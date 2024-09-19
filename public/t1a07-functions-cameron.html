@@ -1,17 +1,25 @@
-<h1 align=center>t107-functions-cameron.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t107-functions-cameron.html</title>
+</head>
+<body>
+    <h1 align="center">t107-functions-cameron.html</h1>
 
-  <script>
-    function myvar(myIn)
-      return document.getElementById(myIn)
-    
-    }
-  </script>
+    <script>
+        function myvar(myIn) {
+            return document.getElementById(myIn);
+        }
+    </script>
 
-  Input:<input type=text id="myfirstName" value"fred">
-  <input type=button value="show on page" onclick="{
-
-    myvar('myDiv01').innerHTML = 'your name is ' + myvar('myfirstMYFIRSTNAME').VALUE
-
+    <label for="myfirstName">Input:</label>
+    <input type="text" id="myfirstName" value="fred">
+    <input type="button" value="Show on page" onclick="{
+        myvar('myDiv01').innerHTML = 'Your name is ' + myvar('myfirstName').value;
     }">
 
-  <div id="myDiv01">...</div>
+    <div id="myDiv01">...</div>
+</body>
+</html>

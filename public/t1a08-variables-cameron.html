@@ -1,36 +1,42 @@
-<h1 align=center>t1a08-variables-cameron</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t1a08-variables-cameron</title>
+</head>
+<body>
+    <h1 align="center">t1a08-variables-cameron</h1>
 
+    <p>W3schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp">here</a></p>
 
-W3schools link tovariables <a href="https://www.w3schools.com/js/js_variables.asp"> here</a<>br>
+    <label for="myIn01">Input 1:</label>
+    <input type="text" id="myIn01" value="5"><br>
+    <label for="myIn02">Input 2:</label>
+    <input type="text" id="myIn02" value="7"><br>
+    <input type="button" value="Add and Fix" onclick="{
+        let myTotal = document.getElementById('myIn01').value + document.getElementById('myIn02').value;
+        document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
+    }">
 
-  
-  input 1:<input type=text id="myIn01" value="5"><br>
- input 1:<input type=text id="myIn02" value="7"><br>
- <input type=button value="add and fix" onclick="{
-   myTotal = document.getElementById('myIn01').value + document.getElementById('myIn02
-   document.getElementById('myDiv01').innerHTML = 'your answer is ' + mytotal
-   }">
+    <div id="myDiv01">...</div>
 
-  <div id+"mydiv01">...</div>
-
-  copy and fix. parseInt() or parseFloat() try not to use var use let instead or const<br>
-
-
-  <input type=button value="add2 and fix" onclick="{
-    let myx = document.getElementById('myIn01').value
-      let myx = document.getElementById('myIn02').value
-    let myTotal = myX + myY
-    document.getElementById('myDiv01').innerHTML = 'your answer is ' + myTotal
+    <input type="button" value="Add2 and Fix" onclick="{
+        let myX = parseFloat(document.getElementById('myIn01').value);
+        let myY = parseFloat(document.getElementById('myIn02').value);
+        let myTotal = myX + myY;
+        document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
     }"><br><br>
 
-  other programming languages use defined variables
-  <pre>
-    boolean
-    int8 or byte
-    int
-    double
-    float
-    char
-    string
-    
-  </pre>
+    <p>Other programming languages use defined variables:</p>
+    <pre>
+        boolean
+        int8 or byte
+        int
+        double
+        float
+        char
+        string
+    </pre>
+</body>
+</html>

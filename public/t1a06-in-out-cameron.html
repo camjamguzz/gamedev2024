@@ -1,10 +1,25 @@
-<h1 align=center>t1a06-in-out-cameron.html</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t1a06-in-out-cameron.html</title>
+</head>
+<body>
+    <h1 align="center">t1a06-in-out-cameron.html</h1>
 
+    <label for="myfirstname">Input:</label>
+    <input type="text" id="myfirstname" value="fred">
+    <input type="button" value="Show on page" onclick="showOnPage()">
 
-niput:<input type=text id="myfirstname" value="fred">
-<input type+button value+"show on page" onclick="{
-// this is a comment
-document.getelementbyid('myfirstname').value
+    <div id="mydiv01">...</div>
 
-}">
-<div id=mydiv01">...</div>
+    <script>
+        // This is a comment
+        function showOnPage() {
+            var inputValue = document.getElementById('myfirstname').value;
+            document.getElementById('mydiv01').innerText = 'Your name is ' + inputValue;
+        }
+    </script>
+</body>
+</html>

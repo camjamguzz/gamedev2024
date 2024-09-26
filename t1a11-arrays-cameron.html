@@ -1,1 +1,25 @@
+<h1 align=center>t1a11-arrays-cameron.html</h1>
+<script>
+  //Set a few Global Variables
+  let myMax = 6
+  let my Array = new Array(myMax)
+</script>
 
+Input:<input type=text id="myFirstName" Value="fred"><br>
+
+<input type=button value="Set Array" onclick="{
+    myArray[0] = 'fred'
+    myArray[1] = 'mary'
+    myArray[2] = 'peter'
+
+  document.getElementById('myDiv01').innerHTML = 'you set the array'
+  }">
+
+  <input type=button value="show Array" onclick="{
+    for (myloop=0;  myloop < 3;  myloop++){
+      documenrt.getElementById('myDiv01').innerHTML += 'myArray[' + myLoop + '] = ' +
+        myArray[myloop] + '<br>
+    }
+    }"><br>
+
+    <div id="myDiv01">...</div>

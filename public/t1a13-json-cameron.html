@@ -6,6 +6,19 @@
            document.getElementById('myDiv').innerHTML = `Sent: ${myIn} `
         }
 
+
+
+        async function fetchData() {
+            const responce = await fetch('https://dog.ceo/api/breeds/image/random');
+            const data = await response.json();
+            console.log(data);
+            console.log(`data.status: ${data.status}`)
+
+
+            const myJson=await JSON.stringify(data, null, 2);
+            document.getElementById('myDiv').innerHTML = myJson
+        }
+
     </script>
 
 
@@ -26,6 +39,6 @@
     </select><br><br>
     
 
-    you make the JSON show up in the DIV<br><br>
+    you make the JSON show up in the DIV, better than i have here, and include many more Urls<br><br>
 
     <div id="mydiv1">...</div>

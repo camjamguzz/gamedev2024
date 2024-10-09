@@ -7,14 +7,14 @@
         }
 
 
-        async function fetchData() {
-            const responce = await fetch('https://dog.ceo/api/breeds/image/random');
+        async function fetchData(myUrl) {
+            document.getElementById('myDiv1').innerHTML = ''
+            const responce = await fetch(myUrl);
             const data = await response.json();
-            console.log(data);
+
             console.log(`data.status: ${data.status}`)
-
-
             const myJson=await JSON.stringify(data, null, 2);
+            
             document.getElementById('myDiv').innerHTML = myJson
         }
 
@@ -28,18 +28,34 @@
     </textarea><br><br>
 
 
-    Enter a json returning URL: <input type=text id="mytext1" value=
+    Enter a json returning URL: <input type=text id="mytext1" size="80" value=
     "https://randomfox.ca/floof/">
-    <input type=button value="show JSON" onclick="{alert('hi')}"><br><br>
+    <input type=button value="show JSON" onclick="{
+        fetchData(document.getElementById('myText1').value)
+
+    }"><br><br>
 
     <select size=1 onchange="myShowJSON(this.value)">
     <option value="https://randomfox.ca/floof/">randomfox
     <option value="https://dog.ceo/api/breeds/image/random">god.ceo
+    <option value="https://jsonplaceholder.typicode.com/posts">jsonplaceholder
+    <option value="https://api.coindesk.com/v1/bpi/currentprice.json">api.coindesk
+    <option value="https://randomuser.me/api/">randomuser
+    <option value="https://api.exchangerate-api.com/v4/latest/USD">api.exchange
+    <option value="https://api.agify.io/?name=micheal">api.agify
+    <option value="https://api.genderize.io/?name=micheal">api.genderize
+    <option value="https://api.nationalize.io/?name=micheal">api.natonalize
+    <option value="https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.405&current_wealther=true">api.open-meteo
+    <option value="https://api.github.com/users/github">api.github
+    <option value="https://pokeapi.co/api/v2/pokemon/ditto">pokeapi.co
+    <option value="https://jsonplaceholder.typicode.com/comments">jsonplaceholder
+    <option value="https://api.quotable.io/random">api.quotable
     </select><br><br>
     
 
     <br><br>
 
+    All the JSON<br>
     <div id="mydiv1">...</div>
 
     

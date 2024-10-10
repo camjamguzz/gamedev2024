@@ -1,23 +1,24 @@
 <body onMouseMove="{
     document.getElementById('myDiv01').innerHTML = `key:${event.key}`
-`x:${event.clientX;}, y:${event.clientY;}`
-
+    `x:${event.clientX;}, y:${event.clientY;}`
 
 }" onKeyDown="{
     document.getElementById(myDiv01).innerHTML =
-    `key:${event.key}`
+`key:${event.key}`
+
 }">
+
 
 <h1 align=center>t1a15-events-cameron.html</h1>
 
-<b onTouchStart="{alert('onTouchStart??')}">Input:</b>
+<b onTouchStart="{/* alert('onTouchStart??') */}">Input:</b>
 
 
 <input type=text id="myfirstName" value="fred"
-onblur="{'alert('onBlur??')'}"><br><br>
+onblur="{/* alert('onBlur??') */}"><br><br>
 
 <input type=button value="show on page" onclick="{
     document.getElementById('myDiv01').innerHTML = 'Hey'
 }"><br><br>
 
-<div id="myDiv01" onMouseOver="{alert('onMouseOver')}">...</div><br><br>
+<div id="myDiv01" onMouseOver="{/* alert('onMouseOver') */}">...</div><br><br>

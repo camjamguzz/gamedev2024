@@ -1,49 +1,46 @@
-<h2 align=center>t1a12-objects-by-cameron.html</h2
-
-    <a href="">Good reference to Javascript Objects<</a><br>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Objects Example</title>
+</head>
+<body>
+    <h2 align="center">t1a12-objects-by-cameron.html</h2>
+    <a href="">Good reference to JavaScript Objects</a>
+    <br>
     Objects are stored named variables
-
-    <h4> Examples Objects code</h4>
+    <h4>Examples Objects code</h4>
     <pre>
-    let myperson = {
-        "firstName": "john"
-        "astName"  : "Doe"
-        "age"      :  50,
-        "eyeColor" : "blue"
-    }
-
-
-</pre>
-
-<h4> Example working Objects code</h4>
-
-Nothing: <input type=text id="myText01" value-"useless at the momment"><br>
-
-
-<input type=button value="Example object set and show" onClick="{
-
-    let myperson = {
-        'firstName' : 'John',
-        'lastName'  : 'Doe',
-        'age'       :  50,
-        'eyeColor'  : 'blue'
-    }
-
-
-    document.getElementById('myDiv01').innerHTML = 'br>myperson object has
-properties: br>'
-    document.getElementById('myDiv01').innerHTML += 'firstName: ' +
-myPerson.firstName + 'br>'
-    document.getElementById('myDiv01').innerHTML += 'lastName: '  +
-myPerson.lastName +  'br>'
-    document.getElementById('myDivo1').innerHTML += 'age:      '  +
-myPerson.age + 'br>'
-document.getElementById('myDivo1').innerHTML     += 'eyeColor: '  +
-
-}">
-
-<div id="myDiv01">...</div>
-
-
-<br>
+let myperson = {
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 50,
+    "eyeColor": "blue"
+}
+    </pre>
+    <h4>Example working Objects code</h4>
+    Nothing: <input type="text" id="myText01" value="Useless at the moment">
+    <br>
+    <input type="button" value="Example object set and show" onClick="showPersonInfo()">
+    <div id="myDiv01">...</div>
+    
+    <script>
+        function showPersonInfo() {
+            let myperson = {
+                firstName: 'John',
+                lastName: 'Doe',
+                age: 50,
+                eyeColor: 'blue'
+            };
+            document.getElementById('myDiv01').innerHTML = `
+                myperson object has properties: <br>
+                firstName: ${myperson.firstName} <br>
+                lastName: ${myperson.lastName} <br>
+                age: ${myperson.age} <br>
+                eyeColor: ${myperson.eyeColor}
+            `;
+        }
+    </script>
+</body>
+</html>

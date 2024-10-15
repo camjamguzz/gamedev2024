@@ -1,24 +1,39 @@
-<body onMouseMove="{
-    document.getElementById('myDiv01').innerHTML = `key:${event.key}`
-    `x:${event.clientX;}, y:${event.clientY;}`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Arrays Example</title>
+</head>
+<body>
+    <h1 align="center">t1a11-arrays-cameron.html</h1>
+    <script>
+        // Set a few Global Variables
+        let myMax = 6;
+        let myArray = new Array(myMax);
+    </script>
+    Input: <input type="text" id="myFirstName" value="fred">
+    <br>
+    <input type="button" value="Set Array" onclick="setArray()">
+    <input type="button" value="Show Array" onclick="showArray()">
+    <br>
+    <div id="myDiv01">...</div>
 
-}" onKeyDown="{
-    document.getElementById(myDiv01).innerHTML =
-`key:${event.key}`
+    <script>
+        function setArray() {
+            myArray[0] = 'fred';
+            myArray[1] = 'mary';
+            myArray[2] = 'peter';
+            document.getElementById('myDiv01').innerHTML = 'You set the array';
+        }
 
-}">
-
-
-<h1 align=center>t1a15-events-cameron.html</h1>
-
-<b onTouchStart="{/* alert('onTouchStart??') */}">Input:</b>
-
-
-<input type=text id="myfirstName" value="fred"
-onblur="{/* alert('onBlur??') */}"><br><br>
-
-<input type=button value="show on page" onclick="{
-    document.getElementById('myDiv01').innerHTML = 'Hey'
-}"><br><br>
-
-<div id="myDiv01" onMouseOver="{/* alert('onMouseOver') */}">...</div><br><br>
+        function showArray() {
+            let output = '';
+            for (let myLoop = 0; myLoop < 3; myLoop++) {
+                output += `myArray[${myLoop}] = ${myArray[myLoop]}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = output;
+        }
+    </script>
+</body>
+</html>

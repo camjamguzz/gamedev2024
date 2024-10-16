@@ -15,6 +15,9 @@
         let myArray3 = new Array(myMax);
         let myArray4 = new Array(myMax);
         let myArray5 = new Array(myMax);
+        let myArray6 = new Array(myMax);
+        let myArray7 = new Array(myMax);
+        let myArray8 = new Array(myMax);
     </script>
     Input: <input type="text" id="myFirstName" value="fred">
     <br>
@@ -32,6 +35,15 @@
     <br>
     <input type="button" value="Set Array 5" onclick="setArray5()">
     <input type="button" value="Show Array 5" onclick="showArray5()">
+    <br>
+    <input type="button" value="Set Array 6" onclick="setArray6()">
+    <input type="button" value="Show Array 6" onclick="showArray6()">
+    <br>
+    <input type="button" value="Set Array 7" onclick="setArray7()">
+    <input type="button" value="Show Array 7" onclick="showArray7()">
+    <br>
+    <input type="button" value="Set Array 8" onclick="setArray8()">
+    <input type="button" value="Show Array 8" onclick="showArray8()">
     <br>
     <div id="myDiv01">...</div>
 
@@ -107,6 +119,51 @@
             let output = '';
             for (let myLoop = 0; myLoop < 3; myLoop++) {
                 output += `myArray5[${myLoop}] = Name: ${myArray5[myLoop].name}, Age: ${myArray5[myLoop].age}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = output;
+        }
+
+        function setArray6() {
+            myArray6[0] = new Date(2022, 11, 24);
+            myArray6[1] = new Date(2023, 0, 1);
+            myArray6[2] = new Date(2023, 1, 14);
+            document.getElementById('myDiv01').innerHTML = 'You set Array 6';
+        }
+
+        function showArray6() {
+            let output = '';
+            for (let myLoop = 0; myLoop < 3; myLoop++) {
+                output += `myArray6[${myLoop}] = ${myArray6[myLoop].toDateString()}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = output;
+        }
+
+        function setArray7() {
+            myArray7[0] = true;
+            myArray7[1] = false;
+            myArray7[2] = true;
+            document.getElementById('myDiv01').innerHTML = 'You set Array 7';
+        }
+
+        function showArray7() {
+            let output = '';
+            for (let myLoop = 0; myLoop < 3; myLoop++) {
+                output += `myArray7[${myLoop}] = ${myArray7[myLoop]}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = output;
+        }
+
+        function setArray8() {
+            myArray8[0] = 'blue';
+            myArray8[1] = 'green';
+            myArray8[2] = 'red';
+            document.getElementById('myDiv01').innerHTML = 'You set Array 8';
+        }
+
+        function showArray8() {
+            let output = '';
+            for (let myLoop = 0; myLoop < 3; myLoop++) {
+                output += `myArray8[${myLoop}] = ${myArray8[myLoop]}<br>`;
             }
             document.getElementById('myDiv01').innerHTML = output;
         }

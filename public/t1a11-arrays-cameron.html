@@ -10,31 +10,70 @@
     <script>
         // Set a few Global Variables
         let myMax = 6;
-        let myArray = new Array(myMax);
+        let myArray1 = new Array(myMax);
+        let myArray2 = new Array(myMax);
+        let myArray3 = new Array(myMax);
     </script>
     Input: <input type="text" id="myFirstName" value="fred">
     <br>
-    <input type="button" value="Set Array" onclick="setArray()">
-    <input type="button" value="Show Array" onclick="showArray()">
+    <input type="button" value="Set Array 1" onclick="setArray1()">
+    <input type="button" value="Show Array 1" onclick="showArray1()">
+    <br>
+    <input type="button" value="Set Array 2" onclick="setArray2()">
+    <input type="button" value="Show Array 2" onclick="showArray2()">
+    <br>
+    <input type="button" value="Set Array 3" onclick="setArray3()">
+    <input type="button" value="Show Array 3" onclick="showArray3()">
     <br>
     <div id="myDiv01">...</div>
 
     <script>
-        function setArray() {
-            myArray[0] = 'fred';
-            myArray[1] = 'mary';
-            myArray[2] = 'peter';
-            document.getElementById('myDiv01').innerHTML = 'You set the array';
+        function setArray1() {
+            myArray1[0] = 'fred';
+            myArray1[1] = 'mary';
+            myArray1[2] = 'peter';
+            document.getElementById('myDiv01').innerHTML = 'You set Array 1';
         }
 
-        function showArray() {
+        function showArray1() {
             let output = '';
             for (let myLoop = 0; myLoop < 3; myLoop++) {
-                output += `myArray[${myLoop}] = ${myArray[myLoop]}<br>`;
+                output += `myArray1[${myLoop}] = ${myArray1[myLoop]}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = output;
+        }
+
+        function setArray2() {
+            myArray2[0] = 'alice';
+            myArray2[1] = 'bob';
+            myArray2[2] = 'charlie';
+            document.getElementById('myDiv01').innerHTML = 'You set Array 2';
+        }
+
+        function showArray2() {
+            let output = '';
+            for (let myLoop = 0; myLoop < 3; myLoop++) {
+                output += `myArray2[${myLoop}] = ${myArray2[myLoop]}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = output;
+        }
+
+        function setArray3() {
+            myArray3[0] = 'orange';
+            myArray3[1] = 'banana';
+            myArray3[2] = 'apple';
+            document.getElementById('myDiv01').innerHTML = 'You set Array 3';
+        }
+
+        function showArray3() {
+            let output = '';
+            for (let myLoop = 0; myLoop < 3; myLoop++) {
+                output += `myArray3[${myLoop}] = ${myArray3[myLoop]}<br>`;
             }
             document.getElementById('myDiv01').innerHTML = output;
         }
     </script>
 </body>
 </html>
+
 

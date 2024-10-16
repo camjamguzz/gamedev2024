@@ -10,14 +10,14 @@
             text-align: center;
             margin: 20px;
         }
-        #mydiv01 {
+        #mydiv01, #mydiv02 {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             border-radius: 5px;
         }
-        #myButton {
+        #myButton, #resetButton {
             margin-top: 10px;
             padding: 10px 20px;
             border: none;
@@ -27,7 +27,7 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #myButton:hover {
+        #myButton:hover, #resetButton:hover {
             background-color: #45a049;
         }
     </style>
@@ -37,13 +37,22 @@
     <label for="myfirstname">Input:</label>
     <input type="text" id="myfirstname" value="fred">
     <input type="button" id="myButton" value="Show on page" onclick="showOnPage()">
+    <input type="button" id="resetButton" value="Reset" onclick="resetFields()">
     <div id="mydiv01">...</div>
-    
+    <div id="mydiv02">...</div>
+
     <script>
         // This is a comment
         function showOnPage() {
             var inputValue = document.getElementById('myfirstname').value;
             document.getElementById('mydiv01').innerText = 'Your name is ' + inputValue;
+            document.getElementById('mydiv02').innerText = `The length of your name is ${inputValue.length}`;
+        }
+
+        function resetFields() {
+            document.getElementById('myfirstname').value = '';
+            document.getElementById('mydiv01').innerText = '...';
+            document.getElementById('mydiv02').innerText = '...';
         }
     </script>
 </body>

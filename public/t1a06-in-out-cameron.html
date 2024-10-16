@@ -4,16 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t1a06-in-out-cameron.html</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #mydiv01 {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        #myButton {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #myButton:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <h1 align="center">t1a06-in-out-cameron.html</h1>
-
     <label for="myfirstname">Input:</label>
     <input type="text" id="myfirstname" value="fred">
-    <input type="button" value="Show on page" onclick="showOnPage()">
-
+    <input type="button" id="myButton" value="Show on page" onclick="showOnPage()">
     <div id="mydiv01">...</div>
-
+    
     <script>
         // This is a comment
         function showOnPage() {

@@ -7,7 +7,9 @@
     <h1 align="center">t1a013-json-cameron.html</h1>
     <script>
         function myShowJSON(myIn) {
-            document.getElementById('myDiv').innerHTML = `Sent: ${myIn}`;
+            //console.log(myIn, document.getElementById('myText1'));
+            document.getElementById('myDiv1').innerHTML = `Sent: ${myIn}`;
+            document.getElementById('myText1').value = myIn;
             fetchData(myIn);
         }
 

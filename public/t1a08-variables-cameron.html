@@ -7,27 +7,20 @@
 </head>
 <body>
     <h1 align="center">t1a08-variables-cameron</h1>
-
     <p>W3schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp">here</a></p>
 
     <label for="myIn01">Input 1:</label>
     <input type="text" id="myIn01" value="5"><br>
     <label for="myIn02">Input 2:</label>
     <input type="text" id="myIn02" value="7"><br>
-    <input type="button" value="Add and Fix" onclick="{
-        let myTotal = document.getElementById('myIn01').value + document.getElementById('myIn02').value;
-        document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
-    }">
-
+    <input type="button" value="Add and Fix" onclick="addAndFix()">
     <div id="myDiv01">...</div>
+    <input type="button" value="Add2 and Fix" onclick="add2AndFix()"><br><br>
 
-    <input type="button" value="Add2 and Fix" onclick="{
-        let myX = parseFloat(document.getElementById('myIn01').value);
-        let myY = parseFloat(document.getElementById('myIn02').value);
-        let myTotal = myX + myY;
-        document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
-    }"><br><br>
-
+    <p>Example of Boolean Variables:</p>
+    <input type="button" value="Check Booleans" onclick="checkBooleans()">
+    <div id="myDiv02">...</div>
+    
     <p>Other programming languages use defined variables:</p>
     <pre>
         boolean
@@ -38,5 +31,26 @@
         char
         string
     </pre>
+
+    <script>
+        function addAndFix() {
+            let myTotal = document.getElementById('myIn01').value + document.getElementById('myIn02').value;
+            document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
+        }
+
+        function add2AndFix() {
+            let myX = parseFloat(document.getElementById('myIn01').value);
+            let myY = parseFloat(document.getElementById('myIn02').value);
+            let myTotal = myX + myY;
+            document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
+        }
+
+        function checkBooleans() {
+            let isSunny = true;
+            let isRaining = false;
+            document.getElementById('myDiv02').innerHTML = `Is it sunny? ${isSunny}<br>Is it raining? ${isRaining}`;
+        }
+    </script>
 </body>
 </html>
+

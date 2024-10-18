@@ -1,32 +1,32 @@
-<h2 align=center>t1a10-loops-by-cameron.html</h2>
-
-<a href="">Good reference to Javascript Loops<a/><br>
-  
-
-  <h4> Example input output code</h4>
-  <pre>
-
-  </pre>
-
-  <h4> Example working code</h4>
-
-  Max loops: <input id="myNum01" type=number value="4" ><br>
-
-  <input type=button value=Basic For loop with Decisions" onclick="{
-  let myTemp = ''
-
-  let myMax = parseInt(document.getElementById('myNum01').value)
-
-  for (let myloop = 0; myloop < myMax; myloop++ ){
-      if (myloop * 2 > myMax){
-    myTemp += ' cool '
-    }
-
-    myTemp += 'loop number: ' + myloop + '<br>'
-    }
-    document.getElementById('myDiv01').innerHTML = myTemp
-}">
-|
-
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t1a10-loops-by-cameron.html</title>
+</head>
+<body>
+    <h2 align="center">t1a10-loops-by-cameron.html</h2>
+    <a href="">Good reference to JavaScript Loops</a><br>
+    <h4>Example input-output code</h4>
+    <pre></pre>
+    <h4>Example working code</h4>
+    Max loops: <input id="myNum01" type="number" value="4"><br>
+    <input type="button" value="Basic For loop with Decisions" onclick="runLoop()">
     <div id="myDiv01">...</div>
+
+    <script>
+        function runLoop() {
+            let myTemp = '';
+            let myMax = parseInt(document.getElementById('myNum01').value);
+            for (let myloop = 0; myloop < myMax; myloop++) {
+                if (myloop * 2 > myMax) {
+                    myTemp += ' cool ';
+                }
+                myTemp += 'loop number: ' + myloop + '<br>';
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp;
+        }
+    </script>
+</body>
+</html>

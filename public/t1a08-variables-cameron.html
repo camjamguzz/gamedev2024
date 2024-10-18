@@ -20,7 +20,7 @@
     <p>Example of Boolean Variables:</p>
     <input type="button" value="Check Booleans" onclick="checkBooleans()">
     <div id="myDiv02">...</div>
-    
+
     <p>Example of Byte Variable in Java:</p>
     <pre>
         public class ByteExample {
@@ -44,7 +44,7 @@
 
     <script>
         function addAndFix() {
-            let myTotal = document.getElementById('myIn01').value + document.getElementById('myIn02').value;
+            let myTotal = parseFloat(document.getElementById('myIn01').value) + parseFloat(document.getElementById('myIn02').value);
             document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
         }
 
@@ -63,4 +63,3 @@
     </script>
 </body>
 </html>
-

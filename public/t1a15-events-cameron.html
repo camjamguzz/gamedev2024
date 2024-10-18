@@ -20,12 +20,13 @@
 <body>
     <h1 align="center">t1a15-events-cameron.html</h1>
     <b onTouchStart="handleTouchEvent()">Input:</b>
-    <input type="text" id="myFirstName" value="fred" onblur="handleBlurEvent()">
+    <input type="text" id="myFirstName" value="fred" onblur="handleBlurEvent()" onfocus="handleFocusEvent()">
     <br><br>
     <input type="button" value="Show on page" onclick="showMessage()">
     <br><br>
-    <div id="myDiv01" onmouseover="handleMouseOver()">...</div>
+    <div id="myDiv01" onmouseover="handleMouseOver()" onmouseout="handleMouseOut()">...</div>
     <br><br>
+    <div id="myDiv02" onkeydown="handleKeyDown(event)" onkeyup="handleKeyUp(event)" tabindex="0" style="border: 1px solid #ccc; padding: 10px;">Click here and press any key...</div>
 
     <script>
         function handleTouchEvent() {
@@ -36,8 +37,24 @@
             document.getElementById('myDiv01').innerHTML = 'Blur event triggered';
         }
 
+        function handleFocusEvent() {
+            document.getElementById('myDiv01').innerHTML = 'Focus event triggered';
+        }
+
         function handleMouseOver() {
             document.getElementById('myDiv01').innerHTML = 'Mouse over event triggered';
+        }
+
+        function handleMouseOut() {
+            document.getElementById('myDiv01').innerHTML = 'Mouse out event triggered';
+        }
+
+        function handleKeyDown(event) {
+            document.getElementById('myDiv02').innerHTML = `Key down event triggered: ${event.key}`;
+        }
+
+        function handleKeyUp(event) {
+            document.getElementById('myDiv02').innerHTML = `Key up event triggered: ${event.key}`;
         }
 
         function showMessage() {

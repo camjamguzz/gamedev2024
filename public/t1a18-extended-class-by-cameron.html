@@ -1,46 +1,48 @@
-<h2 align="center>t1a18-extended-class-by-cameron.html</h2>"
-
-<script>
-
-    class myAnimal {
-        constructor(passName, passAge) {
-            this.myName = passName;
-            this.myAge = passAge;
-        }
-   myshow(){
-    document.getelementById('myDiv01').innerHTML = 'Hello '+ this.myName'<br>'
-   }
-}  // end class myAnimals
-
-
-class mycat extends myAniaml {
-
-    myShow(){
-        document.getElementById('myDiv01').innerHTML = this.myName + ' is a great
-        cat<br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t1a18-extended-class-by-cameron.html</title>
+</head>
+<body>
+    <h2 align="center">t1a18-extended-class-by-cameron.html</h2>
+    <script>
+        class MyAnimal {
+            constructor(passName, passAge) {
+                this.myName = passName;
+                this.myAge = passAge;
             }
-}   // end extended class myCat
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = 'Hello ' + this.myName + '<br>';
+            }
+        }
 
+        class MyCat extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a great cat<br>';
+            }
+        }
+    </script>
 
-</script>
+    <input type="button" value="Example Class Set and Show Class Animal" onclick="setAndShowAnimal()">
+    <br><br>
+    <input type="text" id="myText01" value="may be useful later">
+    <br>
+    <input type="button" value="Example Extended Class Animal as Cat" onclick="setAndShowCat()">
+    <br><br>
+    <div id="myDiv01">...</div>
 
+    <script>
+        function setAndShowAnimal() {
+            let myDog = new MyAnimal('Snickers', 5);
+            myDog.myShow();
+        }
 
-<input type=button value="Example Class Set and Show Class Animal" onClick="{
-    myDog = new mtAnimal('snickers', 5)
-    myDog.myShow()
-
-}"><br><br>
-
-<input type=text id="myText01" value="may be useful later"><br>
-
-<input type=button value="Example Extended Class Animal as Cat" onClick="{
-
-
-
-
-    myPet = new myCat('Fluffy', 14)
-    myPet.myShow()
-
-}"><br><br>
-
-<div id="myDiv01">...</div>
+        function setAndShowCat() {
+            let myPet = new MyCat('Fluffy', 14);
+            myPet.myShow();
+        }
+    </script>
+</body>
+</html>

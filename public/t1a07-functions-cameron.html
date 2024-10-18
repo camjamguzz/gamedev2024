@@ -17,7 +17,7 @@
             background-color: #f9f9f9;
             border-radius: 5px;
         }
-        #myButton {
+        #myButton, #uppercaseButton, #lowercaseButton {
             margin-top: 10px;
             padding: 10px 20px;
             border: none;
@@ -27,7 +27,7 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #myButton:hover {
+        #myButton:hover, #uppercaseButton:hover, #lowercaseButton:hover {
             background-color: #45a049;
         }
     </style>
@@ -37,6 +37,8 @@
     <label for="myFirstName">Input:</label>
     <input type="text" id="myFirstName" value="fred">
     <input type="button" id="myButton" value="Show on page" onclick="showName()">
+    <input type="button" id="uppercaseButton" value="Uppercase" onclick="convertToUppercase()">
+    <input type="button" id="lowercaseButton" value="Lowercase" onclick="convertToLowercase()">
     <div id="myDiv01">...</div>
 
     <script>
@@ -46,6 +48,18 @@
 
         function showName() {
             myvar('myDiv01').innerHTML = 'Your name is ' + myvar('myFirstName').value;
+        }
+
+        function convertToUppercase() {
+            let inputValue = myvar('myFirstName').value;
+            myvar('myFirstName').value = inputValue.toUpperCase();
+            myvar('myDiv01').innerHTML = 'Your name in uppercase is ' + inputValue.toUpperCase();
+        }
+
+        function convertToLowercase() {
+            let inputValue = myvar('myFirstName').value;
+            myvar('myFirstName').value = inputValue.toLowerCase();
+            myvar('myDiv01').innerHTML = 'Your name in lowercase is ' + inputValue.toLowerCase();
         }
     </script>
 </body>

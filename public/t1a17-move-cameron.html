@@ -1,29 +1,33 @@
-<h1 align=center>t1a17-maove-cameron.html</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t1a17-move-cameron.html</title>
+</head>
+<body>
+    <h1 align="center">t1a17-move-cameron.html</h1>
+    <script>
+        // global variables
+        let myClock02;
+    </script>
+    <input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()"><br><br>
+    <input type="button" value="Auto Move Right" onclick="startAutoMove()"><br><br>
+    <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="path/to/your/image.jpg">
 
+    <script>
+        function moveImageRight() {
+            let img = document.getElementById('myImage01');
+            img.style.left = (parseInt(img.style.left) || 0) + 10 + 'px';
+        }
 
-<script>
-
-//global variables
-let myClock02
-
-</script>
-
-
-<input type=button id="myButton02" Value="Image Right" onclick="{
-    document.getElementById('myImage01').style.left =
-parseInt(document.getElementById('myImage01').style.left) + 10 + 'px'
-}"><br><br>
-
-<input type=button value="Auto Move Right" onclick="{
-  document.getElementById('myImage01').style.left = 0
-  clearInterval(myClock02)
-  myClock02 = setInterval(function(){
-    document.getElementById('myButton02').click()
-}, 30)     // activate click every 30 ms (millisecounds)
-
-}"><br><br>
-
-
-
-<img id="myImage01" style="position:relative; width:100px; height:80px; top:0px;
-left:0px;" src="myImage01.jpg">
+        function startAutoMove() {
+            document.getElementById('myImage01').style.left = '0px';
+            clearInterval(myClock02);
+            myClock02 = setInterval(function(){
+                document.getElementById('myButton02').click();
+            }, 30); // activate click every 30 milliseconds
+        }
+    </script>
+</body>
+</html>

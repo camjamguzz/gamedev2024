@@ -20,6 +20,7 @@ clearInterval(myClock02)
 myClock02 = setInterval(function(){
     document.getElementById('myButton02').click()
 },30)     // activate click every 30 ms (millisecounds)
+
 }"><br><br>
 
 

@@ -23,11 +23,13 @@
         function moveImageRight() {
             let img = document.getElementById('myImage01');
             img.style.left = (parseInt(img.style.left) || 0) + 10 + 'px';
+            img.style.transform = 'scaleX(1)'; // Ensure the image is facing right
         }
 
         function moveImageLeft() {
             let img = document.getElementById('myImage01');
             img.style.left = (parseInt(img.style.left) || 0) - 10 + 'px';
+            img.style.transform = 'scaleX(-1)'; // Flip the image horizontally
         }
 
         function startAutoMoveRight() {
@@ -51,7 +53,9 @@
         function resetPosition() {
             clearInterval(myClock02); // Stop the auto-move
             clearInterval(myClock03); // Stop the auto-move
-            document.getElementById('myImage01').style.left = '0px'; // Reset position
+            let img = document.getElementById('myImage01');
+            img.style.left = '0px'; // Reset position
+            img.style.transform = 'scaleX(1)'; // Reset the image orientation
         }
     </script>
 </body>

@@ -10,9 +10,12 @@
     <script>
         // global variables
         let myClock02;
+        let myClock03;
     </script>
-    <input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()"><br><br>
-    <input type="button" value="Auto Move Right" onclick="startAutoMove()"><br><br>
+    <input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()">
+    <input type="button" id="myButton03" value="Image Left" onclick="moveImageLeft()"><br><br>
+    <input type="button" value="Auto Move Right" onclick="startAutoMoveRight()">
+    <input type="button" value="Auto Move Left" onclick="startAutoMoveLeft()"><br><br>
     <input type="button" value="Reset" onclick="resetPosition()"><br><br>
     <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/OIP.i64wV8wss63RhJqFkF4Q7gAAAA?rs=1&pid=ImgDetMain">
 
@@ -22,16 +25,32 @@
             img.style.left = (parseInt(img.style.left) || 0) + 10 + 'px';
         }
 
-        function startAutoMove() {
+        function moveImageLeft() {
+            let img = document.getElementById('myImage01');
+            img.style.left = (parseInt(img.style.left) || 0) - 10 + 'px';
+        }
+
+        function startAutoMoveRight() {
             document.getElementById('myImage01').style.left = '0px';
             clearInterval(myClock02);
+            clearInterval(myClock03);
             myClock02 = setInterval(function(){
                 document.getElementById('myButton02').click();
             }, 30); // activate click every 30 milliseconds
         }
 
+        function startAutoMoveLeft() {
+            document.getElementById('myImage01').style.left = '0px';
+            clearInterval(myClock02);
+            clearInterval(myClock03);
+            myClock03 = setInterval(function(){
+                document.getElementById('myButton03').click();
+            }, 30); // activate click every 30 milliseconds
+        }
+
         function resetPosition() {
             clearInterval(myClock02); // Stop the auto-move
+            clearInterval(myClock03); // Stop the auto-move
             document.getElementById('myImage01').style.left = '0px'; // Reset position
         }
     </script>

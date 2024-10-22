@@ -26,16 +26,16 @@
     <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/OIP.i64wV8wss63RhJqFkF4Q7gAAAA?rs=1&pid=ImgDetMain">
 
     <script>
-        function moveImageRight() {
-            let img = document.getElementById('myImage01');
-            img.style.left = (parseInt(img.style.left) || 0) + 10 + 'px';
-            img.style.transform = 'scaleX(1)'; // Ensure the image is facing right
-        }
-
         function moveImageLeft() {
             let img = document.getElementById('myImage01');
             img.style.left = (parseInt(img.style.left) || 0) - 10 + 'px';
             img.style.transform = 'scaleX(-1)'; // Flip the image horizontally
+        }
+
+            function moveImageRight() {
+            let img = document.getElementById('myImage01');
+            img.style.left = (parseInt(img.style.left) || 0) + 10 + 'px';
+            img.style.transform = 'scaleX(1)'; // Ensure the image is facing right
         }
 
         function moveImageUp() {

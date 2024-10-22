@@ -13,6 +13,7 @@
     </script>
     <input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()"><br><br>
     <input type="button" value="Auto Move Right" onclick="startAutoMove()"><br><br>
+    <input type="button" value="Reset" onclick="resetPosition()"><br><br>
     <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/OIP.i64wV8wss63RhJqFkF4Q7gAAAA?rs=1&pid=ImgDetMain">
 
     <script>
@@ -27,6 +28,11 @@
             myClock02 = setInterval(function(){
                 document.getElementById('myButton02').click();
             }, 30); // activate click every 30 milliseconds
+        }
+
+        function resetPosition() {
+            clearInterval(myClock02); // Stop the auto-move
+            document.getElementById('myImage01').style.left = '0px'; // Reset position
         }
     </script>
 </body>

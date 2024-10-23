@@ -1,10 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proper Cameron</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(120deg, #f0f0f0, #d0d0d0);
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+            animation: colorChange 4s infinite;
+        }
+        @keyframes colorChange {
+            0% { color: #4CAF50; }
+            50% { color: #FF5722; }
+            100% { color: #4CAF50; }
+        }
+        a {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid #2196F3;
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        a:hover {
+            color: #FF5722;
+            border-bottom-color: #FF5722;
+        }
+        .fade-in {
+            animation: fadeIn ease 3s;
+            -webkit-animation: fadeIn ease 3s;
+            -moz-animation: fadeIn ease 3s;
+            -o-animation: fadeIn ease 3s;
+            -ms-animation: fadeIn ease 3s;
+        }
+        @keyframes fadeIn {
+            0% { opacity:0; }
+            100% { opacity:1; }
+        }
+        @-moz-keyframes fadeIn {
+            0% { opacity:0; }
+            100% { opacity:1; }
+        }
+        @-webkit-keyframes fadeIn {
+            0% { opacity:0; }
+            100% { opacity:1; }
+        }
+        @-o-keyframes fadeIn {
+            0% { opacity:0; }
+            100% { opacity:1; }
+        }
+        @-ms-keyframes fadeIn {
+            0% { opacity:0; }
+            100% { opacity:1; }
+        }
+    </style>
 </head>
 <body>
-    <h1 align="center">Proper Cameron</h1>
-    <p>GitHub: <a href="https://github.com/camjamguzz/gamedev2024">https://github.com/camjamguzz/gamedev2024</a></p>
+    <h1>Proper Cameron</h1>
+    <p class="fade-in">GitHub: <a href="https://github.com/camjamguzz/gamedev2024">https://github.com/camjamguzz/gamedev2024</a></p>
 </body>
 </html>

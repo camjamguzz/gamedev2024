@@ -4,26 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t1a04-forms-cameron</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(120deg, #f0f0f0, #d0d0d0);
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1 align="center">t1a04-forms-cameron</h1>
     <form>
-        Name: <input type="text" id="name" value="Cameron"><br>
+        <!-- Text Input -->
+        Name: <input type="text" id="name" value="Cameron"><br><br>
+
+        <!-- Password Input -->
         Password: <input type="password" id="password" value="never"><br><br>
-        Number: <input type="number" value="6"><br>
-        Button as an input: <input type="button" value="click" onclick="alert('hi')"><br>
-        Button as a button tag: <button>Click me</button><br><br><br>
-        
+
+        <!-- Number Input -->
+        Number: <input type="number" value="6"><br><br>
+
+        <!-- Button as an input -->
+        Button as an input: <input type="button" value="click" onclick="alert('hi')"><br><br>
+
+        <!-- Button as a button tag -->
+        Button as a button tag: <button type="button">Click me</button><br><br>
+
+        <!-- Radio Buttons -->
         Radio Buttons:<br>
         <input type="radio" name="myRad" value="red">Red<br>
-        <input type="radio" name="myRad" value="blue">Blue<br><br><br>
-        
+        <input type="radio" name="myRad" value="blue">Blue<br><br>
+
+        <!-- Checkboxes -->
         Checkboxes:<br>
-        <input type="checkbox" value="reading">Reading<br>
-        <input type="checkbox" value="sports">Sports<br><br><br>
-        
-        <textarea rows="4" cols="90">writing here</textarea><br><br>
-        
+        <input type="checkbox" name="hobbies" value="reading">Reading<br>
+        <input type="checkbox" name="hobbies" value="sports">Sports<br><br>
+
+        <!-- Textarea -->
+        <textarea rows="4" cols="50">Writing here</textarea><br><br>
+
+        <!-- Select Box -->
         Select Box:<br>
         <select>
             <option value="usa">USA</option>
@@ -34,11 +55,28 @@
             <option value="france">France</option>
             <option value="japan">Japan</option>
             <option value="china">China</option>
+            <option value="india">India</option>
+            <option value="brazil">Brazil</option>
         </select><br><br>
-        
-        <input type="submit" value="submit">
-        <input type="reset" value="reset">
+
+        <!-- Date Picker -->
+        Date: <input type="date"><br><br>
+
+        <!-- Color Picker -->
+        Favorite Color: <input type="color"><br><br>
+
+        <!-- File Upload -->
+        Upload a file: <input type="file"><br><br>
+
+        <!-- Range Slider -->
+        Volume: <input type="range" min="0" max="100" value="50"><br><br>
+
+        <!-- Hidden Input -->
+        <input type="hidden" name="hiddenField" value="hiddenValue">
+
+        <!-- Submit and Reset Buttons -->
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
     </form>
 </body>
 </html>
-

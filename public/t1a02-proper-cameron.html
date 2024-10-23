@@ -10,6 +10,7 @@
             text-align: center;
             background: linear-gradient(120deg, #f0f0f0, #d0d0d0);
             padding: 20px;
+            transition: background 0.3s;
         }
         h1 {
             color: #4CAF50;
@@ -33,35 +34,30 @@
         }
         .fade-in {
             animation: fadeIn ease 3s;
-            -webkit-animation: fadeIn ease 3s;
-            -moz-animation: fadeIn ease 3s;
-            -o-animation: fadeIn ease 3s;
-            -ms-animation: fadeIn ease 3s;
         }
         @keyframes fadeIn {
             0% { opacity:0; }
             100% { opacity:1; }
         }
-        @-moz-keyframes fadeIn {
-            0% { opacity:0; }
-            100% { opacity:1; }
-        }
-        @-webkit-keyframes fadeIn {
-            0% { opacity:0; }
-            100% { opacity:1; }
-        }
-        @-o-keyframes fadeIn {
-            0% { opacity:0; }
-            100% { opacity:1; }
-        }
-        @-ms-keyframes fadeIn {
-            0% { opacity:0; }
-            100% { opacity:1; }
+        .color-picker-container {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <h1>Proper Cameron</h1>
     <p class="fade-in">GitHub: <a href="https://github.com/camjamguzz/gamedev2024">https://github.com/camjamguzz/gamedev2024</a></p>
+
+    <div class="color-picker-container fade-in">
+        <label for="colorPicker">Select Background Color:</label>
+        <input type="color" id="colorPicker" onchange="changeBackgroundColor()">
+    </div>
+    
+    <script>
+        function changeBackgroundColor() {
+            const color = document.getElementById('colorPicker').value;
+            document.body.style.background = color;
+        }
+    </script>
 </body>
 </html>

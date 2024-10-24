@@ -10,6 +10,8 @@
     <div id="myDiv01">...</div>
     <input type="button" value="Is Cameron" onclick="checkCameron()"><br>
     <input type="button" value="Is Cameron Else" onclick="checkCameronElse()"><br>
+    <input type="button" value="Check Age" onclick="checkAge()"><br>
+    <input type="button" value="Check Both" onclick="checkBoth()"><br>
 
     <script>
         function checkCameron() {
@@ -27,6 +29,29 @@
                 document.getElementById('myDiv01').innerHTML = 'Hi Cameron';
             } else {
                 document.getElementById('myDiv01').innerHTML = 'Was expecting Cameron >:';
+            }
+        }
+
+        function checkAge() {
+            let myNum1 = parseInt(document.getElementById('myNum1').value);
+            if (myNum1 >= 18) {
+                document.getElementById('myDiv01').innerHTML = 'You are an adult';
+            } else {
+                document.getElementById('myDiv01').innerHTML = 'You are a minor';
+            }
+        }
+
+        function checkBoth() {
+            let myIn1 = document.getElementById('myText1').value;
+            let myNum1 = parseInt(document.getElementById('myNum1').value);
+            if (myIn1 === 'Cameron' && myNum1 >= 18) {
+                document.getElementById('myDiv01').innerHTML = 'Hi Cameron, you are an adult';
+            } else if (myIn1 === 'Cameron' && myNum1 < 18) {
+                document.getElementById('myDiv01').innerHTML = 'Hi Cameron, you are a minor';
+            } else if (myIn1 !== 'Cameron' && myNum1 >= 18) {
+                document.getElementById('myDiv01').innerHTML = 'Not Cameron, but you are an adult';
+            } else {
+                document.getElementById('myDiv01').innerHTML = 'Not Cameron, and you are a minor';
             }
         }
     </script>

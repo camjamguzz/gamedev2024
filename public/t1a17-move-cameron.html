@@ -13,94 +13,77 @@
         let myClock03;
         let myClock04;
         let myClock05;
-        let myClock06;
-        let myClock07;
-        let myClock08;
-        let myClock09;
     </script>
-    <div>
-        <input type="button" id="myButton02" value="Image Right" onclick="moveImageRight('myImage01')">
-        <input type="button" id="myButton03" value="Image Left" onclick="moveImageLeft('myImage01')">
-        <input type="button" id="myButton04" value="Image Up" onclick="moveImageUp('myImage01')">
-        <input type="button" id="myButton05" value="Image Down" onclick="moveImageDown('myImage01')"><br><br>
-        <input type="button" value="Auto Move Right" onclick="startAutoMoveRight('myImage01')">
-        <input type="button" value="Auto Move Left" onclick="startAutoMoveLeft('myImage01')">
-        <input type="button" value="Auto Move Up" onclick="startAutoMoveUp('myImage01')">
-        <input type="button" value="Auto Move Down" onclick="startAutoMoveDown('myImage01')"><br><br>
-        <input type="button" value="Reset" onclick="resetPosition('myImage01')"><br><br>
-        <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/OIP.i64wV8wss63RhJqFkF4Q7gAAAA?rs=1&pid=ImgDetMain">
-    </div>
-    <div>
-        <input type="button" id="myButton06" value="Image2 Right" onclick="moveImageRight('myImage02')">
-        <input type="button" id="myButton07" value="Image2 Left" onclick="moveImageLeft('myImage02')">
-        <input type="button" id="myButton08" value="Image2 Up" onclick="moveImageUp('myImage02')">
-        <input type="button" id="myButton09" value="Image2 Down" onclick="moveImageDown('myImage02')"><br><br>
-        <input type="button" value="Auto Move Image2 Right" onclick="startAutoMoveRight('myImage02')">
-        <input type="button" value="Auto Move Image2 Left" onclick="startAutoMoveLeft('myImage02')">
-        <input type="button" value="Auto Move Image2 Up" onclick="startAutoMoveUp('myImage02')">
-        <input type="button" value="Auto Move Image2 Down" onclick="startAutoMoveDown('myImage02')"><br><br>
-        <input type="button" value="Reset Image2" onclick="resetPosition('myImage02')"><br><br>
-        <img id="myImage02" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/OIP.Wu8TDk99bf77MpsQeQ3HigHaE8?pid=ImgDet&rs=1">
-    </div>
+    <input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()">
+    <input type="button" id="myButton03" value="Image Left" onclick="moveImageLeft()"><br><br>
+    <input type="button" id="myButton04" value="Image Up" onclick="moveImageUp()">
+    <input type="button" id="myButton05" value="Image Down" onclick="moveImageDown()"><br><br>
+    <input type="button" value="Auto Move Right" onclick="startAutoMoveRight()">
+    <input type="button" value="Auto Move Left" onclick="startAutoMoveLeft()">
+    <input type="button" value="Auto Move Up" onclick="startAutoMoveUp()">
+    <input type="button" value="Auto Move Down" onclick="startAutoMoveDown()"><br><br>
+    <input type="button" value="Reset" onclick="resetPosition()"><br><br>
+    <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/OIP.i64wV8wss63RhJqFkF4Q7gAAAA?rs=1&pid=ImgDetMain">
+    <img id="myImage02" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/R.90c90dbdaa1110ff9d224fdd1c1f9aa1?rik=vpsx%2bnOIkO%2b5GQ&pid=ImgRaw&r=0"
 
     <script>
-        function moveImageRight(imageId) {
-            let img = document.getElementById(imageId);
+        function moveImageRight() {
+            let img = document.getElementById('myImage01');
             img.style.left = (parseInt(img.style.left) || 0) + 10 + 'px';
             img.style.transform = 'scaleX(1)'; // Ensure the image is facing right
         }
 
-        function moveImageLeft(imageId) {
-            let img = document.getElementById(imageId);
+        function moveImageLeft() {
+            let img = document.getElementById('myImage01');
             img.style.left = (parseInt(img.style.left) || 0) - 10 + 'px';
             img.style.transform = 'scaleX(-1)'; // Flip the image horizontally
         }
 
-        function moveImageUp(imageId) {
-            let img = document.getElementById(imageId);
+        function moveImageUp() {
+            let img = document.getElementById('myImage01');
             img.style.top = (parseInt(img.style.top) || 0) - 10 + 'px';
         }
 
-        function moveImageDown(imageId) {
-            let img = document.getElementById(imageId);
+        function moveImageDown() {
+            let img = document.getElementById('myImage01');
             img.style.top = (parseInt(img.style.top) || 0) + 10 + 'px';
         }
 
-        function startAutoMoveRight(imageId) {
+        function startAutoMoveRight() {
             resetIntervals();
-            document.getElementById(imageId).style.left = '0px';
+            document.getElementById('myImage01').style.left = '0px';
             myClock02 = setInterval(function(){
-                moveImageRight(imageId);
+                document.getElementById('myButton02').click();
             }, 30); // activate click every 30 milliseconds
         }
 
-        function startAutoMoveLeft(imageId) {
+        function startAutoMoveLeft() {
             resetIntervals();
-            document.getElementById(imageId).style.left = '0px';
+            document.getElementById('myImage01').style.left = '0px';
             myClock03 = setInterval(function(){
-                moveImageLeft(imageId);
+                document.getElementById('myButton03').click();
             }, 30); // activate click every 30 milliseconds
         }
 
-        function startAutoMoveUp(imageId) {
+        function startAutoMoveUp() {
             resetIntervals();
-            document.getElementById(imageId).style.top = '0px';
+            document.getElementById('myImage01').style.top = '0px';
             myClock04 = setInterval(function(){
-                moveImageUp(imageId);
+                document.getElementById('myButton04').click();
             }, 30); // activate click every 30 milliseconds
         }
 
-        function startAutoMoveDown(imageId) {
+        function startAutoMoveDown() {
             resetIntervals();
-            document.getElementById(imageId).style.top = '0px';
+            document.getElementById('myImage01').style.top = '0px';
             myClock05 = setInterval(function(){
-                moveImageDown(imageId);
+                document.getElementById('myButton05').click();
             }, 30); // activate click every 30 milliseconds
         }
 
-        function resetPosition(imageId) {
+        function resetPosition() {
             resetIntervals();
-            let img = document.getElementById(imageId);
+            let img = document.getElementById('myImage01');
             img.style.left = '0px'; // Reset position
             img.style.top = '0px'; // Reset position
             img.style.transform = 'scaleX(1)'; // Reset the image orientation

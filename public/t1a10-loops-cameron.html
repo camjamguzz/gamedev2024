@@ -12,11 +12,12 @@
     <pre></pre>
     <h4>Example working code</h4>
     Max loops: <input id="myNum01" type="number" value="4"><br>
-    <input type="button" value="Basic For loop with Decisions" onclick="runLoop()">
+    <input type="button" value="Basic For loop with Decisions" onclick="runBasicLoop()">
+    <input type="button" value="While loop" onclick="runWhileLoop()">
+    <input type="button" value="Do-While loop" onclick="runDoWhileLoop()">
     <div id="myDiv01">...</div>
-
     <script>
-        function runLoop() {
+        function runBasicLoop() {
             let myTemp = '';
             let myMax = parseInt(document.getElementById('myNum01').value);
             for (let myloop = 0; myloop < myMax; myloop++) {
@@ -25,6 +26,28 @@
                 }
                 myTemp += 'loop number: ' + myloop + '<br>';
             }
+            document.getElementById('myDiv01').innerHTML = myTemp;
+        }
+
+        function runWhileLoop() {
+            let myTemp = '';
+            let myMax = parseInt(document.getElementById('myNum01').value);
+            let myloop = 0;
+            while (myloop < myMax) {
+                myTemp += 'while loop number: ' + myloop + '<br>';
+                myloop++;
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp;
+        }
+
+        function runDoWhileLoop() {
+            let myTemp = '';
+            let myMax = parseInt(document.getElementById('myNum01').value);
+            let myloop = 0;
+            do {
+                myTemp += 'do-while loop number: ' + myloop + '<br>';
+                myloop++;
+            } while (myloop < myMax);
             document.getElementById('myDiv01').innerHTML = myTemp;
         }
     </script>

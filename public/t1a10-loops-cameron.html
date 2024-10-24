@@ -15,7 +15,7 @@
     <input type="button" value="Basic For loop with Decisions" onclick="runBasicLoop()">
     <input type="button" value="While loop" onclick="runWhileLoop()">
     <input type="button" value="Do-While loop" onclick="runDoWhileLoop()">
-    <input type="button" value="ForEach loop" onclick="runForEachLoop()">
+    <input type="button" value="For...of loop" onclick="runForOfLoop()">
     <div id="myDiv01">...</div>
     <script>
         function runBasicLoop() {
@@ -52,15 +52,14 @@
             document.getElementById('myDiv01').innerHTML = myTemp;
         }
 
-        function runForEachLoop() {
+        function runForOfLoop() {
             let myTemp = '';
             let myArray = ['apple', 'banana', 'cherry'];
-            myArray.forEach(function(item, index) {
-                myTemp += `forEach loop: item ${index + 1} = ${item} <br>`;
-            });
+            for (const item of myArray) {
+                myTemp += `for...of loop: ${item}<br>`;
+            }
             document.getElementById('myDiv01').innerHTML = myTemp;
         }
     </script>
 </body>
 </html>
-

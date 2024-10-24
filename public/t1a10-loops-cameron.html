@@ -15,8 +15,7 @@
     <input type="button" value="Basic For loop with Decisions" onclick="runBasicLoop()">
     <input type="button" value="While loop" onclick="runWhileLoop()">
     <input type="button" value="Do-While loop" onclick="runDoWhileLoop()">
-    <input type="button" value="For...of loop" onclick="runForOfLoop()">
-    <input type="button" value="For...in loop" onclick="runForInLoop()">
+    <input type="button" value="ForEach loop" onclick="runForEachLoop()">
     <div id="myDiv01">...</div>
     <script>
         function runBasicLoop() {
@@ -53,25 +52,15 @@
             document.getElementById('myDiv01').innerHTML = myTemp;
         }
 
-        function runForOfLoop() {
+        function runForEachLoop() {
             let myTemp = '';
             let myArray = ['apple', 'banana', 'cherry'];
-            for (const item of myArray) {
-                myTemp += 'for...of loop: ' + item + '<br>';
-            }
-            document.getElementById('myDiv01').innerHTML = myTemp;
-        }
-
-        function runForInLoop() {
-            let myTemp = '';
-            let myObject = {name: 'Cameron', age: 30, job: 'Developer'};
-            for (const key in myObject) {
-                if (myObject.hasOwnProperty(key)) {
-                    myTemp += 'for...in loop: ' + key + ' = ' + myObject[key] + '<br>';
-                }
-            }
+            myArray.forEach(function(item, index) {
+                myTemp += `forEach loop: item ${index + 1} = ${item} <br>`;
+            });
             document.getElementById('myDiv01').innerHTML = myTemp;
         }
     </script>
 </body>
 </html>
+

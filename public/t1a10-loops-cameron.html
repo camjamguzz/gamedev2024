@@ -55,9 +55,9 @@
         function runForOfLoop() {
             let myTemp = '';
             let myArray = ['apple', 'banana', 'cherry'];
-            for (const item of myArray) {
-                myTemp += `for...of loop: ${item}<br>`;
-            }
+            myArray.forEach((item, index) => {
+                myTemp += `for...of loop: item ${index} is ${item.toUpperCase()}<br>`;
+            });
             document.getElementById('myDiv01').innerHTML = myTemp;
         }
     </script>

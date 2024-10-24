@@ -23,13 +23,32 @@
                 document.getElementById('myDiv01').innerHTML = this.myName + ' is a great cat<br>';
             }
         }
-    </script>
 
+        class MyDog extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a loyal dog<br>';
+            }
+        }
+
+        class MyBird extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = this.myName + ' can fly high<br>';
+            }
+            makeSound() {
+                document.getElementById('myDiv01').innerHTML += this.myName + ' says: Tweet Tweet!<br>';
+            }
+        }
+    </script>
     <input type="button" value="Example Class Set and Show Class Animal" onclick="setAndShowAnimal()">
     <br><br>
     <input type="text" id="myText01" value="may be useful later">
     <br>
     <input type="button" value="Example Extended Class Animal as Cat" onclick="setAndShowCat()">
+    <br><br>
+    <input type="button" value="Example Extended Class Animal as Dog" onclick="setAndShowDog()">
+    <br><br>
+    <input type="button" value="Example Extended Class Animal as Bird" onclick="setAndShowBird()">
+    <input type="button" value="Bird Sound" onclick="birdSound()">
     <br><br>
     <div id="myDiv01">...</div>
 
@@ -42,6 +61,21 @@
         function setAndShowCat() {
             let myPet = new MyCat('Fluffy', 14);
             myPet.myShow();
+        }
+
+        function setAndShowDog() {
+            let myDog = new MyDog('Buddy', 7);
+            myDog.myShow();
+        }
+
+        function setAndShowBird() {
+            let myBird = new MyBird('Tweety', 3);
+            myBird.myShow();
+        }
+
+        function birdSound() {
+            let myBird = new MyBird('Tweety', 3);
+            myBird.makeSound();
         }
     </script>
 </body>

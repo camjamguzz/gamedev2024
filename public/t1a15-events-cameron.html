@@ -10,10 +10,15 @@
             text-align: center;
             margin: 20px;
         }
-        #myDiv01 {
+        #myDiv01, #myDiv02 {
             border: 1px solid #ccc;
             padding: 10px;
             margin-top: 20px;
+        }
+        #myImage {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
         }
     </style>
 </head>
@@ -27,7 +32,11 @@
     <div id="myDiv01" onmouseover="handleMouseOver()" onmouseout="handleMouseOut()">...</div>
     <br><br>
     <div id="myDiv02" onkeydown="handleKeyDown(event)" onkeyup="handleKeyUp(event)" tabindex="0" style="border: 1px solid #ccc; padding: 10px;">Click here and press any key...</div>
-
+    <br><br>
+    <img id="myImage" src="https://via.placeholder.com/100" alt="Placeholder Image" onload="handleLoadEvent()" onerror="handleErrorEvent()">
+    <br><br>
+    <input type="button" value="Show Time" onclick="showTime()">
+    
     <script>
         function handleTouchEvent() {
             document.getElementById('myDiv01').innerHTML = 'Touch event triggered';
@@ -59,6 +68,19 @@
 
         function showMessage() {
             document.getElementById('myDiv01').innerHTML = 'Hey';
+        }
+
+        function handleLoadEvent() {
+            document.getElementById('myDiv01').innerHTML = 'Image loaded successfully';
+        }
+
+        function handleErrorEvent() {
+            document.getElementById('myDiv01').innerHTML = 'Error loading image';
+        }
+
+        function showTime() {
+            let currentTime = new Date().toLocaleTimeString();
+            document.getElementById('myDiv01').innerHTML = `Current time is: ${currentTime}`;
         }
     </script>
 </body>

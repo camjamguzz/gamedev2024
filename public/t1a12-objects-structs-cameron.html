@@ -4,25 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript Objects Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        pre {
+            text-align: left;
+            margin: 0 auto;
+            display: inline-block;
+            text-align: left;
+        }
+        #myDiv01 {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
     <h2 align="center">t1a12-objects-by-cameron.html</h2>
     <a href="">Good reference to JavaScript Objects</a>
-    <br>
-    Objects are stored named variables
+    <br>Objects are stored named variables
     <h4>Examples Objects code</h4>
     <pre>
 let myperson = {
     "firstName": "John",
     "lastName": "Doe",
     "age": 50,
-    "eyeColor": "blue"
-}
+    "eyeColor": "blue",
+    "address": {
+        "street": "123 Main St",
+        "city": "Anytown",
+        "country": "USA"
+    },
+    "hobbies": ["reading", "traveling", "cooking"],
+    "fullName": function() {
+        return this.firstName + " " + this.lastName;
+    }
+};
     </pre>
     <h4>Example working Objects code</h4>
     Nothing: <input type="text" id="myText01" value="Useless at the moment">
     <br>
-    <input type="button" value="Example object set and show" onClick="showPersonInfo()">
+    <input type="button" value="Example object set and show" onclick="showPersonInfo()">
+    <input type="button" value="Show Full Name" onclick="showFullName()">
     <div id="myDiv01">...</div>
     
     <script>
@@ -31,15 +60,45 @@ let myperson = {
                 firstName: 'John',
                 lastName: 'Doe',
                 age: 50,
-                eyeColor: 'blue'
+                eyeColor: 'blue',
+                address: {
+                    street: '123 Main St',
+                    city: 'Anytown',
+                    country: 'USA'
+                },
+                hobbies: ['reading', 'traveling', 'cooking'],
+                fullName: function() {
+                    return this.firstName + " " + this.lastName;
+                }
             };
             document.getElementById('myDiv01').innerHTML = `
                 myperson object has properties: <br>
                 firstName: ${myperson.firstName} <br>
                 lastName: ${myperson.lastName} <br>
                 age: ${myperson.age} <br>
-                eyeColor: ${myperson.eyeColor}
+                eyeColor: ${myperson.eyeColor} <br>
+                address: ${myperson.address.street}, ${myperson.address.city}, ${myperson.address.country} <br>
+                hobbies: ${myperson.hobbies.join(', ')}
             `;
+        }
+        
+        function showFullName() {
+            let myperson = {
+                firstName: 'John',
+                lastName: 'Doe',
+                age: 50,
+                eyeColor: 'blue',
+                address: {
+                    street: '123 Main St',
+                    city: 'Anytown',
+                    country: 'USA'
+                },
+                hobbies: ['reading', 'traveling', 'cooking'],
+                fullName: function() {
+                    return this.firstName + " " + this.lastName;
+                }
+            };
+            document.getElementById('myDiv01').innerHTML = `Full Name: ${myperson.fullName()}`;
         }
     </script>
 </body>

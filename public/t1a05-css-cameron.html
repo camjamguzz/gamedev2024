@@ -13,6 +13,7 @@
         }
         h1 {
             color: blue;
+            text-shadow: 2px 2px 5px grey;
         }
         b.bold-style {
             font-weight: bold;
@@ -27,6 +28,7 @@
         i.italic-border {
             border-style: groove;
             padding: 5px;
+            background-color: #ffebcd;
         }
         p.underline {
             text-decoration: underline;
@@ -37,11 +39,17 @@
             background-color: white;
             margin-top: 20px;
             border-radius: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
         }
         ul.styled-list {
             list-style-type: square;
             padding-left: 20px;
             color: darkblue;
+        }
+        ul.styled-list li::before {
+            content: "• ";
+            color: darkblue;
+            margin-right: 5px;
         }
         a.styled-link {
             color: purple;
@@ -56,6 +64,11 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            color: transparent;
         }
     </style>
 </head>
@@ -78,7 +91,8 @@
     <label for="colorPicker">Select Background Color: </label>
     <input type="color" id="colorPicker" onchange="changeBackgroundColor()">
     <br><br>
-    
+    <h2 class="gradient-text">Gradient Text Example</h2>
+
     <script>
         function changeBackgroundColor() {
             const color = document.getElementById('colorPicker').value;

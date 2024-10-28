@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t1a08-variables-cameron</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #myDiv01, #myDiv02, #myDiv03 {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1 align="center">t1a08-variables-cameron</h1>
@@ -11,35 +25,44 @@
 
     <label for="myIn01">Input 1:</label>
     <input type="text" id="myIn01" value="5"><br>
+
     <label for="myIn02">Input 2:</label>
     <input type="text" id="myIn02" value="7"><br>
+
     <input type="button" value="Add and Fix" onclick="addAndFix()">
-    <div id="myDiv01">...</div>
     <input type="button" value="Add2 and Fix" onclick="add2AndFix()"><br><br>
 
+    <div id="myDiv01">...</div>
+    <br><br>
+
     <p>Example of Boolean Variables:</p>
-    <input type="button" value="Check Booleans" onclick="checkBooleans()">
+    <input type="button" value="Check Booleans" onclick="checkBooleans()"><br>
     <div id="myDiv02">...</div>
+    <br><br>
+
+    <p>Example of Variable Types:</p>
+    <input type="button" value="Show Variables" onclick="showVariables()"><br>
+    <div id="myDiv03">...</div>
+    <br><br>
 
     <p>Example of Byte Variable in Java:</p>
     <pre>
-        public class ByteExample {
-            public static void main(String[] args) {
-                byte myByte = 127;
-                System.out.println("Byte value: " + myByte);
-            }
-        }
+public class ByteExample {
+    public static void main(String[] args) {
+        byte myByte = 127;
+        System.out.println("Byte value: " + myByte);
+    }
+}
     </pre>
-
     <p>Other programming languages use defined variables:</p>
     <pre>
-        boolean
-        int8 or byte
-        int
-        double
-        float
-        char
-        string
+boolean
+int8 or byte
+int
+double
+float
+char
+string
     </pre>
 
     <script>
@@ -59,6 +82,20 @@
             let isSunny = true;
             let isRaining = false;
             document.getElementById('myDiv02').innerHTML = `Is it sunny? ${isSunny}<br>Is it raining? ${isRaining}`;
+        }
+
+        function showVariables() {
+            let age = 25; // int
+            let name = "Cameron"; // string
+            let height = 5.9; // float
+            let isStudent = false; // boolean
+
+            document.getElementById('myDiv03').innerHTML = `
+                Age (int): ${age} <br>
+                Name (string): ${name} <br>
+                Height (float): ${height} <br>
+                Is Student (boolean): ${isStudent}
+            `;
         }
     </script>
 </body>

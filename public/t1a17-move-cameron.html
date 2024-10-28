@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t1a17-move-cameron.html</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            transition: background-image 0.5s ease-in-out;
+        }
+        img {
+            position: relative;
+            width: 100px;
+            height: 80px;
+        }
+    </style>
 </head>
 <body>
     <h1 align="center">t1a17-move-cameron.html</h1>
@@ -23,7 +36,12 @@
     <input type="button" value="Auto Move Up" onclick="startAutoMoveUp()">
     <input type="button" value="Auto Move Down" onclick="startAutoMoveDown()"><br><br>
     <input type="button" value="Reset" onclick="resetPosition()"><br><br>
-    <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://th.bing.com/th/id/OIP.i64wV8wss63RhJqFkF4Q7gAAAA?rs=1&pid=ImgDetMain">
+    
+    <label for="backgroundPicker">Choose a background image:</label>
+    <input type="text" id="backgroundPicker" placeholder="Enter image URL">
+    <input type="button" value="Change Background" onclick="changeBackground()"><br><br>
+    
+    <img id="myImage01" src="https://th.bing.com/th/id/OIP.i64wV8wss63RhJqFkF4Q7gAAAA?rs=1&pid=ImgDetMain">
 
     <script>
         function moveImageRight() {
@@ -94,6 +112,12 @@
             clearInterval(myClock04);
             clearInterval(myClock05);
         }
+
+        function changeBackground() {
+            let backgroundUrl = document.getElementById('backgroundPicker').value;
+            document.body.style.backgroundImage = `url(${backgroundUrl})`;
+        }
     </script>
 </body>
 </html>
+

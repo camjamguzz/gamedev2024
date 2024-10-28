@@ -1,39 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Objects and Arrays</title>
 </head>
 <body>
     <h1 align="center">t1a14-objects-and-arrays-cameron.html</h1>
     <p>Show your research about objects and arrays in the textarea here:</p>
-    <textarea rows="4" cols="70">
-        let myarray = [5, 2, 8, 2, 1];  
-        let myobject = {name: 'John', age: 30, profession: 'Developer'}; 
-        let myObject = {
-            name: 'Alice', 
-            hobbies: ['reading', 'coding', 'hiking'], // Arrays inside object  
-            age: 25
-        };
-        let myArray = [
-            { name: 'Bob', age: 28 },  // Object inside array   
-            { name: 'Charlie', age: 32 }   
-        ];
+    <textarea rows="10" cols="70">
+let myArray = [5, 2, 8, 2, 1];
+let myObject = { name: 'John', age: 30, profession: 'Developer' };
+
+let complexObject = {
+    name: 'Alice',
+    hobbies: ['reading', 'coding', 'hiking'], // Arrays inside object
+    age: 25,
+    address: {
+        street: '123 Main St',
+        city: 'Anytown',
+        country: 'USA'
+    },
+    getFullAddress: function() {
+        return this.address.street + ', ' + this.address.city + ', ' + this.address.country;
+    }
+};
+
+let arrayOfObjects = [
+    { name: 'Bob', age: 28 },  // Object inside array
+    { name: 'Charlie', age: 32 }
+];
+
+let nestedArray = [
+    ['apple', 'banana', 'cherry'],
+    ['carrot', 'lettuce', 'spinach']
+];
     </textarea>
     <br><br>
     <input type="button" value="Array with objects in it" onclick="displayArrayWithObjects()">
     <input type="button" value="Object with array in it" onclick="displayObjectWithArray()">
+    <input type="button" value="Complex Object" onclick="displayComplexObject()">
+    <input type="button" value="Nested Array" onclick="displayNestedArray()">
     <br><br>
     <div id="myDiv">...</div>
-    
+
     <script>
         function displayArrayWithObjects() {
-            let myArray = [
-                { name: 'Bob', age: 28 },  
+            let arrayOfObjects = [
+                { name: 'Bob', age: 28 },
                 { name: 'Charlie', age: 32 }
             ];
-            document.getElementById('myDiv').innerHTML = JSON.stringify(myArray, null, 2);
+            document.getElementById('myDiv').innerHTML = JSON.stringify(arrayOfObjects, null, 2);
         }
-        
+
         function displayObjectWithArray() {
             let myObject = {
                 name: 'Alice',
@@ -41,6 +60,31 @@
                 age: 25
             };
             document.getElementById('myDiv').innerHTML = JSON.stringify(myObject, null, 2);
+        }
+
+        function displayComplexObject() {
+            let complexObject = {
+                name: 'Alice',
+                hobbies: ['reading', 'coding', 'hiking'],
+                age: 25,
+                address: {
+                    street: '123 Main St',
+                    city: 'Anytown',
+                    country: 'USA'
+                },
+                getFullAddress: function() {
+                    return this.address.street + ', ' + this.address.city + ', ' + this.address.country;
+                }
+            };
+            document.getElementById('myDiv').innerHTML = JSON.stringify(complexObject, null, 2) + '<br>Full Address: ' + complexObject.getFullAddress();
+        }
+
+        function displayNestedArray() {
+            let nestedArray = [
+                ['apple', 'banana', 'cherry'],
+                ['carrot', 'lettuce', 'spinach']
+            ];
+            document.getElementById('myDiv').innerHTML = JSON.stringify(nestedArray, null, 2);
         }
     </script>
 </body>

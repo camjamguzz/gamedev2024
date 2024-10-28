@@ -10,7 +10,7 @@
             text-align: center;
             margin: 20px;
         }
-        #mydiv01, #mydiv02 {
+        #mydiv01, #mydiv02, #mydiv03, #mydiv04 {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
@@ -34,25 +34,44 @@
 </head>
 <body>
     <h1 align="center">t1a06-in-out-cameron.html</h1>
-    <label for="myfirstname">Input:</label>
-    <input type="text" id="myfirstname" value="fred">
+    <label for="myfirstname">First Name:</label>
+    <input type="text" id="myfirstname" value="fred"><br><br>
+    
+    <label for="mylastname">Last Name:</label>
+    <input type="text" id="mylastname" value="johnson"><br><br>
+    
+    <label for="myage">Age:</label>
+    <input type="number" id="myage" value="25"><br><br>
+    
     <input type="button" id="myButton" value="Show on page" onclick="showOnPage()">
-    <input type="button" id="resetButton" value="Reset" onclick="resetFields()">
+    <input type="button" id="resetButton" value="Reset" onclick="resetFields()"><br><br>
+    
     <div id="mydiv01">...</div>
     <div id="mydiv02">...</div>
+    <div id="mydiv03">...</div>
+    <div id="mydiv04">...</div>
 
     <script>
         // This is a comment
         function showOnPage() {
-            var inputValue = document.getElementById('myfirstname').value;
-            document.getElementById('mydiv01').innerText = 'Your name is ' + inputValue;
-            document.getElementById('mydiv02').innerText = `The length of your name is ${inputValue.length}`;
+            var firstName = document.getElementById('myfirstname').value;
+            var lastName = document.getElementById('mylastname').value;
+            var age = document.getElementById('myage').value;
+
+            document.getElementById('mydiv01').innerText = 'Your first name is ' + firstName;
+            document.getElementById('mydiv02').innerText = `The length of your first name is ${firstName.length}`;
+            document.getElementById('mydiv03').innerText = 'Your last name is ' + lastName;
+            document.getElementById('mydiv04').innerText = `Your age is ${age}`;
         }
 
         function resetFields() {
             document.getElementById('myfirstname').value = '';
+            document.getElementById('mylastname').value = '';
+            document.getElementById('myage').value = '';
             document.getElementById('mydiv01').innerText = '...';
             document.getElementById('mydiv02').innerText = '...';
+            document.getElementById('mydiv03').innerText = '...';
+            document.getElementById('mydiv04').innerText = '...';
         }
     </script>
 </body>

@@ -71,6 +71,24 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .rounded-img {
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        button.custom-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+        button.custom-button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -93,6 +111,10 @@
     <input type="color" id="colorPicker" onchange="changeBackgroundColor()">
     <br><br>
     <h2 class="gradient-text">Gradient Text Example</h2>
+    <img src="https://example.com/yourimage.jpg" class="rounded-img" alt="Example Image">
+    <br><br>
+    <button class="custom-button">Click Me</button>
+
     <script>
         function changeBackgroundColor() {
             const color = document.getElementById('colorPicker').value;

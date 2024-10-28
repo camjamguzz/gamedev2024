@@ -16,8 +16,8 @@
             margin-top: 20px;
         }
         #myImage {
-            width: 200px; /* Adjust the width as desired */
-            height: auto; /* Maintain aspect ratio */
+            width: 200px;
+            height: auto;
             margin-top: 20px;
             border: 1px solid #ccc;
             padding: 10px;
@@ -33,12 +33,12 @@
     <br><br>
     <div id="myDiv01" onmouseover="handleMouseOver()" onmouseout="handleMouseOut()">...</div>
     <br><br>
-    <div id="myDiv02" onkeydown="handleKeyDown(event)" onkeyup="handleKeyUp(event)" tabindex="0" style="border: 1px solid #ccc; padding: 10px;">Click here and press any key...</div>
+    <div id="myDiv02" onkeydown="handleKeyDown(event)" onkeyup="handleKeyUp(event)" oncopy="handleCopy()" onpaste="handlePaste()" oncut="handleCut()" tabindex="0" style="border: 1px solid #ccc; padding: 10px;">Click here and press any key...</div>
     <br><br>
     <img id="myImage" src="https://thumbs.dreamstime.com/b/pit-bull-wearing-sunglasses-7185270.jpg" alt="Placeholder Image" onload="handleLoadEvent()" onerror="handleErrorEvent()">
     <br><br>
     <input type="button" value="Show Time" onclick="showTime()">
-    
+
     <script>
         function handleTouchEvent() {
             document.getElementById('myDiv01').innerHTML = 'Touch event triggered';
@@ -66,6 +66,18 @@
 
         function handleKeyUp(event) {
             document.getElementById('myDiv02').innerHTML = `Key up event triggered: ${event.key}`;
+        }
+
+        function handleCopy() {
+            document.getElementById('myDiv02').innerHTML = 'Copy event triggered';
+        }
+
+        function handlePaste() {
+            document.getElementById('myDiv02').innerHTML = 'Paste event triggered';
+        }
+
+        function handleCut() {
+            document.getElementById('myDiv02').innerHTML = 'Cut event triggered';
         }
 
         function showMessage() {

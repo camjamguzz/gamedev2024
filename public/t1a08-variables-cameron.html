@@ -22,60 +22,43 @@
 <body>
     <h1 align="center">t1a08-variables-cameron</h1>
     <p>W3schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp">here</a></p>
-
     <label for="myIn01">Input 1:</label>
     <input type="text" id="myIn01" value="5"><br>
-
     <label for="myIn02">Input 2:</label>
     <input type="text" id="myIn02" value="7"><br>
-
     <input type="button" value="Add and Fix" onclick="addAndFix()">
     <input type="button" value="Add2 and Fix" onclick="add2AndFix()"><br><br>
-
     <div id="myDiv01">...</div>
     <br><br>
-
     <p>Example of Boolean Variables:</p>
     <input type="button" value="Check Booleans" onclick="checkBooleans()"><br>
     <div id="myDiv02">...</div>
     <br><br>
-
     <p>Example of Variable Types:</p>
     <input type="button" value="Show Variables" onclick="showVariables()"><br>
     <div id="myDiv03">...</div>
     <br><br>
-
     <p>Example of Byte Variable in Java:</p>
-    <pre>
-public class ByteExample {
-    public static void main(String[] args) {
-        byte myByte = 127;
-        System.out.println("Byte value: " + myByte);
-    }
-}
-    </pre>
+    <pre>public class ByteExample {    public static void main(String[] args) {        byte myByte = 127;        System.out.println("Byte value: " + myByte);    }}    </pre>
     <p>Other programming languages use defined variables:</p>
-    <pre>
-boolean
+    <pre>boolean
 int8 or byte
 int
 double
 float
 char
-string
-    </pre>
-
+string</pre>
     <script>
         function addAndFix() {
-            let myTotal = parseFloat(document.getElementById('myIn01').value) + parseFloat(document.getElementById('myIn02').value);
-            document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
+            let num1 = parseFloat(document.getElementById('myIn01').value);
+            let num2 = parseFloat(document.getElementById('myIn02').value);
+            document.getElementById('myDiv01').innerHTML = `${num1} + ${num2} = ${num1 + num2}`;
         }
 
         function add2AndFix() {
-            let myX = parseFloat(document.getElementById('myIn01').value);
-            let myY = parseFloat(document.getElementById('myIn02').value);
-            let myTotal = myX + myY;
-            document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
+            let num1 = parseFloat(document.getElementById('myIn01').value);
+            let num2 = parseFloat(document.getElementById('myIn02').value);
+            document.getElementById('myDiv01').innerHTML = `${num1} + ${num2} = ${num1 + num2}`;
         }
 
         function checkBooleans() {
@@ -89,7 +72,6 @@ string
             let name = "Cameron"; // string
             let height = 5.9; // float
             let isStudent = false; // boolean
-
             document.getElementById('myDiv03').innerHTML = `
                 Age (int): ${age} <br>
                 Name (string): ${name} <br>

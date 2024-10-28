@@ -17,7 +17,7 @@
             background-color: #f9f9f9;
             border-radius: 5px;
         }
-        #myButton, #uppercaseButton, #lowercaseButton {
+        #myButton, #uppercaseButton, #lowercaseButton, #reverseButton, #lengthButton {
             margin-top: 10px;
             padding: 10px 20px;
             border: none;
@@ -27,7 +27,7 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #myButton:hover, #uppercaseButton:hover, #lowercaseButton:hover {
+        #myButton:hover, #uppercaseButton:hover, #lowercaseButton:hover, #reverseButton:hover, #lengthButton:hover {
             background-color: #45a049;
         }
     </style>
@@ -39,8 +39,9 @@
     <input type="button" id="myButton" value="Show on page" onclick="showName()">
     <input type="button" id="uppercaseButton" value="Uppercase" onclick="convertToUppercase()">
     <input type="button" id="lowercaseButton" value="Lowercase" onclick="convertToLowercase()">
+    <input type="button" id="reverseButton" value="Reverse" onclick="reverseName()">
+    <input type="button" id="lengthButton" value="Name Length" onclick="showNameLength()">
     <div id="myDiv01">...</div>
-
     <script>
         function myvar(myIn) {
             return document.getElementById(myIn);
@@ -60,6 +61,17 @@
             let inputValue = myvar('myFirstName').value;
             myvar('myFirstName').value = inputValue.toLowerCase();
             myvar('myDiv01').innerHTML = 'Your name in lowercase is ' + inputValue.toLowerCase();
+        }
+
+        function reverseName() {
+            let inputValue = myvar('myFirstName').value;
+            let reversedValue = inputValue.split('').reverse().join('');
+            myvar('myDiv01').innerHTML = 'Your name reversed is ' + reversedValue;
+        }
+
+        function showNameLength() {
+            let inputValue = myvar('myFirstName').value;
+            myvar('myDiv01').innerHTML = 'The length of your name is ' + inputValue.length;
         }
     </script>
 </body>

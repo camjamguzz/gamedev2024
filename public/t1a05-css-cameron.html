@@ -67,7 +67,7 @@
         }
         .gradient-text {
             font-size: 2em;
-            background: -webkit-linear-gradient(#ff8a00, #e52e71);
+            background: linear-gradient(to right, #ff8a00, #e52e71);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -105,16 +105,15 @@
         <li>Styled List Item 2</li>
         <li>Styled List Item 3</li>
     </ul>
-    <a href="https://th.bing.com/th/id/R.cbfd99d87eb0868c65a2429030d747aa?rik=Kcm%2blOdSAwa0qA&riu=http%3a%2f%2fpngimg.com%2fuploads%2fspongebob%2fspongebob_PNG11.png&ehk=uswZEKSa%2bgS6JvjEasBh589TCL%2f2ZymNiUHCA1yBBFY%3d&risl=&pid=ImgRaw&r=0" class="styled-link">Styled Link</a>
+    <a href="https://example.com" class="styled-link">Styled Link</a>
     <br><br>
     <label for="colorPicker">Select Background Color: </label>
     <input type="color" id="colorPicker" onchange="changeBackgroundColor()">
     <br><br>
     <h2 class="gradient-text">Gradient Text Example</h2>
-    <img src="https://th.bing.com/th/id/R.cbfd99d87eb0868c65a2429030d747aa?rik=Kcm%2blOdSAwa0qA&riu=http%3a%2f%2fpngimg.com%2fuploads%2fspongebob%2fspongebob_PNG11.png&ehk=uswZEKSa%2bgS6JvjEasBh589TCL%2f2ZymNiUHCA1yBBFY%3d&risl=&pid=ImgRaw&r=0" class="rounded-img" alt="Example Image">
+    <img src="https://example.com/yourimage.jpg" class="rounded-img" alt="Example Image">
     <br><br>
     <button class="custom-button">Click Me</button>
-
     <script>
         function changeBackgroundColor() {
             const color = document.getElementById('colorPicker').value;

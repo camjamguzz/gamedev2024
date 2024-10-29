@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t1a10-loops-by-cameron.html</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        #myDiv01 {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
-    <h2 align="center">t1a10-loops-by-cameron.html</h2>
-    <a href="">Good reference to JavaScript Loops</a><br>
+    <h2>t1a10-loops-by-cameron.html</h2>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling#loops" target="_blank">Good reference to JavaScript Loops</a><br>
     <h4>Example input-output code</h4>
     <pre></pre>
     <h4>Example working code</h4>
@@ -16,6 +29,8 @@
     <input type="button" value="While loop" onclick="runWhileLoop()">
     <input type="button" value="Do-While loop" onclick="runDoWhileLoop()">
     <input type="button" value="For...of loop" onclick="runForOfLoop()">
+    <input type="button" value="For...in loop" onclick="runForInLoop()">
+    <input type="button" value="Nested For loop" onclick="runNestedForLoop()">
     <div id="myDiv01">...</div>
     <script>
         function runBasicLoop() {
@@ -55,11 +70,32 @@
         function runForOfLoop() {
             let myTemp = '';
             let myArray = ['apple', 'banana', 'cherry'];
-            myArray.forEach((item, index) => {
-                myTemp += `for...of loop: item ${index} is ${item.toUpperCase()}<br>`;
-            });
+            for (const item of myArray) {
+                myTemp += `for...of loop: ${item.toUpperCase()}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp;
+        }
+
+        function runForInLoop() {
+            let myTemp = '';
+            const myObject = {a: 'apple', b: 'banana', c: 'cherry'};
+            for (const key in myObject) {
+                myTemp += `for...in loop: key ${key} has value ${myObject[key]}<br>`;
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp;
+        }
+
+        function runNestedForLoop() {
+            let myTemp = '';
+            let myMax = parseInt(document.getElementById('myNum01').value);
+            for (let i = 0; i < myMax; i++) {
+                for (let j = 0; j < myMax; j++) {
+                    myTemp += `Nested loop: i = ${i}, j = ${j}<br>`;
+                }
+            }
             document.getElementById('myDiv01').innerHTML = myTemp;
         }
     </script>
 </body>
 </html>
+

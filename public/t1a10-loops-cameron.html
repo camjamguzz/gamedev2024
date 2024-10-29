@@ -54,6 +54,9 @@
     <input type="button" value="For...of loop" onclick="runForOfLoop()">
     <input type="button" value="For...in loop" onclick="runForInLoop()">
     <input type="button" value="Nested For loop" onclick="runNestedForLoop()">
+    <input type="button" value="forEach loop" onclick="runForEachLoop()">
+    <input type="button" value="map function" onclick="runMapFunction()">
+    <input type="button" value="filter function" onclick="runFilterFunction()">
     
     <div id="myDiv01">...</div>
     
@@ -118,6 +121,37 @@
                     output += `Nested loop: i = ${i}, j = ${j}<br>`;
                 }
             }
+            displayOutput(output);
+        }
+
+        function runForEachLoop() {
+            let output = '';
+            const fruits = ['apple', 'banana', 'cherry'];
+            fruits.forEach((fruit, index) => {
+                output += `forEach loop: index ${index} has value ${fruit.toUpperCase()}<br>`;
+            });
+            displayOutput(output);
+        }
+
+        function runMapFunction() {
+            let output = '';
+            const numbers = [1, 2, 3, 4, 5];
+            const doubled = numbers.map(num => num * 2);
+            output += 'Using map function to double numbers:<br>';
+            doubled.forEach(num => {
+                output += `Doubled value: ${num}<br>`;
+            });
+            displayOutput(output);
+        }
+
+        function runFilterFunction() {
+            let output = '';
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            const evens = numbers.filter(num => num % 2 === 0);
+            output += 'Using filter function to find even numbers:<br>';
+            evens.forEach(num => {
+                output += `Even number: ${num}<br>`;
+            });
             displayOutput(output);
         }
 

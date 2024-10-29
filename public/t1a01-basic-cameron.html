@@ -10,6 +10,7 @@
             background-color: #335ac7;
             text-align: center;
             padding: 20px;
+            transition: background-color 0.3s;
         }
         h1 {
             color: #b214b8;
@@ -32,6 +33,48 @@
         iframe {
             border: 5px solid #4CAF50;
             border-radius: 10px;
+            margin-top: 10px;
+        }
+        .color-button {
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .color-button:hover {
+            background-color: #45a049;
+        }
+        .feedback-form {
+            margin-top: 30px;
+        }
+        .feedback-form input, .feedback-form textarea {
+            width: 80%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .feedback-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .feedback-form button:hover {
+            background-color: #45a049;
+        }
+        #fun-facts {
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -40,6 +83,46 @@
     Google <a href="https://www.google.ca">Google</a><br>
     <img width="300" src="https://th.bing.com/th/id/OIP.pQHzc_C3ftv-48LbW6SVsgHaHa?rs=1&pid=ImgDetMain"><br>
     this is text<br>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/tHRm22e2kyc?si=5RvSm0wZgpnXPvIi"></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/tHRm22e2kyc?si=5RvSm0wZgpnXPvIi" allowfullscreen></iframe><br>
+
+    <button class="color-button" onclick="changeBackgroundColor()">Change Background Color</button>
+
+    <div class="feedback-form">
+        <h3>Your Comments</h3>
+        <input type="text" id="name" placeholder="Your Name">
+        <textarea id="comment" rows="4" placeholder="Your Comment"></textarea>
+        <button onclick="submitComment()">Submit</button>
+    </div>
+
+    <div id="fun-facts">
+        <h3>Fun Facts About Coding</h3>
+        <ul>
+            <li>Coding is a way to communicate with computers.</li>
+            <li>The first computer programmer was Ada Lovelace.</li>
+            <li>Over 700 programming languages exist today!</li>
+            <li>The word 'bug' in programming comes from a real insect!</li>
+            <li>Learning to code can enhance problem-solving skills.</li>
+        </ul>
+    </div>
+
+    <script>
+        function changeBackgroundColor() {
+            const colors = ['#335ac7', '#ff5733', '#33c7c7', '#c733ff', '#ffd733'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.backgroundColor = randomColor;
+        }
+
+        function submitComment() {
+            const name = document.getElementById('name').value;
+            const comment = document.getElementById('comment').value;
+            if (name && comment) {
+                alert(`Thank you, ${name}! Your comment has been received: "${comment}"`);
+                document.getElementById('name').value = '';
+                document.getElementById('comment').value = '';
+            } else {
+                alert("Please fill out both fields.");
+            }
+        }
+    </script>
 </body>
 </html>

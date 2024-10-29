@@ -74,8 +74,8 @@
         .rounded-img {
             border-radius: 50%;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            width: 150px; /* Adjusted size */
-            height: auto; /* Maintain aspect ratio */
+            width: 150px;
+            height: auto;
         }
         button.custom-button {
             background-color: #4CAF50;
@@ -115,11 +115,16 @@
     <h2 class="gradient-text">Gradient Text Example</h2>
     <img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Pug_portrait.jpg" class="rounded-img" alt="Example Image">
     <br><br>
-    <button class="custom-button">Click Me</button>
+    <button class="custom-button" onclick="displayMessage()">Click Me</button>
+    <p id="message"></p>
     <script>
         function changeBackgroundColor() {
             const color = document.getElementById('colorPicker').value;
             document.body.style.backgroundColor = color;
+        }
+
+        function displayMessage() {
+            document.getElementById('message').innerText = 'Button clicked! Nice to see you here.';
         }
     </script>
 </body>

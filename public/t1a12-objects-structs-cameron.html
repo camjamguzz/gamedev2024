@@ -84,27 +84,46 @@ let myperson = {
     <h4>Example working Objects code</h4>
     Nothing: <input type="text" id="myText01" value="Useless at the moment">
     <br>
-    <input type="button" value="Example object set and show" onclick="showPersonInfo()">
+    <input type="button" value="Show Person Info" onclick="showPersonInfo()">
     <input type="button" value="Show Full Name" onclick="showFullName()">
+    <input type="button" value="Show All Hobbies" onclick="showAllHobbies()">
+    <input type="button" value="Compare Ages" onclick="compareAges()">
     <div id="myDiv01">...</div>
     
     <script>
+        let myperson = {
+            firstName: 'John',
+            lastName: 'Doe',
+            age: 50,
+            eyeColor: 'blue',
+            address: {
+                street: '123 Main St',
+                city: 'Anytown',
+                country: 'USA'
+            },
+            hobbies: ['reading', 'traveling', 'cooking'],
+            fullName: function() {
+                return this.firstName + " " + this.lastName;
+            }
+        };
+
+        let anotherPerson = {
+            firstName: 'Jane',
+            lastName: 'Smith',
+            age: 40,
+            eyeColor: 'green',
+            address: {
+                street: '456 Maple Ave',
+                city: 'Othertown',
+                country: 'USA'
+            },
+            hobbies: ['painting', 'running', 'swimming'],
+            fullName: function() {
+                return this.firstName + " " + this.lastName;
+            }
+        };
+
         function showPersonInfo() {
-            let myperson = {
-                firstName: 'John',
-                lastName: 'Doe',
-                age: 50,
-                eyeColor: 'blue',
-                address: {
-                    street: '123 Main St',
-                    city: 'Anytown',
-                    country: 'USA'
-                },
-                hobbies: ['reading', 'traveling', 'cooking'],
-                fullName: function() {
-                    return this.firstName + " " + this.lastName;
-                }
-            };
             document.getElementById('myDiv01').innerHTML = `
                 myperson object has properties: <br>
                 firstName: ${myperson.firstName} <br>
@@ -115,24 +134,24 @@ let myperson = {
                 hobbies: ${myperson.hobbies.join(', ')}
             `;
         }
-        
+
         function showFullName() {
-            let myperson = {
-                firstName: 'John',
-                lastName: 'Doe',
-                age: 50,
-                eyeColor: 'blue',
-                address: {
-                    street: '123 Main St',
-                    city: 'Anytown',
-                    country: 'USA'
-                },
-                hobbies: ['reading', 'traveling', 'cooking'],
-                fullName: function() {
-                    return this.firstName + " " + this.lastName;
-                }
-            };
             document.getElementById('myDiv01').innerHTML = `Full Name: ${myperson.fullName()}`;
+        }
+
+        function showAllHobbies() {
+            const allHobbies = myperson.hobbies.concat(anotherPerson.hobbies);
+            document.getElementById('myDiv01').innerHTML = `All Hobbies: ${allHobbies.join(', ')}`;
+        }
+
+        function compareAges() {
+            if (myperson.age > anotherPerson.age) {
+                document.getElementById('myDiv01').innerHTML = `${myperson.fullName()} is older than ${anotherPerson.fullName()}.`;
+            } else if (myperson.age < anotherPerson.age) {
+                document.getElementById('myDiv01').innerHTML = `${anotherPerson.fullName()} is older than ${myperson.fullName()}.`;
+            } else {
+                document.getElementById('myDiv01').innerHTML = `${myperson.fullName()} and ${anotherPerson.fullName()} are the same age.`;
+            }
         }
     </script>
 </body>

@@ -56,10 +56,14 @@
     <p>Favorite Color: <input type="text" id="myColor" value="Green"></p>
     <p>Hobby: <input type="text" id="myHobby" value="Reading"></p>
     <div id="myDiv01">...</div>
+    
     <input type="button" value="Is Cameron" onclick="checkCameron()"><br>
     <input type="button" value="Is Cameron Else" onclick="checkCameronElse()"><br>
     <input type="button" value="Check Age" onclick="checkAge()"><br>
     <input type="button" value="Check Both" onclick="checkBoth()"><br>
+    <input type="button" value="Check Favorite Color" onclick="checkFavoriteColor()"><br>
+    <input type="button" value="Check Hobby" onclick="checkHobby()"><br>
+    <input type="button" value="Random Message" onclick="randomMessage()"><br>
     <input type="button" value="Reset" onclick="resetInputs()"><br>
 
     <script>
@@ -109,6 +113,32 @@
             } else {
                 document.getElementById('myDiv01').innerHTML = `Not Cameron, and you are a minor. Your favorite color is ${myColor} and you like ${myHobby}.`;
             }
+        }
+
+        function checkFavoriteColor() {
+            let myColor = document.getElementById('myColor').value;
+            document.getElementById('myDiv01').classList.add('fade-in');
+            document.getElementById('myDiv01').innerHTML = `Your favorite color is ${myColor}.`;
+        }
+
+        function checkHobby() {
+            let myHobby = document.getElementById('myHobby').value;
+            document.getElementById('myDiv01').classList.add('fade-in');
+            document.getElementById('myDiv01').innerHTML = `Your hobby is ${myHobby}.`;
+        }
+
+        function randomMessage() {
+            const messages = [
+                "You're doing great!",
+                "Keep up the awesome work!",
+                "You're a star!",
+                "Believe in yourself!",
+                "Embrace the day!",
+                "You're uniquely you!",
+            ];
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            document.getElementById('myDiv01').classList.add('fade-in');
+            document.getElementById('myDiv01').innerHTML = messages[randomIndex];
         }
 
         function resetInputs() {

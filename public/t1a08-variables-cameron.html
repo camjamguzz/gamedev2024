@@ -10,7 +10,7 @@
             text-align: center;
             margin: 20px;
         }
-        #myDiv01, #myDiv02, #myDiv03 {
+        #myDiv01, #myDiv02, #myDiv03, #myDiv04, #myDiv05 {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
@@ -22,24 +22,37 @@
 <body>
     <h1 align="center">t1a08-variables-cameron</h1>
     <p>W3schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp">here</a></p>
+    
     <label for="myIn01">Input 1:</label>
     <input type="text" id="myIn01" value="5"><br>
     <label for="myIn02">Input 2:</label>
     <input type="text" id="myIn02" value="7"><br>
+    
     <input type="button" value="Add and Fix" onclick="addAndFix()">
-    <input type="button" value="Add2 and Fix" onclick="add2AndFix()"><br><br>
+    <input type="button" value="Subtract and Fix" onclick="subtractAndFix()">
+    <input type="button" value="Multiply and Fix" onclick="multiplyAndFix()">
+    <input type="button" value="Divide and Fix" onclick="divideAndFix()"><br><br>
+    
     <div id="myDiv01">...</div>
     <br><br>
+    
     <p>Example of Boolean Variables:</p>
     <input type="button" value="Check Booleans" onclick="checkBooleans()"><br>
     <div id="myDiv02">...</div>
     <br><br>
+    
     <p>Example of Variable Types:</p>
     <input type="button" value="Show Variables" onclick="showVariables()"><br>
     <div id="myDiv03">...</div>
     <br><br>
+    
+    <p>Example of Arrays and Objects:</p>
+    <input type="button" value="Show Array and Object" onclick="showArrayAndObject()"><br>
+    <div id="myDiv04">...</div>
+    
     <p>Example of Byte Variable in Java:</p>
     <pre>public class ByteExample {    public static void main(String[] args) {        byte myByte = 127;        System.out.println("Byte value: " + myByte);    }}    </pre>
+    
     <p>Other programming languages use defined variables:</p>
     <pre>boolean
 int8 or byte
@@ -48,6 +61,7 @@ double
 float
 char
 string</pre>
+    
     <script>
         function addAndFix() {
             let num1 = parseFloat(document.getElementById('myIn01').value);
@@ -55,10 +69,26 @@ string</pre>
             document.getElementById('myDiv01').innerHTML = `${num1} + ${num2} = ${num1 + num2}`;
         }
 
-        function add2AndFix() {
+        function subtractAndFix() {
             let num1 = parseFloat(document.getElementById('myIn01').value);
             let num2 = parseFloat(document.getElementById('myIn02').value);
-            document.getElementById('myDiv01').innerHTML = `${num1} + ${num2} = ${num1 + num2}`;
+            document.getElementById('myDiv01').innerHTML = `${num1} - ${num2} = ${num1 - num2}`;
+        }
+
+        function multiplyAndFix() {
+            let num1 = parseFloat(document.getElementById('myIn01').value);
+            let num2 = parseFloat(document.getElementById('myIn02').value);
+            document.getElementById('myDiv01').innerHTML = `${num1} * ${num2} = ${num1 * num2}`;
+        }
+
+        function divideAndFix() {
+            let num1 = parseFloat(document.getElementById('myIn01').value);
+            let num2 = parseFloat(document.getElementById('myIn02').value);
+            if (num2 !== 0) {
+                document.getElementById('myDiv01').innerHTML = `${num1} / ${num2} = ${num1 / num2}`;
+            } else {
+                document.getElementById('myDiv01').innerHTML = "Cannot divide by zero!";
+            }
         }
 
         function checkBooleans() {
@@ -77,6 +107,16 @@ string</pre>
                 Name (string): ${name} <br>
                 Height (float): ${height} <br>
                 Is Student (boolean): ${isStudent}
+            `;
+        }
+
+        function showArrayAndObject() {
+            let fruits = ["Apple", "Banana", "Cherry"]; // Array
+            let person = { name: "Cameron", age: 25, isStudent: false }; // Object
+            
+            document.getElementById('myDiv04').innerHTML = `
+                Fruits: ${fruits.join(", ")} <br>
+                Person: Name - ${person.name}, Age - ${person.age}, Is Student - ${person.isStudent}
             `;
         }
     </script>

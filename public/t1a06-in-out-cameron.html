@@ -10,14 +10,14 @@
             text-align: center;
             margin: 20px;
         }
-        #mydiv01, #mydiv02, #mydiv03, #mydiv04 {
+        #mydiv01, #mydiv02, #mydiv03, #mydiv04, #mydiv05, #mydiv06 {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             border-radius: 5px;
         }
-        #myButton, #resetButton {
+        #myButton, #resetButton, #showFullNameButton, #calculateBirthYearButton {
             margin-top: 10px;
             padding: 10px 20px;
             border: none;
@@ -27,7 +27,7 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #myButton:hover, #resetButton:hover {
+        #myButton:hover, #resetButton:hover, #showFullNameButton:hover, #calculateBirthYearButton:hover {
             background-color: #45a049;
         }
     </style>
@@ -46,13 +46,17 @@
     <input type="button" id="myButton" value="Show on page" onclick="showOnPage()">
     <input type="button" id="resetButton" value="Reset" onclick="resetFields()"><br><br>
     
+    <input type="button" id="showFullNameButton" value="Show Full Name" onclick="showFullName()">
+    <input type="button" id="calculateBirthYearButton" value="Calculate Birth Year" onclick="calculateBirthYear()"><br><br>
+    
     <div id="mydiv01">...</div>
     <div id="mydiv02">...</div>
     <div id="mydiv03">...</div>
     <div id="mydiv04">...</div>
+    <div id="mydiv05">...</div>
+    <div id="mydiv06">...</div>
 
     <script>
-        // This is a comment
         function showOnPage() {
             var firstName = document.getElementById('myfirstname').value;
             var lastName = document.getElementById('mylastname').value;
@@ -72,6 +76,21 @@
             document.getElementById('mydiv02').innerText = '...';
             document.getElementById('mydiv03').innerText = '...';
             document.getElementById('mydiv04').innerText = '...';
+            document.getElementById('mydiv05').innerText = '...';
+            document.getElementById('mydiv06').innerText = '...';
+        }
+
+        function showFullName() {
+            var firstName = document.getElementById('myfirstname').value;
+            var lastName = document.getElementById('mylastname').value;
+            document.getElementById('mydiv05').innerText = `Your full name is ${firstName} ${lastName}.`;
+        }
+
+        function calculateBirthYear() {
+            var age = parseInt(document.getElementById('myage').value);
+            var currentYear = new Date().getFullYear();
+            var birthYear = currentYear - age;
+            document.getElementById('mydiv06').innerText = `You were born in ${birthYear}.`;
         }
     </script>
 </body>

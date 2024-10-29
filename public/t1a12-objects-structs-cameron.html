@@ -88,6 +88,8 @@ let myperson = {
     <input type="button" value="Show Full Name" onclick="showFullName()">
     <input type="button" value="Show All Hobbies" onclick="showAllHobbies()">
     <input type="button" value="Compare Ages" onclick="compareAges()">
+    <input type="button" value="Show Pet Info" onclick="showPetInfo()">
+    <input type="button" value="Compare Hobbies" onclick="compareHobbies()">
     <div id="myDiv01">...</div>
     
     <script>
@@ -123,6 +125,32 @@ let myperson = {
             }
         };
 
+        let thirdPerson = {
+            firstName: 'Tom',
+            lastName: 'Brown',
+            age: 30,
+            eyeColor: 'brown',
+            address: {
+                street: '789 Oak St',
+                city: 'Thirdtown',
+                country: 'USA'
+            },
+            hobbies: ['gaming', 'hiking', 'cooking'],
+            fullName: function() {
+                return this.firstName + " " + this.lastName;
+            }
+        };
+
+        let pet = {
+            name: 'Buddy',
+            type: 'Dog',
+            age: 5,
+            owner: myperson.fullName(),
+            details: function() {
+                return `${this.name} is a ${this.age}-year-old ${this.type} owned by ${this.owner}.`;
+            }
+        };
+
         function showPersonInfo() {
             document.getElementById('myDiv01').innerHTML = `
                 myperson object has properties: <br>
@@ -140,18 +168,35 @@ let myperson = {
         }
 
         function showAllHobbies() {
-            const allHobbies = myperson.hobbies.concat(anotherPerson.hobbies);
+            const allHobbies = myperson.hobbies.concat(anotherPerson.hobbies, thirdPerson.hobbies);
             document.getElementById('myDiv01').innerHTML = `All Hobbies: ${allHobbies.join(', ')}`;
         }
 
         function compareAges() {
-            if (myperson.age > anotherPerson.age) {
-                document.getElementById('myDiv01').innerHTML = `${myperson.fullName()} is older than ${anotherPerson.fullName()}.`;
-            } else if (myperson.age < anotherPerson.age) {
-                document.getElementById('myDiv01').innerHTML = `${anotherPerson.fullName()} is older than ${myperson.fullName()}.`;
+            let ageComparison = '';
+            if (myperson.age > anotherPerson.age && myperson.age > thirdPerson.age) {
+                ageComparison = `${myperson.fullName()} is the oldest.`;
+            } else if (anotherPerson.age > myperson.age && anotherPerson.age > thirdPerson.age) {
+                ageComparison = `${anotherPerson.fullName()} is the oldest.`;
+            } else if (thirdPerson.age > myperson.age && thirdPerson.age > anotherPerson.age) {
+                ageComparison = `${thirdPerson.fullName()} is the oldest.`;
             } else {
-                document.getElementById('myDiv01').innerHTML = `${myperson.fullName()} and ${anotherPerson.fullName()} are the same age.`;
+                ageComparison = `There is a tie in age.`;
             }
+            document.getElementById('myDiv01').innerHTML = ageComparison;
+        }
+
+        function showPetInfo() {
+            document.getElementById('myDiv01').innerHTML = pet.details();
+        }
+
+        function compareHobbies() {
+            const myHobbiesSet = new Set(myperson.hobbies);
+            const janeHobbiesSet = new Set(anotherPerson.hobbies);
+            const tomHobbiesSet = new Set(thirdPerson.hobbies);
+
+            const sharedHobbies = [...myHobbiesSet].filter(hobby => janeHobbiesSet.has(hobby) || tomHobbiesSet.has(hobby));
+            document.getElementById('myDiv01').innerHTML = `Shared hobbies: ${sharedHobbies.length ? sharedHobbies.join(', ') : 'None'}`;
         }
     </script>
 </body>

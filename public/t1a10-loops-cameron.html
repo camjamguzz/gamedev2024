@@ -9,93 +9,121 @@
             font-family: Arial, sans-serif;
             padding: 20px;
             text-align: center;
+            background-color: #f0f0f0;
+        }
+        h2 {
+            color: #333;
         }
         #myDiv01 {
             margin-top: 20px;
             border: 1px solid #ccc;
             padding: 10px;
-            background-color: #f9f9f9;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        input[type="number"] {
+            padding: 5px;
+            width: 50px;
+        }
+        input[type="button"] {
+            margin: 5px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="button"]:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <h2>t1a10-loops-by-cameron.html</h2>
     <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling#loops" target="_blank">Good reference to JavaScript Loops</a><br>
-    <h4>Example input-output code</h4>
-    <pre></pre>
+    
     <h4>Example working code</h4>
     Max loops: <input id="myNum01" type="number" value="4"><br>
-    <input type="button" value="Basic For loop with Decisions" onclick="runBasicLoop()">
+    
+    <input type="button" value="Basic For loop" onclick="runBasicLoop()">
     <input type="button" value="While loop" onclick="runWhileLoop()">
     <input type="button" value="Do-While loop" onclick="runDoWhileLoop()">
     <input type="button" value="For...of loop" onclick="runForOfLoop()">
     <input type="button" value="For...in loop" onclick="runForInLoop()">
     <input type="button" value="Nested For loop" onclick="runNestedForLoop()">
+    
     <div id="myDiv01">...</div>
+    
     <script>
         function runBasicLoop() {
-            let myTemp = '';
-            let myMax = parseInt(document.getElementById('myNum01').value);
-            for (let myloop = 0; myloop < myMax; myloop++) {
-                if (myloop * 2 > myMax) {
-                    myTemp += ' cool ';
+            let output = '';
+            const maxLoops = parseInt(document.getElementById('myNum01').value);
+            for (let i = 0; i < maxLoops; i++) {
+                if (i * 2 > maxLoops) {
+                    output += 'Cool! ';
                 }
-                myTemp += 'loop number: ' + myloop + '<br>';
+                output += `Loop number: ${i}<br>`;
             }
-            document.getElementById('myDiv01').innerHTML = myTemp;
+            displayOutput(output);
         }
 
         function runWhileLoop() {
-            let myTemp = '';
-            let myMax = parseInt(document.getElementById('myNum01').value);
-            let myloop = 0;
-            while (myloop < myMax) {
-                myTemp += 'while loop number: ' + myloop + '<br>';
-                myloop++;
+            let output = '';
+            const maxLoops = parseInt(document.getElementById('myNum01').value);
+            let i = 0;
+            while (i < maxLoops) {
+                output += `While loop number: ${i}<br>`;
+                i++;
             }
-            document.getElementById('myDiv01').innerHTML = myTemp;
+            displayOutput(output);
         }
 
         function runDoWhileLoop() {
-            let myTemp = '';
-            let myMax = parseInt(document.getElementById('myNum01').value);
-            let myloop = 0;
+            let output = '';
+            const maxLoops = parseInt(document.getElementById('myNum01').value);
+            let i = 0;
             do {
-                myTemp += 'do-while loop number: ' + myloop + '<br>';
-                myloop++;
-            } while (myloop < myMax);
-            document.getElementById('myDiv01').innerHTML = myTemp;
+                output += `Do-while loop number: ${i}<br>`;
+                i++;
+            } while (i < maxLoops);
+            displayOutput(output);
         }
 
         function runForOfLoop() {
-            let myTemp = '';
-            let myArray = ['apple', 'banana', 'cherry'];
-            for (const item of myArray) {
-                myTemp += `for...of loop: ${item.toUpperCase()}<br>`;
+            let output = '';
+            const fruits = ['apple', 'banana', 'cherry'];
+            for (const fruit of fruits) {
+                output += `For...of loop: ${fruit.toUpperCase()}<br>`;
             }
-            document.getElementById('myDiv01').innerHTML = myTemp;
+            displayOutput(output);
         }
 
         function runForInLoop() {
-            let myTemp = '';
-            const myObject = {a: 'apple', b: 'banana', c: 'cherry'};
-            for (const key in myObject) {
-                myTemp += `for...in loop: key ${key} has value ${myObject[key]}<br>`;
+            let output = '';
+            const fruits = {a: 'apple', b: 'banana', c: 'cherry'};
+            for (const key in fruits) {
+                output += `For...in loop: key ${key} has value ${fruits[key]}<br>`;
             }
-            document.getElementById('myDiv01').innerHTML = myTemp;
+            displayOutput(output);
         }
 
         function runNestedForLoop() {
-            let myTemp = '';
-            let myMax = parseInt(document.getElementById('myNum01').value);
-            for (let i = 0; i < myMax; i++) {
-                for (let j = 0; j < myMax; j++) {
-                    myTemp += `Nested loop: i = ${i}, j = ${j}<br>`;
+            let output = '';
+            const maxLoops = parseInt(document.getElementById('myNum01').value);
+            for (let i = 0; i < maxLoops; i++) {
+                for (let j = 0; j < maxLoops; j++) {
+                    output += `Nested loop: i = ${i}, j = ${j}<br>`;
                 }
             }
-            document.getElementById('myDiv01').innerHTML = myTemp;
+            displayOutput(output);
+        }
+
+        function displayOutput(output) {
+            document.getElementById('myDiv01').innerHTML = output;
         }
     </script>
 </body>
 </html>
-

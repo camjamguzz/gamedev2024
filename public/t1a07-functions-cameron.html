@@ -17,7 +17,7 @@
             background-color: #f9f9f9;
             border-radius: 5px;
         }
-        #myButton, #uppercaseButton, #lowercaseButton, #reverseButton, #lengthButton {
+        #myButton, #uppercaseButton, #lowercaseButton, #reverseButton, #lengthButton, #capitalizeButton, #countVowelsButton, #palindromeButton {
             margin-top: 10px;
             padding: 10px 20px;
             border: none;
@@ -27,7 +27,7 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #myButton:hover, #uppercaseButton:hover, #lowercaseButton:hover, #reverseButton:hover, #lengthButton:hover {
+        #myButton:hover, #uppercaseButton:hover, #lowercaseButton:hover, #reverseButton:hover, #lengthButton:hover, #capitalizeButton:hover, #countVowelsButton:hover, #palindromeButton:hover {
             background-color: #45a049;
         }
     </style>
@@ -41,6 +41,9 @@
     <input type="button" id="lowercaseButton" value="Lowercase" onclick="convertToLowercase()">
     <input type="button" id="reverseButton" value="Reverse" onclick="reverseName()">
     <input type="button" id="lengthButton" value="Name Length" onclick="showNameLength()">
+    <input type="button" id="capitalizeButton" value="Capitalize Each Word" onclick="capitalizeWords()">
+    <input type="button" id="countVowelsButton" value="Count Vowels" onclick="countVowels()">
+    <input type="button" id="palindromeButton" value="Is Palindrome" onclick="isPalindrome()">
     <div id="myDiv01">...</div>
     <script>
         function myvar(myIn) {
@@ -72,6 +75,26 @@
         function showNameLength() {
             let inputValue = myvar('myFirstName').value;
             myvar('myDiv01').innerHTML = 'The length of your name is ' + inputValue.length;
+        }
+
+        function capitalizeWords() {
+            let inputValue = myvar('myFirstName').value;
+            let capitalizedValue = inputValue.replace(/\b\w/g, char => char.toUpperCase());
+            myvar('myFirstName').value = capitalizedValue;
+            myvar('myDiv01').innerHTML = 'Your name capitalized is ' + capitalizedValue;
+        }
+
+        function countVowels() {
+            let inputValue = myvar('myFirstName').value;
+            let vowelCount = (inputValue.match(/[aeiou]/gi) || []).length;
+            myvar('myDiv01').innerHTML = 'Your name contains ' + vowelCount + ' vowels';
+        }
+
+        function isPalindrome() {
+            let inputValue = myvar('myFirstName').value;
+            let reversedValue = inputValue.split('').reverse().join('');
+            let isPalindrome = (inputValue === reversedValue);
+            myvar('myDiv01').innerHTML = isPalindrome ? 'Your name is a palindrome' : 'Your name is not a palindrome';
         }
     </script>
 </body>

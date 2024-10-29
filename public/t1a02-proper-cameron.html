@@ -42,6 +42,32 @@
         .color-picker-container {
             margin-top: 20px;
         }
+        #quote {
+            font-style: italic;
+            margin: 20px 0;
+        }
+        .feedback-form {
+            margin-top: 30px;
+        }
+        .feedback-form input, .feedback-form textarea {
+            width: 80%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .feedback-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .feedback-form button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -52,11 +78,42 @@
         <label for="colorPicker">Select Background Color:</label>
         <input type="color" id="colorPicker" onchange="changeBackgroundColor()">
     </div>
+
+    <div class="fade-in" id="quote">"Believe you can and you're halfway there." - Theodore Roosevelt</div>
     
+    <div class="color-picker-container fade-in">
+        <button onclick="changeTextColor()">Change Text Color</button>
+    </div>
+
+    <div class="feedback-form fade-in">
+        <h3>Your Feedback</h3>
+        <input type="text" id="name" placeholder="Your Name">
+        <textarea id="feedback" rows="4" placeholder="Your Feedback"></textarea>
+        <button onclick="submitFeedback()">Submit</button>
+    </div>
+
     <script>
         function changeBackgroundColor() {
             const color = document.getElementById('colorPicker').value;
             document.body.style.background = color;
+        }
+
+        function changeTextColor() {
+            const colors = ['#FF5722', '#4CAF50', '#2196F3', '#FFC107', '#9C27B0'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.color = randomColor;
+        }
+
+        function submitFeedback() {
+            const name = document.getElementById('name').value;
+            const feedback = document.getElementById('feedback').value;
+            if (name && feedback) {
+                alert(`Thank you, ${name}! Your feedback has been received.`);
+                document.getElementById('name').value = '';
+                document.getElementById('feedback').value = '';
+            } else {
+                alert("Please fill out both fields.");
+            }
         }
     </script>
 </body>

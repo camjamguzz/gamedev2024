@@ -28,6 +28,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         input[type="button"]:hover {
             background-color: #45a049;
@@ -39,21 +40,32 @@
             background-color: #f9f9f9;
             border-radius: 4px;
         }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <h1>Decisions If Cameron</h1>
     <p>Input: <input type="text" id="myText1" value="Cameron"></p>
     <p>Input: <input type="number" id="myNum1" value="14"></p>
+    <p>Favorite Color: <input type="text" id="myColor" value="Green"></p>
+    <p>Hobby: <input type="text" id="myHobby" value="Reading"></p>
     <div id="myDiv01">...</div>
     <input type="button" value="Is Cameron" onclick="checkCameron()"><br>
     <input type="button" value="Is Cameron Else" onclick="checkCameronElse()"><br>
     <input type="button" value="Check Age" onclick="checkAge()"><br>
     <input type="button" value="Check Both" onclick="checkBoth()"><br>
+    <input type="button" value="Reset" onclick="resetInputs()"><br>
 
     <script>
         function checkCameron() {
             let myIn1 = document.getElementById('myText1').value;
+            document.getElementById('myDiv01').classList.add('fade-in');
             if (myIn1 === 'Cameron') {
                 document.getElementById('myDiv01').innerHTML = 'Hi Cameron';
             } else {
@@ -63,6 +75,7 @@
 
         function checkCameronElse() {
             let myIn1 = document.getElementById('myText1').value;
+            document.getElementById('myDiv01').classList.add('fade-in');
             if (myIn1 === 'Cameron') {
                 document.getElementById('myDiv01').innerHTML = 'Hi Cameron';
             } else {
@@ -72,6 +85,7 @@
 
         function checkAge() {
             let myNum1 = parseInt(document.getElementById('myNum1').value);
+            document.getElementById('myDiv01').classList.add('fade-in');
             if (myNum1 >= 18) {
                 document.getElementById('myDiv01').innerHTML = 'You are an adult';
             } else {
@@ -82,15 +96,27 @@
         function checkBoth() {
             let myIn1 = document.getElementById('myText1').value;
             let myNum1 = parseInt(document.getElementById('myNum1').value);
+            let myColor = document.getElementById('myColor').value;
+            let myHobby = document.getElementById('myHobby').value;
+            document.getElementById('myDiv01').classList.add('fade-in');
+
             if (myIn1 === 'Cameron' && myNum1 >= 18) {
-                document.getElementById('myDiv01').innerHTML = 'Hi Cameron, you are an adult';
+                document.getElementById('myDiv01').innerHTML = `Hi Cameron, you are an adult. Your favorite color is ${myColor} and you like ${myHobby}.`;
             } else if (myIn1 === 'Cameron' && myNum1 < 18) {
-                document.getElementById('myDiv01').innerHTML = 'Hi Cameron, you are a minor';
+                document.getElementById('myDiv01').innerHTML = `Hi Cameron, you are a minor. Your favorite color is ${myColor} and you like ${myHobby}.`;
             } else if (myIn1 !== 'Cameron' && myNum1 >= 18) {
-                document.getElementById('myDiv01').innerHTML = 'Not Cameron, but you are an adult';
+                document.getElementById('myDiv01').innerHTML = `Not Cameron, but you are an adult. Your favorite color is ${myColor} and you like ${myHobby}.`;
             } else {
-                document.getElementById('myDiv01').innerHTML = 'Not Cameron, and you are a minor';
+                document.getElementById('myDiv01').innerHTML = `Not Cameron, and you are a minor. Your favorite color is ${myColor} and you like ${myHobby}.`;
             }
+        }
+
+        function resetInputs() {
+            document.getElementById('myText1').value = 'Cameron';
+            document.getElementById('myNum1').value = 14;
+            document.getElementById('myColor').value = 'Green';
+            document.getElementById('myHobby').value = 'Reading';
+            document.getElementById('myDiv01').innerHTML = '...';
         }
     </script>
 </body>

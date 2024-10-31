@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Taker</title>
+    <title>Photo and Video Taker</title>
     <style>
         body {
             display: flex;
@@ -35,23 +35,46 @@
 </head>
 <body>
 
-    <h1>Photo Taker</h1>
+    <h1>Photo and Video Taker</h1>
     <video id="video" autoplay></video>
     <canvas id="canvas" width="400" height="300"></canvas>
     <img id="photo" alt="Your photo will appear here" />
     <button id="snap">Take Photo</button>
+    <button id="start">Start Recording</button>
+    <button id="stop" disabled>Stop Recording</button>
+    <video id="recordedVideo" controls style="display: none; margin-top: 20px;"></video>
 
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const photo = document.getElementById('photo');
         const snapButton = document.getElementById('snap');
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        const recordedVideo = document.getElementById('recordedVideo');
         const context = canvas.getContext('2d');
+        let mediaRecorder;
+        let recordedChunks = [];
 
         // Access the device camera and stream to video element
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 video.srcObject = stream;
+
+                // Initialize MediaRecorder
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    recordedVideo.src = url;
+                    recordedVideo.style.display = 'block';
+                    recordedChunks = []; // Reset chunks
+                };
             })
             .catch((err) => {
                 console.error("Error accessing camera: ", err);
@@ -62,6 +85,20 @@
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             photo.src = canvas.toDataURL('image/png');
             canvas.style.display = 'none'; // Hide the canvas after taking the photo
+        });
+
+        // Start video recording
+        startButton.addEventListener('click', () => {
+            mediaRecorder.start();
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        });
+
+        // Stop video recording
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            startButton.disabled = false;
+            stopButton.disabled = true;
         });
     </script>
 

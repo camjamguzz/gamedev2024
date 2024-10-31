@@ -58,6 +58,7 @@
         const gameWidth = gameElement.clientWidth;
         const gameHeight = gameElement.clientHeight;
         let score = 0;
+        let basketPosition = gameWidth / 2 - 40; // Center the basket initially
 
         function createObject() {
             const object = document.createElement('div');
@@ -80,8 +81,8 @@
 
                 // Check for collision with the basket
                 if (position + 20 >= gameHeight - 20 && 
-                    parseInt(object.style.left) > parseInt(basket.style.left) - 40 &&
-                    parseInt(object.style.left) < parseInt(basket.style.left) + 40) {
+                    parseInt(object.style.left) > basketPosition - 40 &&
+                    parseInt(object.style.left) < basketPosition + 40) {
                     clearInterval(interval);
                     gameElement.removeChild(object);
                     score++;
@@ -91,13 +92,14 @@
         }
 
         function moveBasket(event) {
-            const key = event.key;
-            const left = parseInt(basket.style.left);
+            const left = basketPosition;
 
-            if (key === 'ArrowLeft' && left > 0) {
-                basket.style.left = left - 20 + 'px';
-            } else if (key === 'ArrowRight' && left < gameWidth - 80) {
-                basket.style.left = left + 20 + 'px';
+            if (event.key === 'ArrowLeft' && left > 0) {
+                basketPosition -= 20;
+                basket.style.left = basketPosition + 'px';
+            } else if (event.key === 'ArrowRight' && left < gameWidth - 80) {
+                basketPosition += 20;
+                basket.style.left = basketPosition + 'px';
             }
         }
 

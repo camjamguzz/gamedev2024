@@ -29,7 +29,10 @@
         .pacman {
             background-color: yellow;
             border-radius: 50%;
-            grid-area: 1 / 1 / 2 / 2;
+        }
+        .ghost {
+            background-color: red;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -54,6 +57,8 @@
             .filter(index => !walls.includes(index));
 
         let pacmanPosition = 1;
+        let ghostPosition = 22; // Initial position of the ghost
+        let score = 0;
 
         function createGrid() {
             for (let i = 0; i < gridSize * gridSize; i++) {
@@ -73,6 +78,12 @@
             cells[pacmanPosition].classList.add('pacman');
         }
 
+        function drawGhost() {
+            const cells = gameElement.children;
+            Array.from(cells).forEach(cell => cell.classList.remove('ghost'));
+            cells[ghostPosition].classList.add('ghost');
+        }
+
         function movePacman(direction) {
             const nextPosition = pacmanPosition + direction;
             if (!walls.includes(nextPosition) && nextPosition >= 0 && nextPosition < gridSize * gridSize) {
@@ -80,6 +91,7 @@
                 drawPacman();
                 checkForFood();
             }
+            checkGameOver();
         }
 
         function checkForFood() {
@@ -88,7 +100,54 @@
                 foodPositions.splice(foodIndex, 1); // Remove the food
                 const foodCell = gameElement.children[pacmanPosition];
                 foodCell.classList.remove('food'); // Remove food from grid
+                score++;
+                if (foodPositions.length === 0) {
+                    alert("You've collected all the food! Score: " + score);
+                    resetGame();
+                }
             }
+        }
+
+        function moveGhost() {
+            const directions = [-1, 1, -gridSize, gridSize]; // Left, Right, Up, Down
+            const nextDirection = directions[Math.floor(Math.random() * directions.length)];
+            const nextPosition = ghostPosition + nextDirection;
+
+            if (!walls.includes(nextPosition) && nextPosition >= 0 && nextPosition < gridSize * gridSize) {
+                ghostPosition = nextPosition;
+                drawGhost();
+            }
+
+            checkGameOver();
+        }
+
+        function checkGameOver() {
+            if (pacmanPosition === ghostPosition) {
+                alert("Game Over! Your score: " + score);
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            pacmanPosition = 1;
+            ghostPosition = 22;
+            score = 0;
+            foodPositions.length = 0; // Clear the food
+            createFood(); // Recreate food
+            drawPacman();
+            drawGhost();
+        }
+
+        function createFood() {
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                if (!walls.includes(i) && i !== pacmanPosition && i !== ghostPosition) {
+                    foodPositions.push(i);
+                }
+            }
+            foodPositions.forEach(index => {
+                const foodCell = gameElement.children[index];
+                foodCell.classList.add('food'); // Add food back to the grid
+            });
         }
 
         document.addEventListener('keydown', (event) => {
@@ -110,6 +169,10 @@
 
         createGrid();
         drawPacman();
+        drawGhost();
+
+        // Move the ghost every second
+        setInterval(moveGhost, 1000);
     </script>
 </body>
 </html>

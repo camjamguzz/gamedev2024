@@ -97,7 +97,7 @@
             if (event.key === 'ArrowLeft' && left > 0) {
                 basketPosition -= 20;
                 basket.style.left = basketPosition + 'px';
-            } else if (event.key === 'ArrowRight' && left < gameWidth - 80) {
+            } else if (event.key === 'ArrowRight' && left < gameWidth - 100) { // Adjusted right boundary
                 basketPosition += 20;
                 basket.style.left = basketPosition + 'px';
             }

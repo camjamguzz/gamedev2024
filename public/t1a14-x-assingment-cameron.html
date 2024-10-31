@@ -40,6 +40,9 @@
             font-size: 24px;
             font-weight: bold;
         }
+        #addQuestion {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -48,6 +51,14 @@
     <div class="options" id="options"></div>
     <div id="result"></div>
     <button id="nextButton" style="display: none;" onclick="nextQuestion()">Next Question</button>
+
+    <div id="addQuestion">
+        <h2>Add a Question</h2>
+        <input type="text" id="newQuestion" placeholder="Question" />
+        <input type="text" id="newAnswer" placeholder="Correct Answer" />
+        <input type="text" id="newOptions" placeholder="Options (comma separated)" />
+        <button onclick="addQuestion()">Add Question</button>
+    </div>
 
     <script>
         const questions = [
@@ -115,10 +126,28 @@
             if (currentQuestionIndex < questions.length) {
                 loadQuestion();
             } else {
-                document.getElementById('question').textContent = "Game Over!";
-                document.getElementById('options').innerHTML = '';
-                document.getElementById('result').textContent = '';
-                document.getElementById('nextButton').style.display = 'none';
+                currentQuestionIndex = 0; // Reset to the first question
+                loadQuestion();
+            }
+        }
+
+        function addQuestion() {
+            const newQuestion = document.getElementById('newQuestion').value;
+            const newAnswer = document.getElementById('newAnswer').value;
+            const newOptions = document.getElementById('newOptions').value.split(',').map(option => option.trim());
+
+            if (newQuestion && newAnswer && newOptions.length > 0) {
+                questions.push({
+                    question: newQuestion,
+                    options: newOptions,
+                    answer: newAnswer
+                });
+                document.getElementById('newQuestion').value = '';
+                document.getElementById('newAnswer').value = '';
+                document.getElementById('newOptions').value = '';
+                alert("Question added!");
+            } else {
+                alert("Please fill in all fields correctly.");
             }
         }
 

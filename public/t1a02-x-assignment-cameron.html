@@ -36,16 +36,25 @@
             height: 20px;
             background-color: red;
         }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div id="game">
+        <div id="score">Score: 0</div>
         <div class="basket" id="basket"></div>
     </div>
 
     <script>
         const gameElement = document.getElementById('game');
         const basket = document.getElementById('basket');
+        const scoreDisplay = document.getElementById('score');
         const gameWidth = gameElement.clientWidth;
         const gameHeight = gameElement.clientHeight;
         let score = 0;
@@ -76,7 +85,7 @@
                     clearInterval(interval);
                     gameElement.removeChild(object);
                     score++;
-                    alert(`Score: ${score}`); // Show score when caught
+                    scoreDisplay.textContent = `Score: ${score}`; // Update score display
                 }
             }, 100);
         }

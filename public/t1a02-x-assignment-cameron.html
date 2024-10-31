@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Pac-Man Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+        }
+        #game {
+            display: grid;
+            grid-template-columns: repeat(20, 30px);
+            grid-template-rows: repeat(20, 30px);
+            gap: 1px;
+        }
+        .wall {
+            background-color: blue;
+        }
+        .food {
+            background-color: yellow;
+            border-radius: 50%;
+        }
+        .pacman {
+            background-color: yellow;
+            border-radius: 50%;
+            grid-area: 1 / 1 / 2 / 2;
+        }
+    </style>
+</head>
+<body>
+    <div id="game"></div>
+
+    <script>
+        const gameElement = document.getElementById('game');
+        const gridSize = 20;
+        const walls = [
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+            20, 39, 40, 59, 60, 79, 80, 99,
+            100, 119, 120, 139, 140, 159, 160, 179,
+            180, 181, 182, 183, 184, 185, 186, 187,
+            200, 201, 202, 203, 204, 205, 206, 207,
+            220, 239, 240, 259, 260, 279, 280, 299,
+            300, 319, 320, 339, 340, 359, 360, 379,
+            380, 381, 382, 383, 384, 385, 386, 387,
+        ];
+
+        const foodPositions = Array.from({ length: gridSize * gridSize }, (_, index) => index)
+            .filter(index => !walls.includes(index));
+
+        let pacmanPosition = 1;
+
+        function createGrid() {
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                if (walls.includes(i)) {
+                    cell.classList.add('wall');
+                } else if (foodPositions.includes(i)) {
+                    cell.classList.add('food');
+                }
+                gameElement.appendChild(cell);
+            }
+        }
+
+        function drawPacman() {
+            const cells = gameElement.children;
+            Array.from(cells).forEach(cell => cell.classList.remove('pacman'));
+            cells[pacmanPosition].classList.add('pacman');
+        }
+
+        function movePacman(direction) {
+            const nextPosition = pacmanPosition + direction;
+            if (!walls.includes(nextPosition) && nextPosition >= 0 && nextPosition < gridSize * gridSize) {
+                pacmanPosition = nextPosition;
+                drawPacman();
+                checkForFood();
+            }
+        }
+
+        function checkForFood() {
+            const foodIndex = foodPositions.indexOf(pacmanPosition);
+            if (foodIndex !== -1) {
+                foodPositions.splice(foodIndex, 1); // Remove the food
+                const foodCell = gameElement.children[pacmanPosition];
+                foodCell.classList.remove('food'); // Remove food from grid
+            }
+        }
+
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case 'ArrowUp':
+                    movePacman(-gridSize);
+                    break;
+                case 'ArrowDown':
+                    movePacman(gridSize);
+                    break;
+                case 'ArrowLeft':
+                    movePacman(-1);
+                    break;
+                case 'ArrowRight':
+                    movePacman(1);
+                    break;
+            }
+        });
+
+        createGrid();
+        drawPacman();
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .question {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        button {
+            display: block;
+            padding: 10px 20px;
+            margin: 10px auto;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4e0a75;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #510564;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trivia Game</h1>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div id="result"></div>
+    <button id="nextButton" style="display: none;" onclick="nextQuestion()">Next Question</button>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["Berlin", "Madrid", "Paris", "Lisbon"],
+                answer: "Paris"
+            },
+            {
+                question: "Who wrote 'Romeo and Juliet'?",
+                options: ["Mark Twain", "Shakespeare", "Charles Dickens", "Jane Austen"],
+                answer: "Shakespeare"
+            },
+            {
+                question: "What is the largest planet in our solar system?",
+                options: ["Earth", "Mars", "Jupiter", "Saturn"],
+                answer: "Jupiter"
+            },
+            {
+                question: "What is the boiling point of water?",
+                options: ["100°C", "90°C", "80°C", "70°C"],
+                answer: "100°C"
+            },
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = currentQuestion.question;
+
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById('result').textContent = '';
+            document.getElementById('nextButton').style.display = 'none';
+        }
+
+        function checkAnswer(selected) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const result = document.getElementById('result');
+            if (selected === currentQuestion.answer) {
+                result.textContent = "Correct!";
+            } else {
+                result.textContent = `Wrong! The correct answer was ${currentQuestion.answer}.`;
+            }
+            document.getElementById('nextButton').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('question').textContent = "Game Over!";
+                document.getElementById('options').innerHTML = '';
+                document.getElementById('result').textContent = '';
+                document.getElementById('nextButton').style.display = 'none';
+            }
+        }
+
+        // Start the game
+        loadQuestion();
+    </script>
+</body>
+</html>

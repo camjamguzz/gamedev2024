@@ -31,100 +31,135 @@
 </head>
 <body>
     <h1 align="center">t1a15-events-cameron.html</h1>
+
     <b onTouchStart="handleTouchEvent()">Input:</b>
-    <input type="text" id="myFirstName" value="fred" onblur="handleBlurEvent()" onfocus="handleFocusEvent()">
+    <input type="text" id="myFirstName" value="fred" 
+           onblur="handleBlurEvent('First Name')" 
+           onfocus="handleFocusEvent('First Name')">
     <br><br>
-    <input type="text" id="myLastName" value="doe" onblur="handleLastNameBlur()" onfocus="handleLastNameFocus()">
+    
+    <input type="text" id="myLastName" value="doe" 
+           onblur="handleBlurEvent('Last Name')" 
+           onfocus="handleFocusEvent('Last Name')">
     <br><br>
-    <input type="button" value="Show on page" onclick="showMessage()">
+    
+    <input type="button" value="Show on page" onclick="showMessage('Hey')">
     <br><br>
-    <div id="myDiv01" onmouseover="handleMouseOver()" onmouseout="handleMouseOut()">...</div>
+    
+    <div id="myDiv01" 
+         onmouseover="handleMouseOver()" 
+         onmouseout="handleMouseOut()">...</div>
     <br><br>
-    <div id="myDiv02" onkeydown="handleKeyDown(event)" onkeyup="handleKeyUp(event)" oncopy="handleCopy()" onpaste="handlePaste()" oncut="handleCut()" tabindex="0" style="border: 1px solid #ccc; padding: 10px;">Click here and press any key...</div>
+    
+    <div id="myDiv02" 
+         onkeydown="handleKeyDown(event)" 
+         onkeyup="handleKeyUp(event)" 
+         oncopy="handleCopy()" 
+         onpaste="handlePaste()" 
+         oncut="handleCut()" 
+         tabindex="0" style="border: 1px solid #ccc; padding: 10px;">
+         Click here and press any key...
+    </div>
     <br><br>
-    <div id="myDiv03" ondblclick="handleDoubleClick()" oncontextmenu="handleRightClick(event)">Double-click or right-click inside this box...</div>
+    
+    <div id="myDiv03" 
+         ondblclick="handleDoubleClick()" 
+         oncontextmenu="handleRightClick(event)">
+         Double-click or right-click inside this box...
+    </div>
     <br><br>
-    <div id="dropZone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">Drag and drop an item here...</div>
+    
+    <div id="dropZone" 
+         ondragover="handleDragOver(event)" 
+         ondrop="handleDrop(event)">
+         Drag and drop an item here...
+    </div>
     <br><br>
-    <img id="myImage" src="https://thumbs.dreamstime.com/b/pit-bull-wearing-sunglasses-7185270.jpg" alt="Placeholder Image" onload="handleLoadEvent()" onerror="handleErrorEvent()">
+    
+    <img id="myImage" src="https://thumbs.dreamstime.com/b/pit-bull-wearing-sunglasses-7185270.jpg" 
+         alt="Placeholder Image" 
+         onload="handleLoadEvent()" 
+         onerror="handleErrorEvent()">
     <br><br>
+    
     <input type="button" value="Show Time" onclick="showTime()">
 
     <script>
+        // Handle touch events
         function handleTouchEvent() {
-            document.getElementById('myDiv01').innerHTML = 'Touch event triggered';
+            updateDiv('Touch event triggered');
         }
 
-        function handleBlurEvent() {
-            document.getElementById('myDiv01').innerHTML = 'Blur event triggered on First Name';
+        // Handle focus and blur events
+        function handleBlurEvent(fieldName) {
+            updateDiv(`Blur event triggered on ${fieldName}`);
         }
 
-        function handleFocusEvent() {
-            document.getElementById('myDiv01').innerHTML = 'Focus event triggered on First Name';
+        function handleFocusEvent(fieldName) {
+            updateDiv(`Focus event triggered on ${fieldName}`);
         }
 
-        function handleLastNameBlur() {
-            document.getElementById('myDiv01').innerHTML = 'Blur event triggered on Last Name';
-        }
-
-        function handleLastNameFocus() {
-            document.getElementById('myDiv01').innerHTML = 'Focus event triggered on Last Name';
-        }
-
+        // Handle mouse events
         function handleMouseOver() {
-            document.getElementById('myDiv01').innerHTML = 'Mouse over event triggered';
+            updateDiv('Mouse over event triggered');
         }
 
         function handleMouseOut() {
-            document.getElementById('myDiv01').innerHTML = 'Mouse out event triggered';
+            updateDiv('Mouse out event triggered');
         }
 
+        // Handle keyboard events
         function handleKeyDown(event) {
-            document.getElementById('myDiv02').innerHTML = `Key down event triggered: ${event.key}`;
+            updateDiv(`Key down event triggered: ${event.key}`);
         }
 
         function handleKeyUp(event) {
-            document.getElementById('myDiv02').innerHTML = `Key up event triggered: ${event.key}`;
+            updateDiv(`Key up event triggered: ${event.key}`);
         }
 
         function handleCopy() {
-            document.getElementById('myDiv02').innerHTML = 'Copy event triggered';
+            updateDiv('Copy event triggered');
         }
 
         function handlePaste() {
-            document.getElementById('myDiv02').innerHTML = 'Paste event triggered';
+            updateDiv('Paste event triggered');
         }
 
         function handleCut() {
-            document.getElementById('myDiv02').innerHTML = 'Cut event triggered';
+            updateDiv('Cut event triggered');
         }
 
-        function showMessage() {
-            document.getElementById('myDiv01').innerHTML = 'Hey';
+        // Show message in myDiv01
+        function showMessage(message) {
+            updateDiv(message);
         }
 
+        // Handle image load and error events
         function handleLoadEvent() {
-            document.getElementById('myDiv01').innerHTML = 'Image loaded successfully';
+            updateDiv('Image loaded successfully');
         }
 
         function handleErrorEvent() {
-            document.getElementById('myDiv01').innerHTML = 'Error loading image';
+            updateDiv('Error loading image');
         }
 
+        // Show current time
         function showTime() {
             let currentTime = new Date().toLocaleTimeString();
-            document.getElementById('myDiv01').innerHTML = `Current time is: ${currentTime}`;
+            updateDiv(`Current time is: ${currentTime}`);
         }
 
+        // Handle double-click and right-click events
         function handleDoubleClick() {
-            document.getElementById('myDiv03').innerHTML = 'Double-click event triggered';
+            updateDiv('Double-click event triggered');
         }
 
         function handleRightClick(event) {
             event.preventDefault();
-            document.getElementById('myDiv03').innerHTML = 'Right-click event triggered';
+            updateDiv('Right-click event triggered');
         }
 
+        // Handle drag and drop events
         function handleDragOver(event) {
             event.preventDefault();
             document.getElementById('dropZone').style.backgroundColor = '#f0f0f0';
@@ -133,13 +168,18 @@
         function handleDrop(event) {
             event.preventDefault();
             document.getElementById('dropZone').style.backgroundColor = '#fff';
-            document.getElementById('myDiv01').innerHTML = 'Dropped item detected';
+            updateDiv('Dropped item detected');
         }
 
-        // Add mouse wheel event
+        // Mouse wheel event
         window.onwheel = function(event) {
-            document.getElementById('myDiv01').innerHTML = `Mouse wheel event: ${event.deltaY > 0 ? 'Scrolled down' : 'Scrolled up'}`;
+            updateDiv(`Mouse wheel event: ${event.deltaY > 0 ? 'Scrolled down' : 'Scrolled up'}`);
         };
+
+        // Helper function to update the main div
+        function updateDiv(message) {
+            document.getElementById('myDiv01').innerHTML = message;
+        }
     </script>
 </body>
 </html>

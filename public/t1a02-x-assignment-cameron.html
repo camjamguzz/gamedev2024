@@ -3,176 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Pac-Man Game</title>
+    <title>Catch the Falling Objects Game</title>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000;
+            background-color: #f0f0f0;
             margin: 0;
         }
         #game {
-            display: grid;
-            grid-template-columns: repeat(20, 30px);
-            grid-template-rows: repeat(20, 30px);
-            gap: 1px;
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background-color: #fff;
+            border: 2px solid #000;
+            overflow: hidden;
         }
-        .wall {
-            background-color: blue;
+        .basket {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 80px;
+            height: 20px;
+            background-color: #ff9900;
+            transform: translateX(-50%);
         }
-        .food {
-            background-color: yellow;
-            border-radius: 50%;
-        }
-        .pacman {
-            background-color: yellow;
-            border-radius: 50%;
-        }
-        .ghost {
+        .object {
+            position: absolute;
+            width: 20px;
+            height: 20px;
             background-color: red;
-            border-radius: 50%;
         }
     </style>
 </head>
 <body>
-    <div id="game"></div>
+    <div id="game">
+        <div class="basket" id="basket"></div>
+    </div>
 
     <script>
         const gameElement = document.getElementById('game');
-        const gridSize = 20;
-        const walls = [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-            20, 39, 40, 59, 60, 79, 80, 99,
-            100, 119, 120, 139, 140, 159, 160, 179,
-            180, 181, 182, 183, 184, 185, 186, 187,
-            200, 201, 202, 203, 204, 205, 206, 207,
-            220, 239, 240, 259, 260, 279, 280, 299,
-            300, 319, 320, 339, 340, 359, 360, 379,
-            380, 381, 382, 383, 384, 385, 386, 387,
-        ];
-
-        const foodPositions = Array.from({ length: gridSize * gridSize }, (_, index) => index)
-            .filter(index => !walls.includes(index));
-
-        let pacmanPosition = 1;
-        let ghostPosition = 22; // Initial position of the ghost
+        const basket = document.getElementById('basket');
+        const gameWidth = gameElement.clientWidth;
+        const gameHeight = gameElement.clientHeight;
         let score = 0;
 
-        function createGrid() {
-            for (let i = 0; i < gridSize * gridSize; i++) {
-                const cell = document.createElement('div');
-                if (walls.includes(i)) {
-                    cell.classList.add('wall');
-                } else if (foodPositions.includes(i)) {
-                    cell.classList.add('food');
+        function createObject() {
+            const object = document.createElement('div');
+            object.classList.add('object');
+            object.style.left = Math.random() * (gameWidth - 20) + 'px';
+            gameElement.appendChild(object);
+            moveObject(object);
+        }
+
+        function moveObject(object) {
+            let position = 0;
+            const interval = setInterval(() => {
+                position += 5;
+                object.style.top = position + 'px';
+
+                if (position > gameHeight) {
+                    clearInterval(interval);
+                    gameElement.removeChild(object);
                 }
-                gameElement.appendChild(cell);
-            }
-        }
 
-        function drawPacman() {
-            const cells = gameElement.children;
-            Array.from(cells).forEach(cell => cell.classList.remove('pacman'));
-            cells[pacmanPosition].classList.add('pacman');
-        }
-
-        function drawGhost() {
-            const cells = gameElement.children;
-            Array.from(cells).forEach(cell => cell.classList.remove('ghost'));
-            cells[ghostPosition].classList.add('ghost');
-        }
-
-        function movePacman(direction) {
-            const nextPosition = pacmanPosition + direction;
-            if (!walls.includes(nextPosition) && nextPosition >= 0 && nextPosition < gridSize * gridSize) {
-                pacmanPosition = nextPosition;
-                drawPacman();
-                checkForFood();
-            }
-            checkGameOver();
-        }
-
-        function checkForFood() {
-            const foodIndex = foodPositions.indexOf(pacmanPosition);
-            if (foodIndex !== -1) {
-                foodPositions.splice(foodIndex, 1); // Remove the food
-                const foodCell = gameElement.children[pacmanPosition];
-                foodCell.classList.remove('food'); // Remove food from grid
-                score++;
-                if (foodPositions.length === 0) {
-                    alert("You've collected all the food! Score: " + score);
-                    resetGame();
+                // Check for collision with the basket
+                if (position + 20 >= gameHeight - 20 && 
+                    parseInt(object.style.left) > parseInt(basket.style.left) - 40 &&
+                    parseInt(object.style.left) < parseInt(basket.style.left) + 40) {
+                    clearInterval(interval);
+                    gameElement.removeChild(object);
+                    score++;
+                    alert(`Score: ${score}`); // Show score when caught
                 }
+            }, 100);
+        }
+
+        function moveBasket(event) {
+            const key = event.key;
+            const left = parseInt(basket.style.left);
+
+            if (key === 'ArrowLeft' && left > 0) {
+                basket.style.left = left - 20 + 'px';
+            } else if (key === 'ArrowRight' && left < gameWidth - 80) {
+                basket.style.left = left + 20 + 'px';
             }
         }
 
-        function moveGhost() {
-            const directions = [-1, 1, -gridSize, gridSize]; // Left, Right, Up, Down
-            const nextDirection = directions[Math.floor(Math.random() * directions.length)];
-            const nextPosition = ghostPosition + nextDirection;
-
-            if (!walls.includes(nextPosition) && nextPosition >= 0 && nextPosition < gridSize * gridSize) {
-                ghostPosition = nextPosition;
-                drawGhost();
-            }
-
-            checkGameOver();
-        }
-
-        function checkGameOver() {
-            if (pacmanPosition === ghostPosition) {
-                alert("Game Over! Your score: " + score);
-                resetGame();
-            }
-        }
-
-        function resetGame() {
-            pacmanPosition = 1;
-            ghostPosition = 22;
-            score = 0;
-            foodPositions.length = 0; // Clear the food
-            createFood(); // Recreate food
-            drawPacman();
-            drawGhost();
-        }
-
-        function createFood() {
-            for (let i = 0; i < gridSize * gridSize; i++) {
-                if (!walls.includes(i) && i !== pacmanPosition && i !== ghostPosition) {
-                    foodPositions.push(i);
-                }
-            }
-            foodPositions.forEach(index => {
-                const foodCell = gameElement.children[index];
-                foodCell.classList.add('food'); // Add food back to the grid
-            });
-        }
-
-        document.addEventListener('keydown', (event) => {
-            switch (event.key) {
-                case 'ArrowUp':
-                    movePacman(-gridSize);
-                    break;
-                case 'ArrowDown':
-                    movePacman(gridSize);
-                    break;
-                case 'ArrowLeft':
-                    movePacman(-1);
-                    break;
-                case 'ArrowRight':
-                    movePacman(1);
-                    break;
-            }
-        });
-
-        createGrid();
-        drawPacman();
-        drawGhost();
-
-        // Move the ghost every second
-        setInterval(moveGhost, 1000);
+        document.addEventListener('keydown', moveBasket);
+        setInterval(createObject, 1000); // Create an object every second
     </script>
 </body>
 </html>

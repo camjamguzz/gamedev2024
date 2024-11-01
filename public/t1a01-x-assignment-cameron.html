@@ -81,7 +81,7 @@
             if (gameWon) {
                 context.fillStyle = 'white';
                 context.font = '40px Arial';
-                context.fillText(`${gameWon} Wins!`, canvas.width / 2 - 100, canvas.height / 2);
+                context.fillText(`${gameWon} Wins! Click to Restart!`, canvas.width / 2 - 180, canvas.height / 2);
             }
         }
 
@@ -148,6 +148,13 @@
             ball.dx *= -1; // Change ball direction
         }
 
+        function resetGame() {
+            player.score = 0;
+            computer.score = 0;
+            gameWon = null;
+            resetBall();
+        }
+
         function gameLoop() {
             draw();
             update();
@@ -165,9 +172,15 @@
             if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
         });
 
+        // Restart game on click
+        canvas.addEventListener('click', () => {
+            if (gameWon) {
+                resetGame();
+            }
+        });
+
         // Start the game
         gameLoop();
     </script>
 </body>
 </html>
-

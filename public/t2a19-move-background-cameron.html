@@ -1,45 +1,62 @@
-<body id="myBody" style="background-repeat:repeat; background-size: 80%"
-background="myBackground.jpg>"
-<script>
-    let myGobal1x = 0
-    let myClock01
-    let myclock02
-    let myspeed01 = 400
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move Background</title>
+    <style>
+        body {
+            background-image: url('myBackground.jpg');
+            background-repeat: repeat;
+            background-size: 80%;
+        }
+    </style>
+</head>
+<body id="myBody">
+    <h1 align="center">t2a19-move-background-cameron.html</h1>
 
-<h1 align="center>t2a19-move-background-cameron.html"
+    <input id="myButton01" type="button" value="Background Move Left" onclick="moveBackground()">
+    
+    <input type="button" value="Auto Background Left Faster" onclick="autoBackgroundFaster()">
+    
+    <input type="button" value="Auto Background Left Slower" onclick="autoBackgroundSlower()">
+    
+    <input type="button" value="Auto Move Left" onclick="startAutoMove()">
 
- <input id="myButton01" type=button value="background move left" onclick="{
-   myTemp = '100px 0px'
-   myGlobal1X -= 5
-   myTemp = myGlobal1X + 'px 0px'
-   document.getElementById('myBody').style.backgroundPosition =myTemp
-}">
+    <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png">
 
-<input type="button" value="Auto Background Left Faster" onclick="{
-    ClearInterval(myClock01)
-    mySpeed01 -= 30
-    if (myspeed01 < 10){mySped01 = 10}
-    myClock01 = setInterval(function(){
-        document.getElementById('myButton01').click()
-    }, mySpeed01)
-}">
+    <script>
+        let myGlobal1x = 0;
+        let myClock01;
+        let myClock02;
+        let mySpeed01 = 400;
 
-<input type=button value="Auto Background Left slower" onclick="{
-ClearInterval(myClock01)
-mySpeed01 += 30
-if (mySpeed01 > 1000){mySpeed01 = 1000}
-myClock01 = setInterval(function(){
-    document.getElementById('myButton01').click()
-}, mySpeed01)
-}">
+        function moveBackground() {
+            myGlobal1x -= 5;
+            let myTemp = myGlobal1x + 'px 0px';
+            document.getElementById('myBody').style.backgroundPosition = myTemp;
+        }
 
-<input tyoe="button value=Auto Move Left" onClick="{
-    ClearInterval(myClock02)
-    myClock02 = setInterval(function(){
-        document.getElemtentById('myButton02').click()
-    }, 30)
-}">
+        function autoBackgroundFaster() {
+            clearInterval(myClock01);
+            mySpeed01 -= 30;
+            if (mySpeed01 < 10) { mySpeed01 = 10; }
+            myClock01 = setInterval(moveBackground, mySpeed01);
+        }
 
-<img id ="myImage01" style="position:relative; width:100px; height: 80px; top:0px;
-left:0px;" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png">
+        function autoBackgroundSlower() {
+            clearInterval(myClock01);
+            mySpeed01 += 30;
+            if (mySpeed01 > 1000) { mySpeed01 = 1000; }
+            myClock01 = setInterval(moveBackground, mySpeed01);
+        }
+
+        function startAutoMove() {
+            clearInterval(myClock02);
+            myClock02 = setInterval(() => {
+                document.getElementById('myButton01').click();
+            }, 30);
+        }
+    </script>
+</body>
+</html>

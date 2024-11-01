@@ -9,9 +9,23 @@
             background-image: url('https://pixy.org/src/125/1250988.jpg');
             background-repeat: repeat;
             background-size: 130%;
+            position: relative;
+            overflow: hidden; /* Prevent scrolling */
         }
         #myImage01 {
-            transition: top 0.5s; /* Smooth jump animation */
+            position: absolute;
+            width: 100px;
+            height: 80px;
+            top: 700px;
+            left: -500px;
+            transition: top 0.5s;
+        }
+        .spike {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red; /* Color of spikes */
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%); /* Triangle shape */
         }
     </style>
 </head>
@@ -28,7 +42,7 @@
     
     <input type="button" value="Stop Background" onclick="stopBackground()"> <!-- New Stop button -->
 
-    <img id="myImage01" style="position:relative; width:100px; height:80px; top:700px; left:-500px;" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png">
+    <img id="myImage01" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png">
 
     <script>
         let myGlobal1x = 0;
@@ -84,6 +98,51 @@
                 jump();
             }
         });
+
+        // Function to create spikes
+        function createSpike() {
+            const spike = document.createElement('div');
+            spike.className = 'spike';
+            spike.style.left = Math.random() * (window.innerWidth - 20) + 'px'; // Random horizontal position
+            spike.style.top = '700px'; // Same level as the image
+            document.body.appendChild(spike);
+            return spike;
+        }
+
+        // Function to check for collisions
+        function checkCollision(image, spike) {
+            const rect1 = image.getBoundingClientRect();
+            const rect2 = spike.getBoundingClientRect();
+
+            return !(
+                rect1.top > rect2.bottom ||
+                rect1.bottom < rect2.top ||
+                rect1.left > rect2.right ||
+                rect1.right < rect2.left
+            );
+        }
+
+        // Function to handle collisions
+        function handleCollisions() {
+            const image = document.getElementById('myImage01');
+            const spikes = document.querySelectorAll('.spike');
+            spikes.forEach(spike => {
+                if (checkCollision(image, spike)) {
+                    alert("You touched a spike! Game Over."); // Game Over message
+                    location.reload(); // Restart the game
+                }
+            });
+        }
+
+        // Create spikes at intervals
+        setInterval(() => {
+            createSpike();
+        }, 2000); // Create a spike every 2 seconds
+
+        // Check for collisions every 100 milliseconds
+        setInterval(() => {
+            handleCollisions();
+        }, 100);
     </script>
 </body>
 </html>

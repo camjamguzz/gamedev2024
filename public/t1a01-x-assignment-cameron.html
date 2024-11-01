@@ -57,7 +57,7 @@
             color: 'white'
         };
 
-        let gameWon = false;
+        let gameWon = null; // Can be 'player', 'computer', or null
 
         function draw() {
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -81,7 +81,7 @@
             if (gameWon) {
                 context.fillStyle = 'white';
                 context.font = '40px Arial';
-                context.fillText('You Win!', canvas.width / 2 - 80, canvas.height / 2);
+                context.fillText(`${gameWon} Wins!`, canvas.width / 2 - 100, canvas.height / 2);
             }
         }
 
@@ -125,7 +125,9 @@
 
             // Check for win condition
             if (player.score >= 5) {
-                gameWon = true;
+                gameWon = 'Player';
+            } else if (computer.score >= 5) {
+                gameWon = 'Computer';
             }
 
             // Move the computer paddle
@@ -168,3 +170,4 @@
     </script>
 </body>
 </html>
+

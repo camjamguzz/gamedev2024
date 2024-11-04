@@ -36,6 +36,10 @@
             font-size: 24px;
             font-weight: bold;
         }
+        #scoreboard {
+            margin-top: 20px;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -46,8 +50,15 @@
         <button onclick="playGame('Scissors')">Scissors</button>
     </div>
     <div id="result"></div>
+    <div id="scoreboard">
+        <p>Player Score: <span id="playerScore">0</span></p>
+        <p>Computer Score: <span id="computerScore">0</span></p>
+    </div>
 
     <script>
+        let playerScore = 0;
+        let computerScore = 0;
+
         function playGame(playerChoice) {
             const choices = ['Rock', 'Paper', 'Scissors'];
             const computerChoice = choices[Math.floor(Math.random() * choices.length)];
@@ -61,11 +72,15 @@
                 (playerChoice === 'Scissors' && computerChoice === 'Paper')
             ) {
                 result = `You win! ${playerChoice} beats ${computerChoice}.`;
+                playerScore++;
             } else {
                 result = `You lose! ${computerChoice} beats ${playerChoice}.`;
+                computerScore++;
             }
 
             document.getElementById('result').textContent = result;
+            document.getElementById('playerScore').textContent = playerScore;
+            document.getElementById('computerScore').textContent = computerScore;
         }
     </script>
 </body>

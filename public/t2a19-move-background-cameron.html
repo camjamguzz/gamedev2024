@@ -23,6 +23,11 @@
         #myImage02 {
             left: -400px; /* Adjust position for the second image */
         }
+        /* Ensure both images are displayed properly */
+        img {
+            display: block; /* Prevents any inline issues */
+            margin-right: 10px; /* Space between images */
+        }
     </style>
 </head>
 <body id="myBody">
@@ -39,8 +44,8 @@
     <input type="button" value="Stop Background" onclick="stopBackground()"> <!-- New Stop button -->
 
     <div style="display: flex; align-items: flex-end;"> <!-- Flexbox for alignment -->
-        <img id="myImage01" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png">
-        <img id="myImage02" src="https://w7.pngwing.com/pngs/84/99/png-transparent-patrick-star-youtube-whobob-whatpants-character-patrick-039-s-day-mammal-computer-wallpaper-vertebrate.png"> <!-- Second image -->
+        <img id="myImage01" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png" alt="SpongeBob">
+        <img id="myImage02" src="https://w7.pngwing.com/pngs/84/99/png-transparent-patrick-star-youtube-whobob-whatpants-character-patrick-039-s-day-mammal-computer-wallpaper-vertebrate.png" alt="Patrick Star"> <!-- Second image -->
     </div>
 
     <script>
@@ -106,3 +111,4 @@
     </script>
 </body>
 </html>
+

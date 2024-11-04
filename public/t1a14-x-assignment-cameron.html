@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #word {
+            font-size: 24px;
+            letter-spacing: 5px;
+            margin: 20px 0;
+        }
+        #hangman {
+            font-size: 100px;
+            margin: 20px 0;
+        }
+        #letters {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4e0a75;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #510564;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hangman Game</h1>
+    <div id="hangman">🤔</div>
+    <div id="word"></div>
+    <div id="letters"></div>
+    <input type="text" id="letterInput" maxlength="1" placeholder="Enter a letter" />
+    <button onclick="guessLetter()">Guess</button>
+    <button onclick="resetGame()">Reset</button>
+    <div id="message"></div>
+
+    <script>
+        const words = ["javascript", "hangman", "coding", "challenge", "programming"];
+        let selectedWord;
+        let guessedLetters = [];
+        let wrongGuesses = 0;
+        const maxGuesses = 6;
+
+        function startGame() {
+            selectedWord = words[Math.floor(Math.random() * words.length)];
+            guessedLetters = [];
+            wrongGuesses = 0;
+            document.getElementById("letterInput").value = '';
+            document.getElementById("message").textContent = '';
+            displayWord();
+            displayHangman();
+            displayGuessedLetters();
+        }
+
+        function displayWord() {
+            const wordDisplay = selectedWord.split('').map(letter => guessedLetters.includes(letter) ? letter : '_').join(' ');
+            document.getElementById("word").textContent = wordDisplay;
+            checkWin(wordDisplay);
+        }
+
+        function displayHangman() {
+            const hangmanStages = ["🤔", "😟", "😞", "😕", "😬", "😩", "💀"];
+            document.getElementById("hangman").textContent = hangmanStages[wrongGuesses];
+        }
+
+        function displayGuessedLetters() {
+            document.getElementById("letters").textContent = `Guessed Letters: ${guessedLetters.join(', ')}`;
+        }
+
+        function guessLetter() {
+            const letterInput = document.getElementById("letterInput");
+            const letter = letterInput.value.toLowerCase();
+            letterInput.value = '';
+
+            if (letter && !guessedLetters.includes(letter)) {
+                guessedLetters.push(letter);
+                if (!selectedWord.includes(letter)) {
+                    wrongGuesses++;
+                }
+                displayWord();
+                displayHangman();
+                displayGuessedLetters();
+            }
+        }
+
+        function checkWin(wordDisplay) {
+            if (!wordDisplay.includes('_')) {
+                document.getElementById("message").textContent = "Congratulations! You guessed the word!";
+                disableInput();
+            } else if (wrongGuesses >= maxGuesses) {
+                document.getElementById("message").textContent = `Game Over! The word was "${selectedWord}".`;
+                disableInput();
+            }
+        }
+
+        function disableInput() {
+            document.getElementById("letterInput").disabled = true;
+        }
+
+        function resetGame() {
+            document.getElementById("letterInput").disabled = false;
+            startGame();
+        }
+
+        startGame();
+    </script>
+</body>
+</html>

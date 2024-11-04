@@ -10,8 +10,18 @@
             background-repeat: repeat;
             background-size: 130%;
         }
-        #myImage01 {
+        #myImage01, #myImage02 {
             transition: top 0.5s; /* Smooth jump animation */
+            position: relative;
+            width: 100px; 
+            height: 80px; 
+            top: 700px; 
+        }
+        #myImage01 {
+            left: -500px; /* Original position of the first image */
+        }
+        #myImage02 {
+            left: -400px; /* Adjust position for the second image */
         }
     </style>
 </head>
@@ -28,7 +38,10 @@
     
     <input type="button" value="Stop Background" onclick="stopBackground()"> <!-- New Stop button -->
 
-    <img id="myImage01" style="position:relative; width:100px; height:80px; top:700px; left:-500px;" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png">
+    <div style="display: flex; align-items: flex-end;"> <!-- Flexbox for alignment -->
+        <img id="myImage01" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png">
+        <img id="myImage02" src="https://pngimg.com/uploads/spongebob/spongebob_PNG2.png"> <!-- Second image -->
+    </div>
 
     <script>
         let myGlobal1x = 0;
@@ -68,13 +81,19 @@
             clearInterval(myClock02); // Stop the auto move left
         }
 
-        // Jump function for the image
+        // Jump function for the images
         function jump() {
-            const image = document.getElementById('myImage01');
-            image.style.top = '600px'; // Jump height
-            setTimeout(() => {
-                image.style.top = '700px'; // Return to original position
-            }, 500); // Duration of jump
+            const image1 = document.getElementById('myImage01');
+            const image2 = document.getElementById('myImage02');
+            const jumpHeight = '600px';
+
+            // Jumping animation for both images
+            [image1, image2].forEach(image => {
+                image.style.top = jumpHeight; // Jump height
+                setTimeout(() => {
+                    image.style.top = '700px'; // Return to original position
+                }, 500); // Duration of jump
+            });
         }
 
         // Event listener for the spacebar
@@ -87,4 +106,3 @@
     </script>
 </body>
 </html>
-

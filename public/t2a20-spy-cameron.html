@@ -33,9 +33,18 @@
             document.getElementById('myArea02').value = myString.join(''); // Join array to string and set it to myArea02
         }
 
-        // Decryption function
+        // Decryption function (undo the encryption)
         function decryptText() {
-            alert('Sorry, you have to do this!');
+            let myTemp = '';
+            let myString = document.getElementById('myArea02').value.toLowerCase().split('');
+            for (let myLoop = 0; myLoop < myString.length; myLoop++) {
+                myTemp = myString[myLoop];
+                if (myString[myLoop] == 'f') { myTemp = 'e'; }
+                if (myString[myLoop] == 'i') { myTemp = 'h'; }
+                // Add more reverse substitutions as needed
+                myString[myLoop] = myTemp; // Replace the character in the array
+            }
+            document.getElementById('myArea03').value = myString.join(''); // Join array to string and set it to myArea03
         }
     </script>
 </body>

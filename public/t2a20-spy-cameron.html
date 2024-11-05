@@ -48,8 +48,18 @@
             let myString = document.getElementById('myArea02').value.toLowerCase().split('');
             for (let myLoop = 0; myLoop < myString.length; myLoop++) {
                 myTemp = myString[myLoop];
+                // Reverse the encryption transformations
                 if (myString[myLoop] == 'f') { myTemp = 'e'; }
                 if (myString[myLoop] == 'i') { myTemp = 'h'; }
+                if (myString[myLoop] == 'b') { myTemp = 'a'; }
+                if (myString[myLoop] == 'o') { myTemp = 'l'; }
+                if (myString[myLoop] == 'a') { myTemp = 'o'; }
+                if (myString[myLoop] == 'c') { myTemp = 'b'; }
+                if (myString[myLoop] == 'p') { myTemp = 'w'; }
+                if (myString[myLoop] == 't') { myTemp = 'r'; }
+                if (myString[myLoop] == 's') { myTemp = 'y'; }
+                if (myString[myLoop] == 'w') { myTemp = 'u'; }
+                if (myString[myLoop] == 'e') { myTemp = ' '; }
                 // Add more reverse substitutions as needed
                 myString[myLoop] = myTemp; // Replace the character in the array
             }

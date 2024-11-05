@@ -4,9 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t2a20-spy-cameron.html</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Light blue background */
+            color: #333; /* Dark text color for good contrast */
+            text-align: center;
+        }
+
+        h1 {
+            color: #2e8b57; /* Dark green header */
+        }
+
+        textarea {
+            border: 2px solid #4CAF50; /* Green border */
+            padding: 10px;
+            font-size: 16px;
+            background-color: #ffffff; /* White background for textareas */
+            color: #333; /* Text color */
+            width: 70%;
+            margin: 10px 0;
+        }
+
+        textarea:focus {
+            outline-color: #4CAF50; /* Green focus outline */
+        }
+
+        input[type="button"] {
+            background-color: #4CAF50; /* Green background for buttons */
+            color: white; /* White text on buttons */
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        input[type="button"]:hover {
+            background-color: #45a049; /* Slightly darker green on hover */
+        }
+
+        input[type="button"]:active {
+            background-color: #388e3c; /* Even darker green when clicked */
+        }
+    </style>
 </head>
 <body>
-    <h1 align="center">t2a20-spy-cameron.html</h1>
+    <h1>t2a20-spy-cameron.html</h1>
 
     <textarea id="myArea01" rows="4" cols="70">Hello how are you</textarea><br><br>
 
@@ -101,15 +146,6 @@
                 if (myString[myLoop] == 'x') { myTemp = 'v'; }
                 if (myString[myLoop] == 'j') { myTemp = 'x'; }
                 if (myString[myLoop] == 'v') { myTemp = 'z'; }
-                if (myString[myLoop] == '0') { myTemp = '1'; }
-                if (myString[myLoop] == '4') { myTemp = '2'; }
-                if (myString[myLoop] == '3') { myTemp = '6'; }
-                if (myString[myLoop] == '2') { myTemp = '4'; }
-                if (myString[myLoop] == '6') { myTemp = '3'; }
-                if (myString[myLoop] == '1') { myTemp = '7'; }
-                if (myString[myLoop] == '9') { myTemp = '8'; }
-                if (myString[myLoop] == '5') { myTemp = '9'; }
-                if (myString[myLoop] == '7') { myTemp = '0'; }
                 myString[myLoop] = myTemp; // Replace the character in the array
             }
             document.getElementById('myArea03').value = myString.join(''); // Join array to string and set it to myArea03

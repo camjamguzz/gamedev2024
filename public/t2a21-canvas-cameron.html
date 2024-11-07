@@ -1,62 +1,114 @@
 <h2 align="center">t2a21-canvas-cameron.html</h2>
-<p>You can use loops and variables to make fast fancy drawings</p><br><br>
+<p>You can use loops and variables to make fast, fancy drawings. Try the buttons below:</p><br><br>
 
-<input type="button" value=".lineTo(30,200)" onclick="{
-    myContext.beginPath();
-    myContext.lineWidth = 1;
-    myContext.moveTo(20, 10);
-    myContext.lineTo(30, 200);
-    myContext.stroke();
-}">
+<!-- Buttons to control the drawing -->
+<input type="button" value=".lineTo(30,200)" onclick="drawLineTo()">
+<input type="button" value=".arc(95, 50, 40 , 0, 2 * Math.PI)" onclick="drawArc()">
+<input type="button" value=".fillText('Hello World', 100, 100)" onclick="drawText()">
+<input type="button" value=".quadraticCurveTo(100, 220, 240, 110)" onclick="drawQuadraticCurve()">
+<input type="button" value=".createLinearGradient(100, 300, 200, 400)" onclick="drawGradient()">
+<input type="button" value="clearRect(20, 20, 50, 50)" onclick="clearRect()">
+<input type="button" value="Clear All" onclick="clearAll()"><br><br>
 
-<input type="button" value=".arc(95, 50, 40 , 0, 2 * Math.PI)" onclick="{
-    myContext.beginPath();
-    myContext.lineWidth = 10;
-    myContext.strokeStyle = 'green';
-    myContext.arc(95, 50, 40 , 0, 2 * Math.PI);
-    myContext.stroke();
-}">
-
-<input type="button" value=".fillText('HelloWorld', 400, 100)" onclick="{
-    myContext.font = '20px Arial';
-    myContext.fillText('Hello World', 10, 10);
-    myContext.translate(400, 100);
-    myContext.rotate(60 * Math.PI / 180);
-    myContext.fillText('Hello World', 10, 10);
-    myContext.stroke();
-    myContext.resetTransform();
-}">
-
-<input type="button" value=".quadraticCurveTo(100, 220, 240, 110)" onclick="{
-    myContext.beginPath();
-    myContext.moveTo(300, 100);
-    myContext.quadraticCurveTo(100, 220, 240, 110);
-    myContext.stroke();
-}">
-
-<input type="button" value=".createLinearGradient(100, 300, 200, 400)" onclick="{
-    let myGradient = myContext.createLinearGradient(100, 300, 200, 400);
-    myGradient.addColorStop(0, 'red');
-    myGradient.addColorStop(0.5, 'blue');
-    myGradient.addColorStop(1, 'yellow');
-    myContext.fillStyle = myGradient;
-    myContext.fillRect(100, 300, 200, 400);
-    // reset fillStyle
-    myContext.fillStyle = 'black';
-}"><br><br>
-
-<input type="button" value="clearRect(20, 20, 50, 50)" onclick="{
-    myContext.clearRect(20, 20, 50, 50);
-}">
-
-<input type="button" value="Clear all" onclick="{
-    myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-}"><br><br>
-
+<!-- Canvas element for drawing -->
 <canvas id="myCoolTag" width="1000" height="600" style="border:1px solid #000000;"></canvas>
 
 <script>
-    // Set up global variables
+    // Set up the canvas context
     let myCanvas = document.getElementById('myCoolTag');
     let myContext = myCanvas.getContext('2d');
+    
+    // Function to draw a line
+    function drawLineTo() {
+        myContext.beginPath();
+        myContext.lineWidth = 3;
+        myContext.moveTo(20, 10);
+        myContext.lineTo(30, 200);
+        myContext.strokeStyle = 'blue';
+        myContext.stroke();
+    }
+
+    // Function to draw an arc
+    function drawArc() {
+        myContext.beginPath();
+        myContext.lineWidth = 10;
+        myContext.strokeStyle = 'green';
+        myContext.arc(95, 50, 40, 0, 2 * Math.PI); // x, y, radius, startAngle, endAngle
+        myContext.stroke();
+    }
+
+    // Function to draw text with transformations (rotate & translate)
+    function drawText() {
+        myContext.font = '20px Arial';
+        myContext.fillStyle = 'black';
+        myContext.fillText('Hello World', 10, 10); // Original position
+        
+        // Rotate and translate the text
+        myContext.save(); // Save the current context state
+        myContext.translate(400, 100);
+        myContext.rotate(60 * Math.PI / 180); // Rotate by 60 degrees
+        myContext.fillText('Hello World', 10, 10); // Transformed text
+        myContext.restore(); // Restore the context to its original state
+    }
+
+    // Function to draw a quadratic curve
+    function drawQuadraticCurve() {
+        myContext.beginPath();
+        myContext.moveTo(300, 100);
+        myContext.quadraticCurveTo(100, 220, 240, 110); // Control point and end point
+        myContext.strokeStyle = 'purple';
+        myContext.lineWidth = 5;
+        myContext.stroke();
+    }
+
+    // Function to draw a gradient fill
+    function drawGradient() {
+        let gradient = myContext.createLinearGradient(100, 300, 200, 400);
+        gradient.addColorStop(0, 'red');
+        gradient.addColorStop(0.5, 'blue');
+        gradient.addColorStop(1, 'yellow');
+        
+        // Set gradient as the fill style
+        myContext.fillStyle = gradient;
+        myContext.fillRect(100, 300, 200, 200); // Fill the rectangle with gradient
+    }
+
+    // Function to clear a part of the canvas
+    function clearRect() {
+        myContext.clearRect(20, 20, 50, 50);
+    }
+
+    // Function to clear the entire canvas
+    function clearAll() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear whole canvas
+    }
 </script>
+
+<style>
+    /* Style the canvas for better presentation */
+    canvas {
+        display: block;
+        margin: 0 auto;
+        background-color: #f0f8ff;
+    }
+
+    /* Style for buttons */
+    input[type="button"] {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    input[type="button"]:hover {
+        background-color: #45a049;
+    }
+
+    input[type="button"]:active {
+        background-color: #388e3c;
+    }
+</style>

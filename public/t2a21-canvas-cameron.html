@@ -1,4 +1,4 @@
-<h2 align="center">t2a21-canvas-cameron.html - Fancy Drawings with Loops and Animations</h2>
+<h2 align="center">Fancy Drawings with Loops and Animations</h2>
 <p>Click below to make fast, fancy drawings with loops and variables:</p><br><br>
 
 <!-- Buttons to control the drawing -->
@@ -84,26 +84,28 @@
     // Function to draw an animated spiral
     let angle = 0;
     function drawAnimatedSpiral() {
-        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
 
         let radius = 1;
         let increment = 5;
-        let maxRadius = 200;
+        let maxRadius = Math.sqrt(myCanvas.width * myCanvas.width + myCanvas.height * myCanvas.height); // Diagonal length of canvas
 
         function animateSpiral() {
             myContext.beginPath();
-            myContext.moveTo(500, 300);
+            myContext.moveTo(500, 300); // Starting point in the center of the canvas
             myContext.lineTo(500 + Math.cos(angle) * radius, 300 + Math.sin(angle) * radius);
 
+            // Random color for each line segment
             let color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
             myContext.strokeStyle = color;
             myContext.lineWidth = 2;
             myContext.stroke();
 
+            // Update angle and radius for the next line
             angle += 0.1;
-            radius += increment / 20;
+            radius += increment / 20; // Increase the radius more slowly
             if (radius < maxRadius) {
-                animationId = requestAnimationFrame(animateSpiral); // Store animation frame ID
+                animationId = requestAnimationFrame(animateSpiral); // Continue animation until max radius is reached
             }
         }
 
@@ -112,7 +114,7 @@
 
     // Function to draw radial gradient circles
     function drawRadialGradientCircles() {
-        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
 
         for (let i = 0; i < 10; i++) {
             let x = Math.random() * myCanvas.width;
@@ -132,7 +134,7 @@
 
     // Function to draw concentric squares
     function drawConcentricSquares() {
-        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
 
         let centerX = myCanvas.width / 2;
         let centerY = myCanvas.height / 2;

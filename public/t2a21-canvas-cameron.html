@@ -1,4 +1,4 @@
-<h2 align="center">t2a21-canvas-cameron.html - Fancy Drawings with Loops</h2>
+<h2 align="center">t2a21-canvas-cameron.html - Fancy Drawings with Loops and Animations</h2>
 <p>Click below to make fast, fancy drawings with loops and variables:</p><br><br>
 
 <!-- Buttons to control the drawing -->
@@ -6,6 +6,9 @@
 <input type="button" value="Draw Random Circles" onclick="drawRandomCircles()">
 <input type="button" value="Draw Grid Pattern" onclick="drawGridPattern()">
 <input type="button" value="Draw Animated Spiral" onclick="drawAnimatedSpiral()">
+<input type="button" value="Draw Radial Gradient Circles" onclick="drawRadialGradientCircles()">
+<input type="button" value="Draw Concentric Squares" onclick="drawConcentricSquares()">
+<input type="button" value="Draw Bouncing Balls" onclick="drawBouncingBalls()">
 <input type="button" value="Clear All" onclick="clearAll()"><br><br>
 
 <!-- Canvas element for drawing -->
@@ -23,19 +26,17 @@
         myContext.beginPath();
         myContext.moveTo(500, 300); // Start in the center of the canvas
 
-        let angle = 0;  // Angle to control the spiral
-        let radius = 1; // Radius starts small
-        let maxRadius = 200; // Max radius
-        let increment = 5; // Increase radius gradually
-        let color = 'rgb(0, 0, 255)'; // Blue color for the spiral
+        let angle = 0;
+        let radius = 1;
+        let increment = 5;
 
-        for (let i = 0; i < 200; i++) { // Loop to draw 200 segments
+        for (let i = 0; i < 200; i++) {
             myContext.lineTo(500 + Math.cos(angle) * radius, 300 + Math.sin(angle) * radius);
-            angle += 0.1; // Increment angle for spiral effect
-            radius += increment / 20; // Gradually increase the radius
+            angle += 0.1;
+            radius += increment / 20;
         }
         
-        myContext.strokeStyle = color;
+        myContext.strokeStyle = 'blue';
         myContext.lineWidth = 2;
         myContext.stroke();
     }
@@ -44,12 +45,11 @@
     function drawRandomCircles() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
 
-        for (let i = 0; i < 50; i++) { // Loop to draw 50 random circles
-            let x = Math.random() * myCanvas.width;  // Random X position
-            let y = Math.random() * myCanvas.height; // Random Y position
-            let radius = Math.random() * 50; // Random radius size
+        for (let i = 0; i < 50; i++) {
+            let x = Math.random() * myCanvas.width;
+            let y = Math.random() * myCanvas.height;
+            let radius = Math.random() * 50;
 
-            // Random color using RGB values
             let r = Math.floor(Math.random() * 256);
             let g = Math.floor(Math.random() * 256);
             let b = Math.floor(Math.random() * 256);
@@ -65,13 +65,12 @@
     function drawGridPattern() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
 
-        let gridSize = 50; // Size of each grid square
+        let gridSize = 50;
         let rows = Math.floor(myCanvas.height / gridSize);
         let cols = Math.floor(myCanvas.width / gridSize);
 
         for (let i = 0; i <= rows; i++) {
             for (let j = 0; j <= cols; j++) {
-                // Create alternating colors for the grid
                 let color = (i + j) % 2 === 0 ? 'lightblue' : 'lightgreen';
                 myContext.fillStyle = color;
                 myContext.fillRect(j * gridSize, i * gridSize, gridSize, gridSize);
@@ -79,34 +78,110 @@
         }
     }
 
-    // Function to draw an animated spiral (using loops and requestAnimationFrame)
-    let angle = 0; // Global angle variable for animation
+    // Function to draw an animated spiral
+    let angle = 0; 
     function drawAnimatedSpiral() {
-        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
-        let radius = 1; // Radius starts small
-        let increment = 5; // Radius increment
-        let maxRadius = 200; // Max radius
-        let color = 'rgb(0, 255, 0)'; // Green color for the spiral
+        let radius = 1;
+        let increment = 5;
+        let maxRadius = 200;
 
-        // Start the spiral animation
         function animateSpiral() {
             myContext.beginPath();
-            myContext.moveTo(500, 300); // Start at the center of the canvas
+            myContext.moveTo(500, 300);
             myContext.lineTo(500 + Math.cos(angle) * radius, 300 + Math.sin(angle) * radius);
 
+            let color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
             myContext.strokeStyle = color;
             myContext.lineWidth = 2;
             myContext.stroke();
 
-            angle += 0.1; // Increment angle for spiral effect
-            radius += increment / 20; // Gradually increase the radius
+            angle += 0.1;
+            radius += increment / 20;
             if (radius < maxRadius) {
-                requestAnimationFrame(animateSpiral); // Keep animating
+                requestAnimationFrame(animateSpiral);
             }
         }
 
-        animateSpiral(); // Start the animation
+        animateSpiral();
+    }
+
+    // Function to draw radial gradient circles
+    function drawRadialGradientCircles() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+
+        for (let i = 0; i < 10; i++) {
+            let x = Math.random() * myCanvas.width;
+            let y = Math.random() * myCanvas.height;
+            let radius = Math.random() * 100;
+
+            let gradient = myContext.createRadialGradient(x, y, 0, x, y, radius);
+            gradient.addColorStop(0, 'yellow');
+            gradient.addColorStop(1, 'red');
+
+            myContext.beginPath();
+            myContext.arc(x, y, radius, 0, 2 * Math.PI);
+            myContext.fillStyle = gradient;
+            myContext.fill();
+        }
+    }
+
+    // Function to draw concentric squares
+    function drawConcentricSquares() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+
+        let centerX = myCanvas.width / 2;
+        let centerY = myCanvas.height / 2;
+        let maxSize = 400;
+        let step = 20;
+
+        for (let size = maxSize; size > 0; size -= step) {
+            myContext.beginPath();
+            myContext.rect(centerX - size / 2, centerY - size / 2, size, size);
+            myContext.lineWidth = 5;
+            myContext.strokeStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            myContext.stroke();
+        }
+    }
+
+    // Variables for Bouncing Balls
+    let balls = [];
+    function drawBouncingBalls() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
+
+        // Create random balls
+        for (let i = 0; i < 5; i++) {
+            balls.push({
+                x: Math.random() * myCanvas.width,
+                y: Math.random() * myCanvas.height,
+                radius: 20,
+                dx: Math.random() * 4 - 2, // Random horizontal speed
+                dy: Math.random() * 4 - 2, // Random vertical speed
+                color: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
+            });
+        }
+
+        function animateBalls() {
+            for (let ball of balls) {
+                myContext.beginPath();
+                myContext.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+                myContext.fillStyle = ball.color;
+                myContext.fill();
+
+                // Move the ball
+                ball.x += ball.dx;
+                ball.y += ball.dy;
+
+                // Bounce off walls
+                if (ball.x + ball.radius > myCanvas.width || ball.x - ball.radius < 0) ball.dx = -ball.dx;
+                if (ball.y + ball.radius > myCanvas.height || ball.y - ball.radius < 0) ball.dy = -ball.dy;
+            }
+
+            requestAnimationFrame(animateBalls);
+        }
+
+        animateBalls(); // Start the animation loop
     }
 
     // Function to clear the canvas
@@ -143,3 +218,4 @@
         background-color: #388e3c;
     }
 </style>
+

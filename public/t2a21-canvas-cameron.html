@@ -1,13 +1,11 @@
-<h2 align="center">t2a21-canvas-cameron.html</h2>
-<p>You can use loops and variables to make fast, fancy drawings. Try the buttons below:</p><br><br>
+<h2 align="center">t2a21-canvas-cameron.html - Fancy Drawings with Loops</h2>
+<p>Click below to make fast, fancy drawings with loops and variables:</p><br><br>
 
 <!-- Buttons to control the drawing -->
-<input type="button" value=".lineTo(30,200)" onclick="drawLineTo()">
-<input type="button" value=".arc(95, 50, 40 , 0, 2 * Math.PI)" onclick="drawArc()">
-<input type="button" value=".fillText('Hello World', 100, 100)" onclick="drawText()">
-<input type="button" value=".quadraticCurveTo(100, 220, 240, 110)" onclick="drawQuadraticCurve()">
-<input type="button" value=".createLinearGradient(100, 300, 200, 400)" onclick="drawGradient()">
-<input type="button" value="clearRect(20, 20, 50, 50)" onclick="clearRect()">
+<input type="button" value="Draw Spiral" onclick="drawSpiral()">
+<input type="button" value="Draw Random Circles" onclick="drawRandomCircles()">
+<input type="button" value="Draw Grid Pattern" onclick="drawGridPattern()">
+<input type="button" value="Draw Animated Spiral" onclick="drawAnimatedSpiral()">
 <input type="button" value="Clear All" onclick="clearAll()"><br><br>
 
 <!-- Canvas element for drawing -->
@@ -17,68 +15,101 @@
     // Set up the canvas context
     let myCanvas = document.getElementById('myCoolTag');
     let myContext = myCanvas.getContext('2d');
-    
-    // Function to draw a line
-    function drawLineTo() {
-        myContext.beginPath();
-        myContext.lineWidth = 3;
-        myContext.moveTo(20, 10);
-        myContext.lineTo(30, 200);
-        myContext.strokeStyle = 'blue';
-        myContext.stroke();
-    }
 
-    // Function to draw an arc
-    function drawArc() {
-        myContext.beginPath();
-        myContext.lineWidth = 10;
-        myContext.strokeStyle = 'green';
-        myContext.arc(95, 50, 40, 0, 2 * Math.PI); // x, y, radius, startAngle, endAngle
-        myContext.stroke();
-    }
+    // Function to draw a spiral using loops
+    function drawSpiral() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
 
-    // Function to draw text with transformations (rotate & translate)
-    function drawText() {
-        myContext.font = '20px Arial';
-        myContext.fillStyle = 'black';
-        myContext.fillText('Hello World', 10, 10); // Original position
+        myContext.beginPath();
+        myContext.moveTo(500, 300); // Start in the center of the canvas
+
+        let angle = 0;  // Angle to control the spiral
+        let radius = 1; // Radius starts small
+        let maxRadius = 200; // Max radius
+        let increment = 5; // Increase radius gradually
+        let color = 'rgb(0, 0, 255)'; // Blue color for the spiral
+
+        for (let i = 0; i < 200; i++) { // Loop to draw 200 segments
+            myContext.lineTo(500 + Math.cos(angle) * radius, 300 + Math.sin(angle) * radius);
+            angle += 0.1; // Increment angle for spiral effect
+            radius += increment / 20; // Gradually increase the radius
+        }
         
-        // Rotate and translate the text
-        myContext.save(); // Save the current context state
-        myContext.translate(400, 100);
-        myContext.rotate(60 * Math.PI / 180); // Rotate by 60 degrees
-        myContext.fillText('Hello World', 10, 10); // Transformed text
-        myContext.restore(); // Restore the context to its original state
-    }
-
-    // Function to draw a quadratic curve
-    function drawQuadraticCurve() {
-        myContext.beginPath();
-        myContext.moveTo(300, 100);
-        myContext.quadraticCurveTo(100, 220, 240, 110); // Control point and end point
-        myContext.strokeStyle = 'purple';
-        myContext.lineWidth = 5;
+        myContext.strokeStyle = color;
+        myContext.lineWidth = 2;
         myContext.stroke();
     }
 
-    // Function to draw a gradient fill
-    function drawGradient() {
-        let gradient = myContext.createLinearGradient(100, 300, 200, 400);
-        gradient.addColorStop(0, 'red');
-        gradient.addColorStop(0.5, 'blue');
-        gradient.addColorStop(1, 'yellow');
-        
-        // Set gradient as the fill style
-        myContext.fillStyle = gradient;
-        myContext.fillRect(100, 300, 200, 200); // Fill the rectangle with gradient
+    // Function to draw random circles using loops
+    function drawRandomCircles() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
+
+        for (let i = 0; i < 50; i++) { // Loop to draw 50 random circles
+            let x = Math.random() * myCanvas.width;  // Random X position
+            let y = Math.random() * myCanvas.height; // Random Y position
+            let radius = Math.random() * 50; // Random radius size
+
+            // Random color using RGB values
+            let r = Math.floor(Math.random() * 256);
+            let g = Math.floor(Math.random() * 256);
+            let b = Math.floor(Math.random() * 256);
+            myContext.fillStyle = `rgb(${r}, ${g}, ${b})`;
+
+            myContext.beginPath();
+            myContext.arc(x, y, radius, 0, 2 * Math.PI);
+            myContext.fill();
+        }
     }
 
-    // Function to clear a part of the canvas
-    function clearRect() {
-        myContext.clearRect(20, 20, 50, 50);
+    // Function to draw a grid pattern using loops
+    function drawGridPattern() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
+
+        let gridSize = 50; // Size of each grid square
+        let rows = Math.floor(myCanvas.height / gridSize);
+        let cols = Math.floor(myCanvas.width / gridSize);
+
+        for (let i = 0; i <= rows; i++) {
+            for (let j = 0; j <= cols; j++) {
+                // Create alternating colors for the grid
+                let color = (i + j) % 2 === 0 ? 'lightblue' : 'lightgreen';
+                myContext.fillStyle = color;
+                myContext.fillRect(j * gridSize, i * gridSize, gridSize, gridSize);
+            }
+        }
     }
 
-    // Function to clear the entire canvas
+    // Function to draw an animated spiral (using loops and requestAnimationFrame)
+    let angle = 0; // Global angle variable for animation
+    function drawAnimatedSpiral() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
+
+        let radius = 1; // Radius starts small
+        let increment = 5; // Radius increment
+        let maxRadius = 200; // Max radius
+        let color = 'rgb(0, 255, 0)'; // Green color for the spiral
+
+        // Start the spiral animation
+        function animateSpiral() {
+            myContext.beginPath();
+            myContext.moveTo(500, 300); // Start at the center of the canvas
+            myContext.lineTo(500 + Math.cos(angle) * radius, 300 + Math.sin(angle) * radius);
+
+            myContext.strokeStyle = color;
+            myContext.lineWidth = 2;
+            myContext.stroke();
+
+            angle += 0.1; // Increment angle for spiral effect
+            radius += increment / 20; // Gradually increase the radius
+            if (radius < maxRadius) {
+                requestAnimationFrame(animateSpiral); // Keep animating
+            }
+        }
+
+        animateSpiral(); // Start the animation
+    }
+
+    // Function to clear the canvas
     function clearAll() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear whole canvas
     }

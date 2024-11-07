@@ -70,43 +70,45 @@
             let myString = document.getElementById('myArea01').value.toLowerCase().split('');
             for (let myLoop = 0; myLoop < myString.length; myLoop++) {
                 myTemp = myString[myLoop];
-                if (myString[myLoop] == 'e') { myTemp = 'f'; }
-                if (myString[myLoop] == 'h') { myTemp = 'i'; }
-                if (myString[myLoop] == 'a') { myTemp = 'b'; }
-                if (myString[myLoop] == 'l') { myTemp = 'o'; }
-                if (myString[myLoop] == 'o') { myTemp = 'a'; }
-                if (myString[myLoop] == 'b') { myTemp = 'c'; }
-                if (myString[myLoop] == 'w') { myTemp = 'p'; }
-                if (myString[myLoop] == 'r') { myTemp = 't'; }
-                if (myString[myLoop] == 'y') { myTemp = 's'; }
-                if (myString[myLoop] == 'u') { myTemp = 'w'; }
-                if (myString[myLoop] == ' ') { myTemp = 'e'; } // Space to 'e' encryption
-                if (myString[myLoop] == 'n') { myTemp = 'h'; }
-                if (myString[myLoop] == 'c') { myTemp = 'g'; }
-                if (myString[myLoop] == 'd') { myTemp = 'l'; }
-                if (myString[myLoop] == 'f') { myTemp = 'z'; }
-                if (myString[myLoop] == 'g') { myTemp = 'q'; }
-                if (myString[myLoop] == 'i') { myTemp = 'u'; }
-                if (myString[myLoop] == 'j') { myTemp = 'r'; }
-                if (myString[myLoop] == 'k') { myTemp = 'm'; }
-                if (myString[myLoop] == 'm') { myTemp = 'y'; }
-                if (myString[myLoop] == 'p') { myTemp = ' '; } // 'p' to space encryption
-                if (myString[myLoop] == 'q') { myTemp = 'n'; }
-                if (myString[myLoop] == 's') { myTemp = 'd'; }
-                if (myString[myLoop] == 't') { myTemp = 'k'; }
-                if (myString[myLoop] == 'v') { myTemp = 'x'; }
-                if (myString[myLoop] == 'x') { myTemp = 'j'; }
-                if (myString[myLoop] == 'z') { myTemp = 'v'; }
-                if (myString[myLoop] == '1') { myTemp = '0'; }
-                if (myString[myLoop] == '2') { myTemp = '4'; }
-                if (myString[myLoop] == '3') { myTemp = '0'; }
-                if (myString[myLoop] == '4') { myTemp = '2'; }
-                if (myString[myLoop] == '5') { myTemp = '6'; }
-                if (myString[myLoop] == '6') { myTemp = '3'; }
-                if (myString[myLoop] == '7') { myTemp = '1'; }
-                if (myString[myLoop] == '8') { myTemp = '9'; }
-                if (myString[myLoop] == '9') { myTemp = '5'; }
-                if (myString[myLoop] == '0') { myTemp = '7'; }
+                switch (myString[myLoop]) {
+                    case 'e': myTemp = 'f'; break;
+                    case 'h': myTemp = 'i'; break;
+                    case 'a': myTemp = 'b'; break;
+                    case 'l': myTemp = 'o'; break;
+                    case 'o': myTemp = 'a'; break;
+                    case 'b': myTemp = 'c'; break;
+                    case 'w': myTemp = 'p'; break;
+                    case 'r': myTemp = 't'; break;
+                    case 'y': myTemp = 's'; break;
+                    case 'u': myTemp = 'w'; break;
+                    case ' ': myTemp = 'e'; break; // Space to 'e' encryption
+                    case 'n': myTemp = 'h'; break;
+                    case 'c': myTemp = 'g'; break;
+                    case 'd': myTemp = 'l'; break;
+                    case 'f': myTemp = 'z'; break;
+                    case 'g': myTemp = 'q'; break;
+                    case 'i': myTemp = 'u'; break;
+                    case 'j': myTemp = 'r'; break;
+                    case 'k': myTemp = 'm'; break;
+                    case 'm': myTemp = 'y'; break;
+                    case 'p': myTemp = ' '; break; // 'p' to space encryption
+                    case 'q': myTemp = 'n'; break;
+                    case 's': myTemp = 'd'; break;
+                    case 't': myTemp = 'k'; break;
+                    case 'v': myTemp = 'x'; break;
+                    case 'x': myTemp = 'j'; break;
+                    case 'z': myTemp = 'v'; break;
+                    case '1': myTemp = '0'; break;
+                    case '2': myTemp = '4'; break;
+                    case '3': myTemp = '0'; break;
+                    case '4': myTemp = '2'; break;
+                    case '5': myTemp = '6'; break;
+                    case '6': myTemp = '3'; break;
+                    case '7': myTemp = '1'; break;
+                    case '8': myTemp = '9'; break;
+                    case '9': myTemp = '5'; break;
+                    case '0': myTemp = '7'; break;
+                }
                 myString[myLoop] = myTemp; // Replace the character in the array
             }
             document.getElementById('myArea02').value = myString.join(''); // Join array to string and set it to myArea02
@@ -118,34 +120,36 @@
             let myString = document.getElementById('myArea02').value.toLowerCase().split('');
             for (let myLoop = 0; myLoop < myString.length; myLoop++) {
                 myTemp = myString[myLoop];
-                // Reverse the encryption transformations
-                if (myString[myLoop] == 'f') { myTemp = 'e'; }
-                if (myString[myLoop] == 'i') { myTemp = 'h'; }
-                if (myString[myLoop] == 'b') { myTemp = 'a'; }
-                if (myString[myLoop] == 'o') { myTemp = 'l'; }
-                if (myString[myLoop] == 'a') { myTemp = 'o'; }
-                if (myString[myLoop] == 'c') { myTemp = 'b'; }
-                if (myString[myLoop] == 'p') { myTemp = 'w'; }
-                if (myString[myLoop] == 't') { myTemp = 'r'; }
-                if (myString[myLoop] == 's') { myTemp = 'y'; }
-                if (myString[myLoop] == 'w') { myTemp = 'u'; }
-                if (myString[myLoop] == 'e') { myTemp = ' '; } // 'e' to space decryption
-                if (myString[myLoop] == 'h') { myTemp = 'n'; }
-                if (myString[myLoop] == 'g') { myTemp = 'c'; }
-                if (myString[myLoop] == 'l') { myTemp = 'd'; }
-                if (myString[myLoop] == 'z') { myTemp = 'f'; }
-                if (myString[myLoop] == 'q') { myTemp = 'g'; }
-                if (myString[myLoop] == 'u') { myTemp = 'i'; }
-                if (myString[myLoop] == 'r') { myTemp = 'j'; }
-                if (myString[myLoop] == 'm') { myTemp = 'k'; }
-                if (myString[myLoop] == 'y') { myTemp = 'm'; }
-                if (myString[myLoop] == ' ') { myTemp = 'p'; } // ' ' to 'p' decryption
-                if (myString[myLoop] == 'n') { myTemp = 'q'; }
-                if (myString[myLoop] == 'd') { myTemp = 's'; }
-                if (myString[myLoop] == 'k') { myTemp = 't'; }
-                if (myString[myLoop] == 'x') { myTemp = 'v'; }
-                if (myString[myLoop] == 'j') { myTemp = 'x'; }
-                if (myString[myLoop] == 'v') { myTemp = 'z'; }
+                switch (myString[myLoop]) {
+                    case 'f': myTemp = 'e'; break;
+                    case 'i': myTemp = 'h'; break;
+                    case 'b': myTemp = 'a'; break;
+                    case 'o': myTemp = 'l'; break;
+                    case 'a': myTemp = 'o'; break;
+                    case 'c': myTemp = 'b'; break;
+                    case 'p': myTemp = 'w'; break;
+                    case 't': myTemp = 'r'; break;
+                    case 's': myTemp = 'y'; break;
+                    case 'w': myTemp = 'u'; break;
+                    case 'e': myTemp = ' '; break; // 'e' to space decryption
+                    case 'h': myTemp = 'n'; break;
+                    case 'g': myTemp = 'c'; break;
+                    case 'l': myTemp = 'd'; break;
+                    case 'z': myTemp = 'f'; break;
+                    case 'q': myTemp = 'g'; break;
+                    case 'u': myTemp = 'i'; break;
+                    case 'r': myTemp = 'j'; break;
+                    case 'm': myTemp = 'k'; break;
+                    case 'y': myTemp = 'm'; break;
+                    case ' ': myTemp = 'p'; break; // ' ' to 'p' decryption
+                    case 'n': myTemp = 'q'; break;
+                    case 'd': myTemp = 's'; break;
+                    case 'k': myTemp = 't'; break;
+                    case 'x': myTemp = 'v'; break;
+                    case 'j': myTemp = 'x'; break;
+                    case 'v': myTemp = 'z'; break;
+                    default: myTemp = myString[myLoop]; break; // If it's a character not encrypted, leave it unchanged
+                }
                 myString[myLoop] = myTemp; // Replace the character in the array
             }
             document.getElementById('myArea03').value = myString.join(''); // Join array to string and set it to myArea03

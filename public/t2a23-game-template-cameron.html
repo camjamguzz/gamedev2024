@@ -8,6 +8,7 @@
        let myClock
        let myImg02Direction = 1  // 1 means down, -1 means up
        let myImg02Speed = 5      // speed of movement
+       let myImg01Speed = 10     // speed of Image 01 (player's image)
 
        // global functions here
        function myHitOther(my1,my2){
@@ -55,6 +56,33 @@
 
        // Start moving myImg02 when the page loads
        setInterval(moveMyImg02, 50);  // Move every 50ms
+
+       // Function to check if myImg01 has reached the end of the screen (right side of the background)
+       function checkWinCondition() {
+           let img01 = document.getElementById('myImg01');
+           let body = document.getElementById('myBody');
+           let bodyWidth = body.offsetWidth;  // Get the width of the body (background width)
+           let img01Right = parseInt(img01.style.left) + img01.width; // Rightmost position of myImg01
+
+           // If the rightmost position of myImg01 is past the right edge of the screen
+           if (img01Right >= bodyWidth) {
+               alert('You Win!');
+               // Optional: Navigate to the next page or trigger some other action
+               // location = 'nextLevel.html'; // Uncomment to go to the next level
+           }
+       }
+
+       // Function to move myImg01 to the right and check win condition
+       function moveImg01Right() {
+           let img01 = document.getElementById('myImg01');
+           let newLeft = parseInt(img01.style.left) + myImg01Speed + 'px';
+           img01.style.left = newLeft;
+           myCheckHit();  // Check for collisions
+           checkWinCondition();  // Check if the player has won
+       }
+
+       // Call the function to move myImg01 right on button click
+       // You can trigger this by clicking the "Image Right Fast Button"
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">
@@ -73,8 +101,7 @@
     
     <!-- Image Right Movement Button -->
     <input type=button value="Image Right Fast Button" onTouchStart="{this.click(); event.preventDefault();}" onclick="{
-        document.getElementById('myImg01').style.left = parseInt(document.getElementById('myImg01').style.left) + 10 + 'px'
-        myCheckHit()     // checks for all collisions
+        moveImg01Right();  // Move img01 to the right and check win condition
     }"><br><br>
 
     <!-- New Up Button -->

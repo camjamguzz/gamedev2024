@@ -5,7 +5,7 @@
 <input type="button" value="Draw Spiral" onclick="drawSpiral()">
 <input type="button" value="Draw Random Circles" onclick="drawRandomCircles()">
 <input type="button" value="Draw Grid Pattern" onclick="drawGridPattern()">
-<input type="button" value="Draw Animated Spiral" onclick="drawAnimatedSpiral()">
+<input type="button" value="Draw Animated Spiral" onclick="guh(100)">
 <input type="button" value="Draw Radial Gradient Circles" onclick="drawRadialGradientCircles()">
 <input type="button" value="Draw Concentric Squares" onclick="drawConcentricSquares()">
 <input type="button" value="Draw Bouncing Balls" onclick="drawBouncingBalls()">
@@ -83,6 +83,11 @@
 
     // Function to draw an animated spiral
     let angle = 0;
+    function guh(count=10){
+        for (let i = 0; i < count; i++) {
+            setTimeout(drawAnimatedSpiral, i * 100)
+        }
+    }
     function drawAnimatedSpiral() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
 

@@ -4,11 +4,11 @@
     
     <script>
        // Global variables here
-       let myGlobalX = 0
-       let myClock
-       let myImg02Direction = 1  // 1 means down, -1 means up
-       let myImg02Speed = 5      // speed of movement
-       let myImg01Speed = 10     // speed of Image 01 (player's image)
+       let myGlobalX = 0;
+       let myClock;
+       let myImg02Direction = 1;  // 1 means down, -1 means up
+       let myImg02Speed = 5;      // Speed of movement for myImg02 (enemy)
+       let myImg01Speed = 10;     // Speed of movement for myImg01 (player)
 
        // Function to check for collisions
        function myHitOther(my1, my2) {
@@ -31,10 +31,10 @@
            return false;
        }
     
-       // Function to check for collision with myImg02 (when the player loses)
+       // Function to check for collision and handle the "You Lost!" scenario
        function myCheckHit() {
            if (myHitOther('myImg01', 'myImg02')) {
-               alert('You Lost!');  // Show a "You Lost!" message
+               alert('You Lost!');  // Display the "You Lost!" message
                restartGame();  // Restart the game
            }
        }
@@ -75,7 +75,7 @@
            // Reset any other game variables if necessary (e.g., speed, direction)
        }
 
-       // Function to move myImg01 to the right and check win condition
+       // Function to move myImg01 to the right and check for collisions
        function moveImg01Right() {
            let img01 = document.getElementById('myImg01');
            let newLeft = parseInt(img01.style.left) + myImg01Speed + 'px';
@@ -83,7 +83,7 @@
            myCheckHit();  // Check for collisions
        }
 
-       // Function to move myImg01 to the left and check win condition
+       // Function to move myImg01 to the left and check for collisions
        function moveImg01Left() {
            let img01 = document.getElementById('myImg01');
            let newLeft = parseInt(img01.style.left) - myImg01Speed + 'px';

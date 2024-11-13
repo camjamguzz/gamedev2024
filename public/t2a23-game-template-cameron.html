@@ -3,38 +3,41 @@
     <br><br><br><br>
     
     <script>
-       // global variables here
+       // Global variables here
        let myGlobalX = 0
        let myClock
        let myImg02Direction = 1  // 1 means down, -1 means up
        let myImg02Speed = 5      // speed of movement
        let myImg01Speed = 10     // speed of Image 01 (player's image)
 
-       // global functions here
-       function myHitOther(my1,my2){
-           left1   = parseInt(document.getElementById(my1).style.left)
-           right1  = left1 + parseInt(document.getElementById(my1).style.width)
-           top1    = parseInt(document.getElementById(my1).style.top)   
-           bottom1 = top1   + parseInt(document.getElementById(my1).style.height)
-           left2   = parseInt(document.getElementById(my2).style.left)
-           right2  = left2 + parseInt(document.getElementById(my2).style.width)
-           top2    = parseInt(document.getElementById(my2).style.top)   
-           bottom2 = top2   + parseInt(document.getElementById(my2).style.height)
-           if ((right1  >=  left2  ) &&       
-               (bottom1 >=  top2   ) &&
-               (left1   <=  right2 ) &&
-               (top1    <=  bottom2) ){
-               return true
+       // Function to check for collisions
+       function myHitOther(my1, my2) {
+           let left1 = parseInt(document.getElementById(my1).style.left);
+           let right1 = left1 + parseInt(document.getElementById(my1).style.width);
+           let top1 = parseInt(document.getElementById(my1).style.top);
+           let bottom1 = top1 + parseInt(document.getElementById(my1).style.height);
+           let left2 = parseInt(document.getElementById(my2).style.left);
+           let right2 = left2 + parseInt(document.getElementById(my2).style.width);
+           let top2 = parseInt(document.getElementById(my2).style.top);
+           let bottom2 = top2 + parseInt(document.getElementById(my2).style.height);
+
+           // If the two images overlap
+           if ((right1 >= left2) && 
+               (bottom1 >= top2) &&
+               (left1 <= right2) &&
+               (top1 <= bottom2)) {
+               return true;
            }
+           return false;
        }
     
-       function myCheckHit(){
-           if ( myHitOther('myImg01','myImg02') ){
-               alert('You Died!');  // Display a "You Died" message
+       // Function to check for collision with myImg02 (when the player loses)
+       function myCheckHit() {
+           if (myHitOther('myImg01', 'myImg02')) {
+               alert('You Lost!');  // Show a "You Lost!" message
                restartGame();  // Restart the game
            }
-           // more if statements here like the above
-       }  // end of myCheckHit()
+       }
 
        // Function to move myImg02 automatically up and down
        function moveMyImg02() {
@@ -56,19 +59,20 @@
        // Start moving myImg02 when the page loads
        setInterval(moveMyImg02, 50);  // Move every 50ms
 
-       // Function to check if myImg01 has reached the end of the screen (right side of the background)
-       function checkWinCondition() {
-           let img01 = document.getElementById('myImg01');
-           let body = document.getElementById('myBody');
-           let bodyWidth = body.offsetWidth;  // Get the width of the body (background width)
-           let img01Right = parseInt(img01.style.left) + img01.width; // Rightmost position of myImg01
+       // Function to reset the game (restart from the beginning)
+       function restartGame() {
+           // Reset the positions of the images
+           document.getElementById('myImg01').style.left = '50px';
+           document.getElementById('myImg01').style.top = '300px';
 
-           // If the rightmost position of myImg01 is past the right edge of the screen
-           if (img01Right >= bodyWidth) {
-               alert('You Win!');
-               // Optional: Navigate to the next page or trigger some other action
-               // location = 'nextLevel.html'; // Uncomment to go to the next level
-           }
+           document.getElementById('myImg02').style.left = '350px';
+           document.getElementById('myImg02').style.top = '300px';
+
+           // Reset the background position (optional)
+           myGlobalX = 0;
+           document.getElementById('myBody').style.backgroundPosition = '100px 0px';
+
+           // Reset any other game variables if necessary (e.g., speed, direction)
        }
 
        // Function to move myImg01 to the right and check win condition
@@ -77,7 +81,6 @@
            let newLeft = parseInt(img01.style.left) + myImg01Speed + 'px';
            img01.style.left = newLeft;
            myCheckHit();  // Check for collisions
-           checkWinCondition();  // Check if the player has won
        }
 
        // Function to move myImg01 to the left and check win condition
@@ -86,24 +89,22 @@
            let newLeft = parseInt(img01.style.left) - myImg01Speed + 'px';
            img01.style.left = newLeft;
            myCheckHit();  // Check for collisions
-           checkWinCondition();  // Check if the player has won
        }
 
-       // Function to reset the game (restart)
-       function restartGame() {
-           // Reset the positions of the images
-           document.getElementById('myImg01').style.left = '50px';
-           document.getElementById('myImg01').style.top = '300px';
-           
-           document.getElementById('myImg02').style.left = '350px';
-           document.getElementById('myImg02').style.top = '300px';
+       // Function to move myImg01 up
+       function moveImg01Up() {
+           let img01 = document.getElementById('myImg01');
+           let newTop = parseInt(img01.style.top) - 10 + 'px';
+           img01.style.top = newTop;
+           myCheckHit();  // Check for collisions
+       }
 
-           // Reset the background position (optional)
-           myGlobalX = 0;
-           document.getElementById('myBody').style.backgroundPosition = '100px 0px';
-
-           // You can also reset other game variables, if necessary
-           // For example, resetting the speed, direction, etc.
+       // Function to move myImg01 down
+       function moveImg01Down() {
+           let img01 = document.getElementById('myImg01');
+           let newTop = parseInt(img01.style.top) + 10 + 'px';
+           img01.style.top = newTop;
+           myCheckHit();  // Check for collisions
        }
     </script>
     
@@ -122,25 +123,23 @@
     }">
     
     <!-- Image Right Movement Button -->
-    <input type=button value="Image Right Fast Button" onTouchStart="{this.click(); event.preventDefault();}" onclick="{
-        moveImg01Right();  // Move img01 to the right and check win condition
+    <input type=button value="Image Right Fast Button" onclick="{
+        moveImg01Right();  // Move img01 to the right and check for collisions
     }"><br><br>
 
     <!-- Image Left Movement Button -->
     <input type="button" value="Image Left" onclick="{
-        moveImg01Left();  // Move img01 to the left and check win condition
+        moveImg01Left();  // Move img01 to the left and check for collisions
     }"><br><br>
 
     <!-- New Up Button -->
     <input type="button" value="Image Up" onclick="{
-        document.getElementById('myImg01').style.top = parseInt(document.getElementById('myImg01').style.top) - 10 + 'px'
-        myCheckHit()  // check for collisions
+        moveImg01Up();  // Move img01 up and check for collisions
     }"><br><br>
 
     <!-- New Down Button -->
     <input type="button" value="Image Down" onclick="{
-        document.getElementById('myImg01').style.top = parseInt(document.getElementById('myImg01').style.top) + 10 + 'px'
-        myCheckHit()  // check for collisions
+        moveImg01Down();  // Move img01 down and check for collisions
     }"><br><br>
 
 </body>

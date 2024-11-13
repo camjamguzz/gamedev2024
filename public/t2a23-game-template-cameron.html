@@ -30,9 +30,8 @@
     
        function myCheckHit(){
            if ( myHitOther('myImg01','myImg02') ){
-               alert('you lose')  
-               document.getElementById('myImg01').style.left = '20px'
-               location = 't2a13-keydown.html'  // go to your next level
+               alert('You Died!');  // Display a "You Died" message
+               restartGame();  // Restart the game
            }
            // more if statements here like the above
        }  // end of myCheckHit()
@@ -90,6 +89,22 @@
            checkWinCondition();  // Check if the player has won
        }
 
+       // Function to reset the game (restart)
+       function restartGame() {
+           // Reset the positions of the images
+           document.getElementById('myImg01').style.left = '50px';
+           document.getElementById('myImg01').style.top = '300px';
+           
+           document.getElementById('myImg02').style.left = '350px';
+           document.getElementById('myImg02').style.top = '300px';
+
+           // Reset the background position (optional)
+           myGlobalX = 0;
+           document.getElementById('myBody').style.backgroundPosition = '100px 0px';
+
+           // You can also reset other game variables, if necessary
+           // For example, resetting the speed, direction, etc.
+       }
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">
@@ -111,7 +126,7 @@
         moveImg01Right();  // Move img01 to the right and check win condition
     }"><br><br>
 
-    <!-- New Left Button -->
+    <!-- Image Left Movement Button -->
     <input type="button" value="Image Left" onclick="{
         moveImg01Left();  // Move img01 to the left and check win condition
     }"><br><br>

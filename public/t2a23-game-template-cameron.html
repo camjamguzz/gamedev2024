@@ -10,7 +10,7 @@
        let myImg02Speed = 5;      // Speed of movement for myImg02 (enemy)
        let myImg01Speed = 10;     // Speed of movement for myImg01 (player)
 
-       // Function to check for collisions
+       // Function to check for collisions between two elements
        function myHitOther(my1, my2) {
            let left1 = parseInt(document.getElementById(my1).style.left);
            let right1 = left1 + parseInt(document.getElementById(my1).style.width);
@@ -122,6 +122,9 @@
 
        // Start moving the background left as soon as the page loads
        setInterval(moveBackgroundLeft, 100);  // Move the background every 100ms
+
+       // Continuous collision check (check every 50ms, even if image01 is not moving)
+       setInterval(myCheckHit, 50);  // Continuously check for collisions between images
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">

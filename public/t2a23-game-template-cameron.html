@@ -6,7 +6,9 @@
        // global variables here
        let myGlobalX = 0
        let myClock
-    
+       let myImg02Direction = 1  // 1 means down, -1 means up
+       let myImg02Speed = 5      // speed of movement
+
        // global functions here
        function myHitOther(my1,my2){
            left1   = parseInt(document.getElementById(my1).style.left)
@@ -34,6 +36,25 @@
            // more if statements here like the above
        }  // end of myCheckHit()
 
+       // Function to move myImg02 automatically up and down
+       function moveMyImg02() {
+           let img02 = document.getElementById('myImg02');
+           let currentTop = parseInt(img02.style.top);
+
+           // Move the image up or down based on direction
+           currentTop += myImg02Direction * myImg02Speed;
+
+           // Reverse direction if it hits the top or bottom of the screen
+           if (currentTop <= 0 || currentTop + img02.height >= window.innerHeight) {
+               myImg02Direction *= -1;  // Reverse direction
+           }
+
+           // Update the top position of the image
+           img02.style.top = currentTop + 'px';
+       }
+
+       // Start moving myImg02 when the page loads
+       setInterval(moveMyImg02, 50);  // Move every 50ms
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">

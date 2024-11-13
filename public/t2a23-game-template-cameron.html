@@ -81,6 +81,12 @@
            let newLeft = parseInt(img01.style.left) + myImg01Speed + 'px';
            img01.style.left = newLeft;
            myCheckHit();  // Check for collisions
+
+           // Check if myImg01 crosses the right side of the screen
+           if (parseInt(img01.style.left) >= window.innerWidth) {
+               alert('You Win!');  // Display the win message
+               restartGame();  // Restart the game
+           }
        }
 
        // Function to move myImg01 to the left and check for collisions

@@ -3,7 +3,7 @@
     <br><br><br><br>
     
     <script>
-       // Global variables here
+       // Global variables
        let myGlobalX = 0;
        let myClock;
        let myImg02Direction = 1;  // 1 means down, -1 means up
@@ -106,12 +106,22 @@
            img01.style.top = newTop;
            myCheckHit();  // Check for collisions
        }
+
+       // Function to move the background left automatically
+       function moveBackgroundLeft() {
+           myGlobalX -= 5;  // Move the background 5px left
+           let myTemp = myGlobalX + 'px 0px';  // Update the background position
+           document.getElementById('myBody').style.backgroundPosition = myTemp;
+       }
+
+       // Start moving the background left as soon as the page loads
+       setInterval(moveBackgroundLeft, 100);  // Move the background every 100ms
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">
     <img id="myImg02" style="position:absolute; width:300px; height:200px; top:300px; left:350px;" src="https://pnghq.com/wp-content/uploads/rayquaza-png-free-image-png-17831.png">
     
-    <!-- Background Movement Button -->
+    <!-- Background Movement Button (You can remove this since it's automated now) -->
     <input type=button value="Auto Background Left" onclick="{
         clearInterval(myClock)
         let myTemp = '100px 0px'

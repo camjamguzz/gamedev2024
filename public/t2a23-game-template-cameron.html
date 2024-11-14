@@ -10,7 +10,7 @@
        let myGlobalX = 0;
        let myClock;
        let myImg02Direction = 1;  // 1 means down, -1 means up
-       let myImg02Speed = 5;      // Speed of movement for myImg02 (enemy)
+       let myImg02Speed = 8;      // Speed of movement for myImg02 (enemy) increased from 5 to 8
        let myImg01Speed = 10;     // Speed of movement for myImg01 (player)
 
        // Function to check for collisions between two elements
@@ -42,7 +42,7 @@
            }
        }
 
-       // Function to move myImg02 automatically up and down
+       // Function to move myImg02 automatically up and down (make it move faster)
        function moveMyImg02() {
            let img02 = document.getElementById('myImg02');
            let currentTop = parseInt(img02.style.top);
@@ -59,7 +59,7 @@
            img02.style.top = currentTop + 'px';
        }
 
-       // Start moving myImg02 when the page loads
+       // Start moving myImg02 when the page loads (with new, faster speed)
        setInterval(moveMyImg02, 50);  // Move every 50ms
 
        // Function to reset the game (restart from the beginning)
@@ -167,15 +167,4 @@
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">
     <img id="myImg02" style="position:absolute; width:300px; height:200px; top:300px; left:350px;" src="https://pnghq.com/wp-content/uploads/rayquaza-png-free-image-png-17831.png">
-    
-    <!-- Background Movement Button (You can remove this since it's automated now) -->
-    <input type="button" value="Auto Background Left" onclick="{
-        clearInterval(myClock)
-        let myTemp = '100px 0px'
-        myClock = setInterval(function(){
-            myGlobalX -= 5
-            myTemp =  myGlobalX + 'px 0px'
-            document.getElementById('myBody').style.backgroundPosition = myTemp
-        }, 100)
-    }">
 </body>

@@ -2,13 +2,11 @@
 <p>Click below to make fast, fancy drawings with loops and variables:</p><br><br>
 
 <!-- Buttons to control the drawing -->
-<input type="button" value="Draw Spiral" onclick="drawSpiral()">
-<input type="button" value="Draw Random Circles" onclick="drawRandomCircles()">
-<input type="button" value="Draw Grid Pattern" onclick="drawGridPattern()">
-<input type="button" value="Draw Animated Spiral" onclick="guh(100)">
-<input type="button" value="Draw Radial Gradient Circles" onclick="drawRadialGradientCircles()">
-<input type="button" value="Draw Concentric Squares" onclick="drawConcentricSquares()">
-<input type="button" value="Draw Bouncing Balls" onclick="drawBouncingBalls()">
+<input type="button" value="Draw Spiral with Gradient" onclick="drawSpiralWithGradient()">
+<input type="button" value="Draw Random Circles with Motion" onclick="drawRandomCirclesWithMotion()">
+<input type="button" value="Draw Animated Concentric Circles" onclick="drawAnimatedConcentricCircles()">
+<input type="button" value="Draw Complex Grid Pattern" onclick="drawComplexGridPattern()">
+<input type="button" value="Draw Bouncing Balls with Trails" onclick="drawBouncingBallsWithTrails()">
 <input type="button" value="Clear All and Stop Animations" onclick="resetCanvas()"><br><br>
 
 <!-- Canvas element for drawing -->
@@ -22,16 +20,21 @@
     // Global variables for animations
     let animationIds = []; // Array to hold all animation frame IDs
 
-    // Function to draw a spiral using loops
-    function drawSpiral() {
+    // Draw Spiral with Gradient
+    function drawSpiralWithGradient() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
-
-        myContext.beginPath();
-        myContext.moveTo(500, 300); // Start in the center of the canvas
 
         let angle = 0;
         let radius = 1;
         let increment = 5;
+        let maxRadius = Math.sqrt(myCanvas.width * myCanvas.width + myCanvas.height * myCanvas.height);
+
+        let gradient = myContext.createLinearGradient(0, 0, myCanvas.width, myCanvas.height);
+        gradient.addColorStop(0, 'red');
+        gradient.addColorStop(1, 'blue');
+
+        myContext.beginPath();
+        myContext.moveTo(500, 300); // Start in the center of the canvas
 
         for (let i = 0; i < 200; i++) {
             myContext.lineTo(500 + Math.cos(angle) * radius, 300 + Math.sin(angle) * radius);
@@ -39,131 +42,114 @@
             radius += increment / 20;
         }
 
-        myContext.strokeStyle = 'blue';
+        myContext.strokeStyle = gradient;
         myContext.lineWidth = 2;
         myContext.stroke();
     }
 
-    // Function to draw random circles using loops
-    function drawRandomCircles() {
+    // Draw Random Circles with Motion
+    let circles = [];
+    function drawRandomCirclesWithMotion() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
 
-        for (let i = 0; i < 50; i++) {
-            let x = Math.random() * myCanvas.width;
-            let y = Math.random() * myCanvas.height;
-            let radius = Math.random() * 50;
-
-            let r = Math.floor(Math.random() * 256);
-            let g = Math.floor(Math.random() * 256);
-            let b = Math.floor(Math.random() * 256);
-            myContext.fillStyle = `rgb(${r}, ${g}, ${b})`;
-
-            myContext.beginPath();
-            myContext.arc(x, y, radius, 0, 2 * Math.PI);
-            myContext.fill();
+        for (let i = 0; i < 10; i++) {
+            circles.push({
+                x: Math.random() * myCanvas.width,
+                y: Math.random() * myCanvas.height,
+                radius: Math.random() * 30 + 10,
+                dx: Math.random() * 4 - 2, // Random horizontal speed
+                dy: Math.random() * 4 - 2, // Random vertical speed
+                color: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
+                shadowBlur: Math.random() * 10 + 5 // Random shadow blur for effect
+            });
         }
+
+        function animateCircles() {
+            for (let circle of circles) {
+                myContext.beginPath();
+                myContext.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
+                myContext.fillStyle = circle.color;
+                myContext.shadowColor = circle.color;
+                myContext.shadowBlur = circle.shadowBlur;
+                myContext.fill();
+
+                // Move the circle
+                circle.x += circle.dx;
+                circle.y += circle.dy;
+
+                // Bounce off the walls
+                if (circle.x + circle.radius > myCanvas.width || circle.x - circle.radius < 0) circle.dx = -circle.dx;
+                if (circle.y + circle.radius > myCanvas.height || circle.y - circle.radius < 0) circle.dy = -circle.dy;
+            }
+
+            animationIds.push(requestAnimationFrame(animateCircles)); // Store the animation frame ID
+        }
+
+        animateCircles(); // Start the animation loop
     }
 
-    // Function to draw a grid pattern using loops
-    function drawGridPattern() {
+    // Draw Animated Concentric Circles
+    let concentricCircleRadius = 10;
+    function drawAnimatedConcentricCircles() {
+        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
+
+        let centerX = myCanvas.width / 2;
+        let centerY = myCanvas.height / 2;
+
+        function animateCircles() {
+            myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas for each frame
+
+            // Draw concentric circles with dynamic radius
+            for (let i = 0; i < 10; i++) {
+                myContext.beginPath();
+                myContext.arc(centerX, centerY, concentricCircleRadius + i * 15, 0, 2 * Math.PI);
+                myContext.lineWidth = 2;
+                myContext.strokeStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+                myContext.stroke();
+            }
+
+            concentricCircleRadius += 1; // Increase radius
+
+            if (concentricCircleRadius < 300) {
+                animationIds.push(requestAnimationFrame(animateCircles)); // Continue the animation
+            }
+        }
+
+        animateCircles(); // Start the animation loop
+    }
+
+    // Draw Complex Grid Pattern with Animation
+    let gridOffset = 0;
+    function drawComplexGridPattern() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
 
         let gridSize = 50;
         let rows = Math.floor(myCanvas.height / gridSize);
         let cols = Math.floor(myCanvas.width / gridSize);
 
-        for (let i = 0; i <= rows; i++) {
-            for (let j = 0; j <= cols; j++) {
-                let color = (i + j) % 2 === 0 ? 'lightblue' : 'lightgreen';
-                myContext.fillStyle = color;
-                myContext.fillRect(j * gridSize, i * gridSize, gridSize, gridSize);
+        function animateGrid() {
+            for (let i = 0; i <= rows; i++) {
+                for (let j = 0; j <= cols; j++) {
+                    let color = (i + j + gridOffset) % 2 === 0 ? 'lightblue' : 'lightgreen';
+                    myContext.fillStyle = color;
+                    myContext.fillRect(j * gridSize, i * gridSize, gridSize, gridSize);
+                }
             }
-        }
-    }
-
-    // Function to draw an animated spiral
-    let angle = 0;
-    function guh(count=10){
-        for (let i = 0; i < count; i++) {
-            setTimeout(drawAnimatedSpiral, i * 100);
-        }
-    }
-
-    function drawAnimatedSpiral() {
-        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
-
-        let radius = 1;
-        let increment = 5;
-        let maxRadius = Math.sqrt(myCanvas.width * myCanvas.width + myCanvas.height * myCanvas.height); // Diagonal length of canvas
-
-        function animateSpiral() {
-            myContext.beginPath();
-            myContext.moveTo(500, 300); // Starting point in the center of the canvas
-            myContext.lineTo(500 + Math.cos(angle) * radius, 300 + Math.sin(angle) * radius);
-
-            // Random color for each line segment
-            let color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
-            myContext.strokeStyle = color;
-            myContext.lineWidth = 2;
-            myContext.stroke();
-
-            // Update angle and radius for the next line
-            angle += 0.1;
-            radius += increment / 20; // Increase the radius more slowly
-            if (radius < maxRadius) {
-                animationIds.push(requestAnimationFrame(animateSpiral)); // Store the animation frame ID
-            }
+            gridOffset += 0.5; // Create animation effect by shifting the grid pattern
+            animationIds.push(requestAnimationFrame(animateGrid)); // Continue the animation
         }
 
-        animateSpiral();
+        animateGrid(); // Start the animation loop
     }
 
-    // Function to draw radial gradient circles
-    function drawRadialGradientCircles() {
-        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
-
-        for (let i = 0; i < 10; i++) {
-            let x = Math.random() * myCanvas.width;
-            let y = Math.random() * myCanvas.height;
-            let radius = Math.random() * 100;
-
-            let gradient = myContext.createRadialGradient(x, y, 0, x, y, radius);
-            gradient.addColorStop(0, 'yellow');
-            gradient.addColorStop(1, 'red');
-
-            myContext.beginPath();
-            myContext.arc(x, y, radius, 0, 2 * Math.PI);
-            myContext.fillStyle = gradient;
-            myContext.fill();
-        }
-    }
-
-    // Function to draw concentric squares
-    function drawConcentricSquares() {
-        myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
-
-        let centerX = myCanvas.width / 2;
-        let centerY = myCanvas.height / 2;
-        let maxSize = 400;
-        let step = 20;
-
-        for (let size = maxSize; size > 0; size -= step) {
-            myContext.beginPath();
-            myContext.rect(centerX - size / 2, centerY - size / 2, size, size);
-            myContext.lineWidth = 5;
-            myContext.strokeStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
-            myContext.stroke();
-        }
-    }
-
-    // Variables for Bouncing Balls
-    let balls = [];
-    function drawBouncingBalls() {
+    // Draw Bouncing Balls with Trails
+    let ballsWithTrails = [];
+    function drawBouncingBallsWithTrails() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear canvas before drawing
 
         // Create random balls
         for (let i = 0; i < 5; i++) {
-            balls.push({
+            ballsWithTrails.push({
                 x: Math.random() * myCanvas.width,
                 y: Math.random() * myCanvas.height,
                 radius: 20,
@@ -173,8 +159,9 @@
             });
         }
 
-        function animateBalls() {
-            for (let ball of balls) {
+        function animateBallsWithTrails() {
+            for (let ball of ballsWithTrails) {
+                // Create a fading trail effect
                 myContext.beginPath();
                 myContext.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
                 myContext.fillStyle = ball.color;
@@ -189,10 +176,10 @@
                 if (ball.y + ball.radius > myCanvas.height || ball.y - ball.radius < 0) ball.dy = -ball.dy;
             }
 
-            animationIds.push(requestAnimationFrame(animateBalls)); // Store animation frame ID
+            animationIds.push(requestAnimationFrame(animateBallsWithTrails)); // Store the animation frame ID
         }
 
-        animateBalls(); // Start the animation loop
+        animateBallsWithTrails(); // Start the animation loop
     }
 
     // Function to clear the canvas and stop all animations
@@ -206,7 +193,6 @@
         // Clear the canvas
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
     }
-
 </script>
 
 <style>

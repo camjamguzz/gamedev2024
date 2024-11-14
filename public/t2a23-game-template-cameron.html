@@ -143,6 +143,26 @@
 
        // Continuous collision check (check every 50ms, even if image01 is not moving)
        setInterval(myCheckHit, 50);  // Continuously check for collisions between images
+
+       // Event listener for keyboard arrow key movement
+       window.addEventListener('keydown', function(event) {
+           switch(event.key) {
+               case "ArrowLeft":  // Left arrow key
+                   moveImg01Left();
+                   break;
+               case "ArrowRight":  // Right arrow key
+                   moveImg01Right();
+                   break;
+               case "ArrowUp":  // Up arrow key
+                   moveImg01Up();
+                   break;
+               case "ArrowDown":  // Down arrow key
+                   moveImg01Down();
+                   break;
+               default:
+                   break;  // Ignore other keys
+           }
+       });
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">
@@ -158,25 +178,4 @@
             document.getElementById('myBody').style.backgroundPosition = myTemp
         }, 100)
     }">
-    
-    <!-- Image Right Movement Button -->
-    <input type="button" value="Image Right Fast Button" onclick="{
-        moveImg01Right();  // Move img01 to the right and check for collisions
-    }"><br><br>
-
-    <!-- Image Left Movement Button -->
-    <input type="button" value="Image Left" onclick="{
-        moveImg01Left();  // Move img01 to the left and check for collisions
-    }"><br><br>
-
-    <!-- New Up Button -->
-    <input type="button" value="Image Up" onclick="{
-        moveImg01Up();  // Move img01 up and check for collisions
-    }"><br><br>
-
-    <!-- New Down Button -->
-    <input type="button" value="Image Down" onclick="{
-        moveImg01Down();  // Move img01 down and check for collisions
-    }"><br><br>
-
 </body>

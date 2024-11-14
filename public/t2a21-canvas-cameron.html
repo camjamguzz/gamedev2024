@@ -19,8 +19,8 @@
     let myCanvas = document.getElementById('myCoolTag');
     let myContext = myCanvas.getContext('2d');
 
-    // Variable to hold animation frame ID for stopping animation
-    let animationId;
+    // Global variables for animations
+    let animationIds = []; // Array to hold all animation frame IDs
 
     // Function to draw a spiral using loops
     function drawSpiral() {
@@ -85,9 +85,10 @@
     let angle = 0;
     function guh(count=10){
         for (let i = 0; i < count; i++) {
-            setTimeout(drawAnimatedSpiral, i * 100)
+            setTimeout(drawAnimatedSpiral, i * 100);
         }
     }
+
     function drawAnimatedSpiral() {
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); // Clear the canvas before drawing
 
@@ -110,7 +111,7 @@
             angle += 0.1;
             radius += increment / 20; // Increase the radius more slowly
             if (radius < maxRadius) {
-                animationId = requestAnimationFrame(animateSpiral); // Continue animation until max radius is reached
+                animationIds.push(requestAnimationFrame(animateSpiral)); // Store the animation frame ID
             }
         }
 
@@ -188,7 +189,7 @@
                 if (ball.y + ball.radius > myCanvas.height || ball.y - ball.radius < 0) ball.dy = -ball.dy;
             }
 
-            animationId = requestAnimationFrame(animateBalls); // Store animation frame ID
+            animationIds.push(requestAnimationFrame(animateBalls)); // Store animation frame ID
         }
 
         animateBalls(); // Start the animation loop
@@ -196,8 +197,11 @@
 
     // Function to clear the canvas and stop all animations
     function resetCanvas() {
-        // Stop any ongoing animations
-        cancelAnimationFrame(animationId);
+        // Stop all animations
+        for (let id of animationIds) {
+            cancelAnimationFrame(id);
+        }
+        animationIds = []; // Clear the animation frame IDs array
 
         // Clear the canvas
         myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);

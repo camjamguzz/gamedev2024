@@ -5,12 +5,6 @@
     <h1 align="center">t2a11 Game Template by Fred</h1>
     <br><br><br><br>
     
-    <!-- Custom message overlay (hidden by default) -->
-    <div id="gameOverPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); color: white; font-size: 30px; text-align: center; padding-top: 200px; z-index: 1000;">
-        <div id="gameOverMessage"></div>
-        <p>Press any key to continue</p>
-    </div>
-
     <script>
        // Global variables
        let myGlobalX = 0;
@@ -18,7 +12,7 @@
        let myImg02Direction = 1;  // 1 means down, -1 means up
        let myImg02Speed = 8;      // Speed of movement for myImg02 (enemy) increased from 5 to 8
        let myImg01Speed = 10;     // Speed of movement for myImg01 (player)
-       let keysPressed = { up: false, down: false, left: false, right: false };  // To track which keys are pressed
+       let keysPressed = {};      // To track which keys are pressed
 
        // Function to check for collisions between two elements
        function myHitOther(my1, my2) {
@@ -44,7 +38,7 @@
        // Function to check for collision and handle the "You Lost!" scenario
        function myCheckHit() {
            if (myHitOther('myImg01', 'myImg02')) {
-               showGameOverMessage('You Lost!');
+               alert('You Lost!');  // Display the "You Lost!" message
                restartGame();  // Restart the game
            }
        }
@@ -83,34 +77,59 @@
            document.getElementById('myBody').style.backgroundPosition = '100px 0px';
        }
 
-       // Function to move myImg01 based on key press and check for boundaries
-       function moveImg01() {
+       // Function to move myImg01 to the right and check for collisions
+       function moveImg01Right() {
            let img01 = document.getElementById('myImg01');
-           let newLeft = parseInt(img01.style.left);
-           let newTop = parseInt(img01.style.top);
+           let newLeft = parseInt(img01.style.left) + myImg01Speed;
 
-           // Move horizontally based on keys pressed
-           if (keysPressed.right && newLeft + img01.width < window.innerWidth) {
-               newLeft += myImg01Speed;
-           }
-           if (keysPressed.left && newLeft > 0) {
-               newLeft -= myImg01Speed;
+           // Prevent the image from going beyond the right boundary (taking into account the image width)
+           if (newLeft + img01.width <= window.innerWidth) {
+               img01.style.left = newLeft + 'px';
            }
 
-           // Move vertically based on keys pressed
-           if (keysPressed.up && newTop > 0) {
-               newTop -= myImg01Speed;
-           }
-           if (keysPressed.down && newTop + img01.height < window.innerHeight) {
-               newTop += myImg01Speed;
+           // Check if the image has reached the right edge
+           if (newLeft + img01.width >= window.innerWidth - 10) {  // 10px for the border width
+               alert('You Win!');  // Display the win message
+               restartGame();  // Restart the game
            }
 
-           // Update the position of the player
-           img01.style.left = newLeft + 'px';
-           img01.style.top = newTop + 'px';
+           myCheckHit();  // Check for collisions
+       }
 
-           // Check for collisions after each move
-           myCheckHit();
+       // Function to move myImg01 to the left and check for collisions
+       function moveImg01Left() {
+           let img01 = document.getElementById('myImg01');
+           let newLeft = parseInt(img01.style.left) - myImg01Speed;
+
+           // Prevent the image from going beyond the left boundary
+           if (newLeft >= 0) {
+               img01.style.left = newLeft + 'px';
+           }
+           myCheckHit();  // Check for collisions
+       }
+
+       // Function to move myImg01 up and check for boundaries
+       function moveImg01Up() {
+           let img01 = document.getElementById('myImg01');
+           let newTop = parseInt(img01.style.top) - 10;
+
+           // Prevent the image from going beyond the top boundary
+           if (newTop >= 0) {
+               img01.style.top = newTop + 'px';
+           }
+           myCheckHit();  // Check for collisions
+       }
+
+       // Function to move myImg01 down and check for boundaries
+       function moveImg01Down() {
+           let img01 = document.getElementById('myImg01');
+           let newTop = parseInt(img01.style.top) + 10;
+
+           // Prevent the image from going beyond the bottom boundary
+           if (newTop + img01.height <= window.innerHeight) {
+               img01.style.top = newTop + 'px';
+           }
+           myCheckHit();  // Check for collisions
        }
 
        // Function to move the background left automatically
@@ -123,51 +142,39 @@
        // Start moving the background left as soon as the page loads
        setInterval(moveBackgroundLeft, 100);  // Move the background every 100ms
 
-       // Continuous movement (check every 50ms)
-       setInterval(moveImg01, 50);
+       // Continuous collision check (check every 50ms, even if image01 is not moving)
+       setInterval(myCheckHit, 50);  // Continuously check for collisions between images
 
        // Event listener for keyboard arrow key movement
        window.addEventListener('keydown', function(event) {
-           // Mark the key as pressed to enable movement
-           if (event.key === "ArrowLeft") {
-               keysPressed.left = true;
-           } else if (event.key === "ArrowRight") {
-               keysPressed.right = true;
-           } else if (event.key === "ArrowUp") {
-               keysPressed.up = true;
-           } else if (event.key === "ArrowDown") {
-               keysPressed.down = true;
-           }
+           // Only allow movement if the key hasn't been pressed already
+           if (!keysPressed[event.key]) {
+               keysPressed[event.key] = true;  // Mark the key as pressed
 
-           // Prevent default action (e.g., scrolling for arrow keys)
-           event.preventDefault();
+               switch(event.key) {
+                   case "ArrowLeft":  // Left arrow key
+                       moveImg01Left();
+                       break;
+                   case "ArrowRight":  // Right arrow key
+                       moveImg01Right();
+                       break;
+                   case "ArrowUp":  // Up arrow key
+                       moveImg01Up();
+                       break;
+                   case "ArrowDown":  // Down arrow key
+                       moveImg01Down();
+                       break;
+                   default:
+                       break;  // Ignore other keys
+               }
+           }
        });
 
-       // Event listener for key release to stop movement
+       // Reset the key press state when the key is released
        window.addEventListener('keyup', function(event) {
-           // Mark the key as not pressed
-           if (event.key === "ArrowLeft") {
-               keysPressed.left = false;
-           } else if (event.key === "ArrowRight") {
-               keysPressed.right = false;
-           } else if (event.key === "ArrowUp") {
-               keysPressed.up = false;
-           } else if (event.key === "ArrowDown") {
-               keysPressed.down = false;
-           }
+           keysPressed[event.key] = false;  // Allow the key to be pressed again
        });
 
-       // Function to display the Game Over or Win message
-       function showGameOverMessage(message) {
-           document.getElementById('gameOverMessage').innerText = message;
-           document.getElementById('gameOverPopup').style.display = 'block';
-       }
-
-       // Event listener for key press to close the game over popup
-       window.addEventListener('keydown', function() {
-           document.getElementById('gameOverPopup').style.display = 'none';  // Hide the popup
-           restartGame();  // Restart the game
-       });
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">

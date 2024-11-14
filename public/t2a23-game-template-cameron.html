@@ -79,38 +79,48 @@
        // Function to move myImg01 to the right and check for collisions
        function moveImg01Right() {
            let img01 = document.getElementById('myImg01');
-           let newLeft = parseInt(img01.style.left) + myImg01Speed + 'px';
-           img01.style.left = newLeft;
-           myCheckHit();  // Check for collisions
+           let newLeft = parseInt(img01.style.left) + myImg01Speed;
 
-           // Check if myImg01 crosses the right side of the screen
-           if (parseInt(img01.style.left) >= window.innerWidth) {
-               alert('You Win!');  // Display the win message
-               restartGame();  // Restart the game
+           // Prevent the image from going beyond the right boundary (taking into account the image width)
+           if (newLeft + img01.width <= window.innerWidth) {
+               img01.style.left = newLeft + 'px';
            }
+           myCheckHit();  // Check for collisions
        }
 
        // Function to move myImg01 to the left and check for collisions
        function moveImg01Left() {
            let img01 = document.getElementById('myImg01');
-           let newLeft = parseInt(img01.style.left) - myImg01Speed + 'px';
-           img01.style.left = newLeft;
+           let newLeft = parseInt(img01.style.left) - myImg01Speed;
+
+           // Prevent the image from going beyond the left boundary
+           if (newLeft >= 0) {
+               img01.style.left = newLeft + 'px';
+           }
            myCheckHit();  // Check for collisions
        }
 
-       // Function to move myImg01 up
+       // Function to move myImg01 up and check for boundaries
        function moveImg01Up() {
            let img01 = document.getElementById('myImg01');
-           let newTop = parseInt(img01.style.top) - 10 + 'px';
-           img01.style.top = newTop;
+           let newTop = parseInt(img01.style.top) - 10;
+
+           // Prevent the image from going beyond the top boundary
+           if (newTop >= 0) {
+               img01.style.top = newTop + 'px';
+           }
            myCheckHit();  // Check for collisions
        }
 
-       // Function to move myImg01 down
+       // Function to move myImg01 down and check for boundaries
        function moveImg01Down() {
            let img01 = document.getElementById('myImg01');
-           let newTop = parseInt(img01.style.top) + 10 + 'px';
-           img01.style.top = newTop;
+           let newTop = parseInt(img01.style.top) + 10;
+
+           // Prevent the image from going beyond the bottom boundary
+           if (newTop + img01.height <= window.innerHeight) {
+               img01.style.top = newTop + 'px';
+           }
            myCheckHit();  // Check for collisions
        }
 

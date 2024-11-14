@@ -85,6 +85,13 @@
            if (newLeft + img01.width <= window.innerWidth) {
                img01.style.left = newLeft + 'px';
            }
+
+           // Check if the image has reached the right edge
+           if (newLeft + img01.width >= window.innerWidth - 10) {  // 10px for the border width
+               alert('You Win!');  // Display the win message
+               restartGame();  // Restart the game
+           }
+
            myCheckHit();  // Check for collisions
        }
 

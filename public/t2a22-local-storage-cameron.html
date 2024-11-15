@@ -19,14 +19,14 @@ Text example:
 <!-- Button to retrieve text -->
 <input type="button" value="Retrieve Text" onclick="retrieveTexts()">
 
-<!-- Display area for stored texts -->
-<div id="storedTextsList"></div>
+<!-- Display area for stored texts (initially hidden) -->
+<div id="storedTextsList" style="display: none; margin-top: 20px;"></div>
 
 <script>
-    // Function to load and display stored texts on page load
+    // Function to load stored texts silently on page load
     function loadStoredTexts() {
-        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
-        displayTexts(storedTexts);
+        // Prepares stored texts in memory, no display here
+        JSON.parse(localStorage.getItem('myStoredTexts')) || [];
     }
 
     // Function to store text into localStorage
@@ -37,7 +37,6 @@ Text example:
             storedTexts.push(textValue); // Add the new text to the list
             localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
             document.getElementById('myText1').value = ''; // Clear the input field
-            displayTexts(storedTexts); // Update the displayed list
         }
     }
 
@@ -45,6 +44,7 @@ Text example:
     function retrieveTexts() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block'; // Show the list
     }
 
     // Function to display texts in a list format and make them clickable

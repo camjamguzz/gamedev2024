@@ -47,7 +47,7 @@ Text example:
         displayTexts(storedTexts);
     }
 
-    // Function to display texts in a list format
+    // Function to display texts in a list format and make them clickable
     function displayTexts(texts) {
         const listContainer = document.getElementById('storedTextsList');
         listContainer.innerHTML = ''; // Clear the current list
@@ -56,12 +56,19 @@ Text example:
             texts.forEach(text => {
                 const li = document.createElement('li'); // Create a list item
                 li.textContent = text; // Set the text content
+                li.style.cursor = 'pointer'; // Make it look clickable
+                li.onclick = () => populateTextField(text); // Add click event to populate the input field
                 ul.appendChild(li); // Add to the list
             });
             listContainer.appendChild(ul); // Display the list
         } else {
             listContainer.textContent = 'No stored texts found.';
         }
+    }
+
+    // Function to populate the input field with the clicked text
+    function populateTextField(text) {
+        document.getElementById('myText1').value = text;
     }
 
     // Automatically save text when the user leaves the page

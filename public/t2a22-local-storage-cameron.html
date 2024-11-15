@@ -3,15 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local Storage Example</title>
+    <title>Cooler Local Storage Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 20px;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        #myText1 {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+        input[type="button"]:active {
+            background-color: #3e8e41;
+        }
+        #storedTextsList {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #storedTextsList ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        #storedTextsList li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #storedTextsList li:hover {
+            background-color: #f0f0f0;
+        }
+        #storedTextsList li:active {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body onload="loadStoredTexts()">
 
-<h2>t2a22-local-storage-cameron.html</h2>
+<h2>Cooler Local Storage Example</h2>
 
 <!-- Input for storing and retrieving text -->
 Text example: 
-<input id="myText1" type="text" size="70" value="" placeholder="Write here to store"><br>
+<input id="myText1" type="text" placeholder="Write here to store..."><br>
 
 <!-- Buttons for actions -->
 <input type="button" value="Store Text" onclick="storeText()">
@@ -19,7 +84,7 @@ Text example:
 <input type="button" value="Delete Text" onclick="startDeleteMode()">
 
 <!-- Display area for stored texts (initially hidden) -->
-<div id="storedTextsList" style="display: none; margin-top: 20px;"></div>
+<div id="storedTextsList" style="display: none;"></div>
 
 <script>
     let deleteMode = false; // Keeps track of whether delete mode is active

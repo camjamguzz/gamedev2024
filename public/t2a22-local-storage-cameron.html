@@ -32,7 +32,6 @@ Text example:
     function storeText() {
         const textValue = document.getElementById('myText1').value;
         localStorage.setItem('myStoredText', textValue);
-        alert(textValue + ' \nHas been stored');
         document.getElementById('myText1').value = ''; // Clear the input
     }
 
@@ -41,9 +40,8 @@ Text example:
         const storedText = localStorage.getItem('myStoredText');
         if (storedText !== null) {
             document.getElementById('myText1').value = storedText;
-            alert('Retrieved Text: ' + storedText);
         } else {
-            alert('No text found in storage.');
+            document.getElementById('myText1').value = ''; // Clear input if nothing is stored
         }
     }
 

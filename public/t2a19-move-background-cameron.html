@@ -23,7 +23,6 @@
         #myImage02 {
             left: 180px; /* Adjust position for the second image */
         }
-        /* Ensure both images are displayed properly */
         img {
             display: block; /* Prevents any inline issues */
             margin-right: 10px; /* Space between images */
@@ -34,18 +33,14 @@
     <h1 align="center">t2a19-move-background-cameron.html</h1>
 
     <input id="myButton01" type="button" value="Background Move Left" onclick="moveBackground()">
-    
     <input type="button" value="Auto Background Left Faster" onclick="autoBackgroundFaster()">
-    
     <input type="button" value="Auto Background Left Slower" onclick="autoBackgroundSlower()">
-    
     <input type="button" value="Auto Move Left" onclick="startAutoMove()">
-    
-    <input type="button" value="Stop Background" onclick="stopBackground()"> <!-- New Stop button -->
+    <input type="button" value="Stop Background" onclick="stopBackground()"> <!-- Stop button -->
 
     <div style="display: flex; align-items: flex-end;"> <!-- Flexbox for alignment -->
         <img id="myImage01" src="https://pngimg.com/uploads/spongebob/spongebob_PNG1.png" alt="SpongeBob">
-        <img id="myImage02" src="https://www.freeiconspng.com/uploads/spongebob-and-patrick-png-4.png" alt="Patrick Star"> <!-- Second image -->
+        <img id="myImage02" src="https://www.freeiconspng.com/uploads/spongebob-and-patrick-png-4.png" alt="Patrick Star">
     </div>
 
     <script>
@@ -61,16 +56,20 @@
         }
 
         function autoBackgroundFaster() {
-            clearInterval(myClock01);
-            mySpeed01 -= 30;
-            if (mySpeed01 < 10) { mySpeed01 = 10; }
-            myClock01 = setInterval(moveBackground, mySpeed01);
+            clearInterval(myClock01); // Stop any existing interval
+            mySpeed01 -= 50; // Increase the speed (lower interval time)
+            if (mySpeed01 < 10) { 
+                mySpeed01 = 10; // Set a minimum limit to avoid extremely fast intervals
+            }
+            myClock01 = setInterval(moveBackground, mySpeed01); // Apply the faster interval
         }
 
         function autoBackgroundSlower() {
             clearInterval(myClock01);
-            mySpeed01 += 30;
-            if (mySpeed01 > 1000) { mySpeed01 = 1000; }
+            mySpeed01 += 50; // Decrease speed (higher interval time)
+            if (mySpeed01 > 1000) { 
+                mySpeed01 = 1000; // Set a maximum limit to avoid freezing
+            }
             myClock01 = setInterval(moveBackground, mySpeed01);
         }
 
@@ -111,4 +110,3 @@
     </script>
 </body>
 </html>
-

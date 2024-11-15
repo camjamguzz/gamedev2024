@@ -13,23 +13,23 @@
 Text example: 
 <input id="myText1" type="text" size="70" value="" placeholder="Write here to store"><br>
 
-<!-- Button to store text -->
+<!-- Buttons for actions -->
 <input type="button" value="Store Text" onclick="storeText()">
-
-<!-- Button to retrieve text -->
 <input type="button" value="Retrieve Text" onclick="retrieveTexts()">
+<input type="button" value="Delete Text" onclick="startDeleteMode()">
 
 <!-- Display area for stored texts (initially hidden) -->
 <div id="storedTextsList" style="display: none; margin-top: 20px;"></div>
 
 <script>
-    // Function to load stored texts silently on page load
+    let deleteMode = false; // Keeps track of whether delete mode is active
+
+    // Load stored texts silently on page load
     function loadStoredTexts() {
-        // Prepares stored texts in memory, no display here
         JSON.parse(localStorage.getItem('myStoredTexts')) || [];
     }
 
-    // Function to store text into localStorage
+    // Store text into localStorage
     function storeText() {
         const textValue = document.getElementById('myText1').value;
         if (textValue.trim() !== "") {
@@ -40,24 +40,43 @@ Text example:
         }
     }
 
-    // Function to retrieve and display all stored texts
+    // Retrieve and display all stored texts
     function retrieveTexts() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         displayTexts(storedTexts);
         document.getElementById('storedTextsList').style.display = 'block'; // Show the list
+        deleteMode = false; // Ensure delete mode is off when retrieving texts
     }
 
-    // Function to display texts in a list format and make them clickable
+    // Enable delete mode
+    function startDeleteMode() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts to delete.');
+            return;
+        }
+        displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block'; // Ensure list is visible
+        deleteMode = true; // Activate delete mode
+    }
+
+    // Display texts in a list format and make them clickable
     function displayTexts(texts) {
         const listContainer = document.getElementById('storedTextsList');
         listContainer.innerHTML = ''; // Clear the current list
         if (texts.length > 0) {
             const ul = document.createElement('ul'); // Create a list container
-            texts.forEach(text => {
+            texts.forEach((text, index) => {
                 const li = document.createElement('li'); // Create a list item
                 li.textContent = text; // Set the text content
                 li.style.cursor = 'pointer'; // Make it look clickable
-                li.onclick = () => populateTextField(text); // Add click event to populate the input field
+                li.onclick = () => {
+                    if (deleteMode) {
+                        deleteText(index); // Delete the clicked text
+                    } else {
+                        populateTextField(text); // Populate the input field
+                    }
+                };
                 ul.appendChild(li); // Add to the list
             });
             listContainer.appendChild(ul); // Display the list
@@ -66,9 +85,20 @@ Text example:
         }
     }
 
-    // Function to populate the input field with the clicked text
+    // Populate the input field with the clicked text
     function populateTextField(text) {
         document.getElementById('myText1').value = text;
+    }
+
+    // Delete a text by its index
+    function deleteText(index) {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (index >= 0 && index < storedTexts.length) {
+            storedTexts.splice(index, 1); // Remove the text at the selected index
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts)); // Update localStorage
+            displayTexts(storedTexts); // Refresh the displayed list
+        }
+        deleteMode = false; // Exit delete mode after deletion
     }
 
     // Automatically save text when the user leaves the page

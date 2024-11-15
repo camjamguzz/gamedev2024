@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Storage Example</title>
 </head>
-<body onload="loadStoredText()">
+<body onload="loadStoredTexts()">
 
 <h2>t2a22-local-storage-cameron.html</h2>
 
@@ -17,37 +17,61 @@ Text example:
 <input type="button" value="Store Text" onclick="storeText()">
 
 <!-- Button to retrieve text -->
-<input type="button" value="Retrieve Text" onclick="retrieveText()">
+<input type="button" value="Retrieve Text" onclick="retrieveTexts()">
+
+<!-- Display area for stored texts -->
+<div id="storedTextsList"></div>
 
 <script>
-    // Function to load stored text when the page loads
-    function loadStoredText() {
-        const myStorage = localStorage.getItem('myStoredText');
-        if (myStorage !== null) {
-            document.getElementById('myText1').value = myStorage;
+    // Function to load and display stored texts on page load
+    function loadStoredTexts() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        displayTexts(storedTexts);
+    }
+
+    // Function to store text into localStorage
+    function storeText() {
+        const textValue = document.getElementById('myText1').value;
+        if (textValue.trim() !== "") {
+            const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+            storedTexts.push(textValue); // Add the new text to the list
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
+            document.getElementById('myText1').value = ''; // Clear the input field
+            displayTexts(storedTexts); // Update the displayed list
         }
     }
 
-    // Function to store text in localStorage
-    function storeText() {
-        const textValue = document.getElementById('myText1').value;
-        localStorage.setItem('myStoredText', textValue);
-        document.getElementById('myText1').value = ''; // Clear the input
+    // Function to retrieve and display all stored texts
+    function retrieveTexts() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        displayTexts(storedTexts);
     }
 
-    // Function to retrieve text from localStorage
-    function retrieveText() {
-        const storedText = localStorage.getItem('myStoredText');
-        if (storedText !== null) {
-            document.getElementById('myText1').value = storedText;
+    // Function to display texts in a list format
+    function displayTexts(texts) {
+        const listContainer = document.getElementById('storedTextsList');
+        listContainer.innerHTML = ''; // Clear the current list
+        if (texts.length > 0) {
+            const ul = document.createElement('ul'); // Create a list container
+            texts.forEach(text => {
+                const li = document.createElement('li'); // Create a list item
+                li.textContent = text; // Set the text content
+                ul.appendChild(li); // Add to the list
+            });
+            listContainer.appendChild(ul); // Display the list
         } else {
-            document.getElementById('myText1').value = ''; // Clear input if nothing is stored
+            listContainer.textContent = 'No stored texts found.';
         }
     }
 
     // Automatically save text when the user leaves the page
     window.onunload = function () {
-        localStorage.setItem('myStoredText', document.getElementById('myText1').value);
+        const textValue = document.getElementById('myText1').value;
+        if (textValue.trim() !== "") {
+            const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+            storedTexts.push(textValue); // Add unsaved text to the list
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
+        }
     };
 </script>
 

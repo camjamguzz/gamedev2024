@@ -3,6 +3,7 @@
                         border: 10px solid #000000; /* Black border around the edge */
                         margin: 0; padding: 0; overflow: hidden;">
     <h1 align="center">t2a11 Game Template by Fred</h1>
+    <h2 id="levelDisplay" align="center" style="margin-top: -20px;">Level: 1</h2>
     <br><br><br><br>
     
     <!-- Custom message overlay (hidden by default) -->
@@ -19,6 +20,7 @@
         let myImg02Speed = 1;      // Initial speed for myImg02 (enemy)
         let myImg01Speed = 10;     // Speed of movement for myImg01 (player)
         let keysPressed = {};      // To track which keys are pressed
+        let currentLevel = 1;      // Initialize level to 1
 
         // Function to check for collisions
         function myHitOther(my1, my2) {
@@ -86,7 +88,7 @@
             if (newLeft + img01.width >= window.innerWidth - 10) {
                 showGameMessage('You Win!');
                 showConfetti();
-                increaseEnemySpeed();  // Increase enemy speed
+                nextLevel();  // Proceed to the next level
                 restartGame();
             }
         }
@@ -118,9 +120,16 @@
             }
         }
 
-        // Function to increase enemy speed after winning
-        function increaseEnemySpeed() {
-            myImg02Speed += 1;  // Increment speed
+        // Function to proceed to the next level
+        function nextLevel() {
+            currentLevel += 1;  // Increment level
+            myImg02Speed += 1;  // Increment enemy speed
+            updateLevelDisplay();  // Update the level display
+        }
+
+        // Update the level display
+        function updateLevelDisplay() {
+            document.getElementById('levelDisplay').textContent = `Level: ${currentLevel}`;
         }
 
         // Background movement

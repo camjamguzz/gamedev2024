@@ -59,6 +59,9 @@
 
         setInterval(moveMyImg02, 50);  // Move myImg02 every 50ms
 
+        // Continuous collision checking
+        setInterval(myCheckHit, 50);  // Check for collisions every 50ms
+
         // Restart the game
         function restartGame() {
             document.getElementById('myImg01').style.left = '50px';
@@ -86,7 +89,6 @@
                 increaseEnemySpeed();  // Increase enemy speed
                 restartGame();
             }
-            myCheckHit();
         }
 
         function moveImg01Left() {
@@ -96,7 +98,6 @@
             if (newLeft >= 0) {
                 img01.style.left = newLeft + 'px';
             }
-            myCheckHit();
         }
 
         function moveImg01Up() {
@@ -106,7 +107,6 @@
             if (newTop >= 0) {
                 img01.style.top = newTop + 'px';
             }
-            myCheckHit();
         }
 
         function moveImg01Down() {
@@ -116,7 +116,6 @@
             if (newTop + img01.height <= window.innerHeight) {
                 img01.style.top = newTop + 'px';
             }
-            myCheckHit();
         }
 
         // Function to increase enemy speed after winning

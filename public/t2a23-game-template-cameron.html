@@ -14,212 +14,182 @@
     <div id="confetti-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
 
     <script>
-       // Global variables
-       let myGlobalX = 0;
-       let myClock;
-       let myImg02Direction = 1;  // 1 means down, -1 means up
-       let myImg02Speed = 8;      // Speed of movement for myImg02 (enemy) increased from 5 to 8
-       let myImg01Speed = 10;     // Speed of movement for myImg01 (player)
-       let keysPressed = {};      // To track which keys are pressed
+        let myGlobalX = 0;
+        let myImg02Direction = 1;  // 1 means down, -1 means up
+        let myImg02Speed = 1;      // Initial speed for myImg02 (enemy)
+        let myImg01Speed = 10;     // Speed of movement for myImg01 (player)
+        let keysPressed = {};      // To track which keys are pressed
 
-       // Function to check for collisions between two elements
-       function myHitOther(my1, my2) {
-           let left1 = parseInt(document.getElementById(my1).style.left);
-           let right1 = left1 + parseInt(document.getElementById(my1).style.width);
-           let top1 = parseInt(document.getElementById(my1).style.top);
-           let bottom1 = top1 + parseInt(document.getElementById(my1).style.height);
-           let left2 = parseInt(document.getElementById(my2).style.left);
-           let right2 = left2 + parseInt(document.getElementById(my2).style.width);
-           let top2 = parseInt(document.getElementById(my2).style.top);
-           let bottom2 = top2 + parseInt(document.getElementById(my2).style.height);
+        // Function to check for collisions
+        function myHitOther(my1, my2) {
+            let left1 = parseInt(document.getElementById(my1).style.left);
+            let right1 = left1 + parseInt(document.getElementById(my1).style.width);
+            let top1 = parseInt(document.getElementById(my1).style.top);
+            let bottom1 = top1 + parseInt(document.getElementById(my1).style.height);
+            let left2 = parseInt(document.getElementById(my2).style.left);
+            let right2 = left2 + parseInt(document.getElementById(my2).style.width);
+            let top2 = parseInt(document.getElementById(my2).style.top);
+            let bottom2 = top2 + parseInt(document.getElementById(my2).style.height);
 
-           // If the two images overlap
-           if ((right1 >= left2) && 
-               (bottom1 >= top2) &&
-               (left1 <= right2) &&
-               (top1 <= bottom2)) {
-               return true;
-           }
-           return false;
-       }
+            return (right1 >= left2) && 
+                   (bottom1 >= top2) &&
+                   (left1 <= right2) &&
+                   (top1 <= bottom2);
+        }
 
-       // Function to check for collision and handle the "You Lost!" scenario
-       function myCheckHit() {
-           if (myHitOther('myImg01', 'myImg02')) {
-               showGameMessage('You Lost!');  // Show the "You Lost!" message
-               restartGame();  // Restart the game
-           }
-       }
+        // Function to check for collisions and handle "You Lost"
+        function myCheckHit() {
+            if (myHitOther('myImg01', 'myImg02')) {
+                showGameMessage('You Lost!');
+                restartGame();
+            }
+        }
 
-       // Function to move myImg02 automatically up and down (make it move faster)
-       function moveMyImg02() {
-           let img02 = document.getElementById('myImg02');
-           let currentTop = parseInt(img02.style.top);
+        // Function to move myImg02 automatically
+        function moveMyImg02() {
+            let img02 = document.getElementById('myImg02');
+            let currentTop = parseInt(img02.style.top);
+            currentTop += myImg02Direction * myImg02Speed;
 
-           // Move the image up or down based on direction
-           currentTop += myImg02Direction * myImg02Speed;
+            if (currentTop <= 0 || currentTop + img02.height >= window.innerHeight) {
+                myImg02Direction *= -1;  // Reverse direction
+            }
+            img02.style.top = currentTop + 'px';
+        }
 
-           // Reverse direction if it hits the top or bottom of the screen
-           if (currentTop <= 0 || currentTop + img02.height >= window.innerHeight) {
-               myImg02Direction *= -1;  // Reverse direction
-           }
+        setInterval(moveMyImg02, 50);  // Move myImg02 every 50ms
 
-           // Update the top position of the image
-           img02.style.top = currentTop + 'px';
-       }
+        // Restart the game
+        function restartGame() {
+            document.getElementById('myImg01').style.left = '50px';
+            document.getElementById('myImg01').style.top = '300px';
 
-       // Start moving myImg02 when the page loads (with new, faster speed)
-       setInterval(moveMyImg02, 50);  // Move every 50ms
+            document.getElementById('myImg02').style.left = '350px';
+            document.getElementById('myImg02').style.top = '300px';
 
-       // Function to reset the game (restart from the beginning)
-       function restartGame() {
-           // Reset the positions of the images
-           document.getElementById('myImg01').style.left = '50px';
-           document.getElementById('myImg01').style.top = '300px';
+            myGlobalX = 0;
+            document.getElementById('myBody').style.backgroundPosition = '100px 0px';
+        }
 
-           document.getElementById('myImg02').style.left = '350px';
-           document.getElementById('myImg02').style.top = '300px';
+        // Move myImg01 functions
+        function moveImg01Right() {
+            let img01 = document.getElementById('myImg01');
+            let newLeft = parseInt(img01.style.left) + myImg01Speed;
 
-           // Reset the background position (optional)
-           myGlobalX = 0;
-           document.getElementById('myBody').style.backgroundPosition = '100px 0px';
-       }
+            if (newLeft + img01.width <= window.innerWidth) {
+                img01.style.left = newLeft + 'px';
+            }
 
-       // Function to move myImg01 to the right and check for collisions
-       function moveImg01Right() {
-           let img01 = document.getElementById('myImg01');
-           let newLeft = parseInt(img01.style.left) + myImg01Speed;
+            if (newLeft + img01.width >= window.innerWidth - 10) {
+                showGameMessage('You Win!');
+                showConfetti();
+                increaseEnemySpeed();  // Increase enemy speed
+                restartGame();
+            }
+            myCheckHit();
+        }
 
-           // Prevent the image from going beyond the right boundary (taking into account the image width)
-           if (newLeft + img01.width <= window.innerWidth) {
-               img01.style.left = newLeft + 'px';
-           }
+        function moveImg01Left() {
+            let img01 = document.getElementById('myImg01');
+            let newLeft = parseInt(img01.style.left) - myImg01Speed;
 
-           // Check if the image has reached the right edge
-           if (newLeft + img01.width >= window.innerWidth - 10) {  // 10px for the border width
-               showGameMessage('You Win!');  // Show the "You Win!" message and trigger confetti
-               showConfetti();  // Trigger confetti effect
-               restartGame();  // Restart the game
-           }
+            if (newLeft >= 0) {
+                img01.style.left = newLeft + 'px';
+            }
+            myCheckHit();
+        }
 
-           myCheckHit();  // Check for collisions
-       }
+        function moveImg01Up() {
+            let img01 = document.getElementById('myImg01');
+            let newTop = parseInt(img01.style.top) - 10;
 
-       // Function to move myImg01 to the left and check for collisions
-       function moveImg01Left() {
-           let img01 = document.getElementById('myImg01');
-           let newLeft = parseInt(img01.style.left) - myImg01Speed;
+            if (newTop >= 0) {
+                img01.style.top = newTop + 'px';
+            }
+            myCheckHit();
+        }
 
-           // Prevent the image from going beyond the left boundary
-           if (newLeft >= 0) {
-               img01.style.left = newLeft + 'px';
-           }
-           myCheckHit();  // Check for collisions
-       }
+        function moveImg01Down() {
+            let img01 = document.getElementById('myImg01');
+            let newTop = parseInt(img01.style.top) + 10;
 
-       // Function to move myImg01 up and check for boundaries
-       function moveImg01Up() {
-           let img01 = document.getElementById('myImg01');
-           let newTop = parseInt(img01.style.top) - 10;
+            if (newTop + img01.height <= window.innerHeight) {
+                img01.style.top = newTop + 'px';
+            }
+            myCheckHit();
+        }
 
-           // Prevent the image from going beyond the top boundary
-           if (newTop >= 0) {
-               img01.style.top = newTop + 'px';
-           }
-           myCheckHit();  // Check for collisions
-       }
+        // Function to increase enemy speed after winning
+        function increaseEnemySpeed() {
+            myImg02Speed += 1;  // Increment speed
+        }
 
-       // Function to move myImg01 down and check for boundaries
-       function moveImg01Down() {
-           let img01 = document.getElementById('myImg01');
-           let newTop = parseInt(img01.style.top) + 10;
+        // Background movement
+        function moveBackgroundLeft() {
+            myGlobalX -= 5;
+            document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
+        }
+        setInterval(moveBackgroundLeft, 100);
 
-           // Prevent the image from going beyond the bottom boundary
-           if (newTop + img01.height <= window.innerHeight) {
-               img01.style.top = newTop + 'px';
-           }
-           myCheckHit();  // Check for collisions
-       }
+        // Custom messages
+        function showGameMessage(message) {
+            let messageElement = document.getElementById('gameMessage');
+            let messageText = document.getElementById('messageText');
+            messageText.textContent = message;
+            messageElement.style.display = 'block';
 
-       // Function to move the background left automatically
-       function moveBackgroundLeft() {
-           myGlobalX -= 5;  // Move the background 5px left
-           let myTemp = myGlobalX + 'px 0px';  // Update the background position
-           document.getElementById('myBody').style.backgroundPosition = myTemp;
-       }
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 1000);
+        }
 
-       // Start moving the background left as soon as the page loads
-       setInterval(moveBackgroundLeft, 100);  // Move the background every 100ms
+        // Confetti effect
+        function showConfetti() {
+            let container = document.getElementById('confetti-container');
+            let colors = ['#ff0000', '#00ff00', '#0000ff', '#ffcc00', '#ff00ff'];
 
-       // Continuous collision check (check every 50ms, even if image01 is not moving)
-       setInterval(myCheckHit, 50);  // Continuously check for collisions between images
+            for (let i = 0; i < 100; i++) {
+                let confettiPiece = document.createElement('div');
+                confettiPiece.style.position = 'absolute';
+                confettiPiece.style.width = '10px';
+                confettiPiece.style.height = '10px';
+                confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confettiPiece.style.left = `${Math.random() * window.innerWidth}px`;
+                confettiPiece.style.top = `${Math.random() * window.innerHeight}px`;
+                confettiPiece.style.animation = `confetti-animation ${Math.random() * 1 + 2}s ease-out forwards`;
 
-       // Event listener for keyboard arrow key movement
-       window.addEventListener('keydown', function(event) {
-           // Only allow movement if the key hasn't been pressed already
-           if (!keysPressed[event.key]) {
-               keysPressed[event.key] = true;  // Mark the key as pressed
+                container.appendChild(confettiPiece);
+                setTimeout(() => {
+                    confettiPiece.remove();
+                }, 2000);
+            }
+        }
 
-               switch(event.key) {
-                   case "ArrowLeft":  // Left arrow key
-                       moveImg01Left();
-                       break;
-                   case "ArrowRight":  // Right arrow key
-                       moveImg01Right();
-                       break;
-                   case "ArrowUp":  // Up arrow key
-                       moveImg01Up();
-                       break;
-                   case "ArrowDown":  // Down arrow key
-                       moveImg01Down();
-                       break;
-                   default:
-                       break;  // Ignore other keys
-               }
-           }
-       });
+        // Keyboard controls
+        window.addEventListener('keydown', (event) => {
+            if (!keysPressed[event.key]) {
+                keysPressed[event.key] = true;
 
-       // Reset the key press state when the key is released
-       window.addEventListener('keyup', function(event) {
-           keysPressed[event.key] = false;  // Allow the key to be pressed again
-       });
+                switch (event.key) {
+                    case "ArrowLeft":
+                        moveImg01Left();
+                        break;
+                    case "ArrowRight":
+                        moveImg01Right();
+                        break;
+                    case "ArrowUp":
+                        moveImg01Up();
+                        break;
+                    case "ArrowDown":
+                        moveImg01Down();
+                        break;
+                }
+            }
+        });
 
-       // Show custom message on win or lose
-       function showGameMessage(message) {
-           let messageElement = document.getElementById('gameMessage');
-           let messageText = document.getElementById('messageText');
-           messageText.textContent = message;
-           messageElement.style.display = 'block';
-
-           setTimeout(function() {
-               messageElement.style.display = 'none';
-           }, 1000);
-       }
-
-       // Function to create and animate confetti
-       function showConfetti() {
-           let container = document.getElementById('confetti-container');
-           let colors = ['#ff0000', '#00ff00', '#0000ff', '#ffcc00', '#ff00ff'];
-
-           // Create 100 confetti pieces
-           for (let i = 0; i < 100; i++) {
-               let confettiPiece = document.createElement('div');
-               confettiPiece.style.position = 'absolute';
-               confettiPiece.style.width = '10px';
-               confettiPiece.style.height = '10px';
-               confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-               confettiPiece.style.left = `${Math.random() * window.innerWidth}px`;
-               confettiPiece.style.top = `${Math.random() * window.innerHeight}px`;
-               confettiPiece.style.animation = `confetti-animation ${Math.random() * 1 + 2}s ease-out forwards`;
-
-               container.appendChild(confettiPiece);
-
-               // Remove the confetti after animation
-               setTimeout(function() {
-                   confettiPiece.remove();
-               }, 2000);  // Confetti disappears after 2 seconds
-           }
-       }
+        window.addEventListener('keyup', (event) => {
+            keysPressed[event.key] = false;
+        });
     </script>
     
     <img id="myImg01" style="position:absolute; width:200px; height:150px; top:300px; left:50px;" src="https://i.pinimg.com/originals/d2/d8/40/d2d8405e5600dafbd7e042fe30f39ae6.png">

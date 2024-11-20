@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Quiz Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9fafb;
+      margin: 20px;
+    }
+    .game-container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .start-button {
+      background-color: #4CAF50;
+    }
+    .submit-button {
+      background-color: #008CBA;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 60px;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .output {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Math Quiz Game</h1>
+    <div id="setup">
+      <button class="start-button" onclick="startGame()">Start Quiz</button>
+    </div>
+    <div id="game" style="display: none;">
+      <p id="question"></p>
+      <input type="number" id="answer" placeholder="Your answer">
+      <button class="submit-button" onclick="checkAnswer()">Submit</button>
+      <div class="output">
+        <p id="result"></p>
+        <p id="score"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let num1, num2, correctAnswer, currentScore = 0, questionCount = 0;
+
+    function startGame() {
+      currentScore = 0;
+      questionCount = 0;
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
+      generateQuestion();
+    }
+
+    function generateQuestion() {
+      num1 = Math.floor(Math.random() * 10) + 1;
+      num2 = Math.floor(Math.random() * 10) + 1;
+      correctAnswer = num1 + num2; // You can change this to subtraction, multiplication, or division
+      document.getElementById("question").textContent = `What is ${num1} + ${num2}?`;
+      document.getElementById("answer").value = "";
+      document.getElementById("result").textContent = "";
+    }
+
+    function checkAnswer() {
+      const playerAnswer = parseInt(document.getElementById("answer").value);
+      questionCount++;
+
+      if (playerAnswer === correctAnswer) {
+        document.getElementById("result").textContent = "Correct! 🎉";
+        currentScore++;
+      } else {
+        document.getElementById("result").textContent = `Wrong! The correct answer was ${correctAnswer}.`;
+      }
+
+      document.getElementById("score").textContent = `Score: ${currentScore} / ${questionCount}`;
+      setTimeout(() => {
+        if (questionCount < 5) {
+          generateQuestion();
+        } else {
+          endGame();
+        }
+      }, 1500);
+    }
+
+    function endGame() {
+      document.getElementById("game").style.display = "none";
+      document.getElementById("setup").style.display = "block";
+      alert(`Game over! Your final score is ${currentScore} out of ${questionCount}.`);
+    }
+  </script>
+</body>
+</html>

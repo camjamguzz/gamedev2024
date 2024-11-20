@@ -2,13 +2,41 @@ import random
 
 def number_guessing_game():
     print("Welcome to the Number Guessing Game!")
-    print("I have selected a number between 1 and 100.")
-    print("Can you guess it?")
     
-    number_to_guess = random.randint(1, 100)
+    # Select Difficulty
+    print("\nChoose a difficulty level:")
+    print("1. Easy (Unlimited attempts)")
+    print("2. Medium (10 attempts)")
+    print("3. Hard (5 attempts)")
+    difficulty = input("Enter 1, 2, or 3: ")
+    
+    if difficulty == "1":
+        max_attempts = None  # Unlimited attempts
+    elif difficulty == "2":
+        max_attempts = 10
+    elif difficulty == "3":
+        max_attempts = 5
+    else:
+        print("Invalid choice, defaulting to Easy mode.")
+        max_attempts = None
+    
+    # Custom Range
+    print("\nEnter the range for the game.")
+    lower_bound = int(input("Enter the minimum number: "))
+    upper_bound = int(input("Enter the maximum number: "))
+    number_to_guess = random.randint(lower_bound, upper_bound)
+
+    print(f"\nI have selected a number between {lower_bound} and {upper_bound}. Can you guess it?")
+    
     attempts = 0
+    high_score = None  # Initialize high score
     
     while True:
+        if max_attempts and attempts >= max_attempts:
+            print(f"\nYou've reached the maximum attempts ({max_attempts}). Game over!")
+            print(f"The number was: {number_to_guess}")
+            break
+        
         guess = input("Enter your guess: ")
         if not guess.isdigit():
             print("Please enter a valid number.")
@@ -22,7 +50,12 @@ def number_guessing_game():
         elif guess > number_to_guess:
             print("Too high! Try again.")
         else:
-            print(f"Congratulations! You guessed it in {attempts} attempts.")
+            print(f"🎉 Congratulations! You guessed it in {attempts} attempts.")
+            if high_score is None or attempts < high_score:
+                high_score = attempts
+                print(f"🎖 New high score: {high_score} attempts!")
+            else:
+                print(f"Your high score remains: {high_score} attempts.")
             break
 
 # Run the game

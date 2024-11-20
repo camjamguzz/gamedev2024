@@ -12,7 +12,7 @@ def number_guessing_game():
         print("1. Easy (Unlimited attempts)")
         print("2. Medium (10 attempts)")
         print("3. Hard (5 attempts)")
-        difficulty = input("Enter 1, 2, or 3: ")
+        difficulty = input("Enter 1, 2, or 3: ").strip()
         
         if difficulty == "1":
             max_attempts = None  # Unlimited attempts
@@ -28,8 +28,8 @@ def number_guessing_game():
         print("\nEnter the range for the game.")
         while True:
             try:
-                lower_bound = int(input("Enter the minimum number: "))
-                upper_bound = int(input("Enter the maximum number: "))
+                lower_bound = int(input("Enter the minimum number: ").strip())
+                upper_bound = int(input("Enter the maximum number: ").strip())
                 if lower_bound >= upper_bound:
                     print("Minimum should be less than maximum. Try again.")
                 else:
@@ -45,10 +45,10 @@ def number_guessing_game():
         while True:
             if max_attempts is not None and attempts >= max_attempts:
                 print(f"\nYou've reached the maximum attempts ({max_attempts}). Game over!")
-                print(f"The number was: {number_to_guess}")
+                print(f"The correct number was: {number_to_guess}")
                 break
 
-            guess = input("Enter your guess: ")
+            guess = input("Enter your guess: ").strip()
             if not guess.isdigit():
                 print("Please enter a valid number.")
                 continue

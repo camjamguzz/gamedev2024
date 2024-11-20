@@ -84,16 +84,38 @@
     }
 
     function generateQuestion() {
+      const operations = ['+', '-', '*', '/'];
+      const operation = operations[Math.floor(Math.random() * operations.length)];
+      
       num1 = Math.floor(Math.random() * 10) + 1;
       num2 = Math.floor(Math.random() * 10) + 1;
-      correctAnswer = num1 + num2; // You can change this to subtraction, multiplication, or division
-      document.getElementById("question").textContent = `What is ${num1} + ${num2}?`;
+
+      if (operation === '/') {
+        num1 = num1 * num2; // To ensure division is always clean
+      }
+
+      let questionText;
+      if (operation === '+') {
+        correctAnswer = num1 + num2;
+        questionText = `What is ${num1} + ${num2}?`;
+      } else if (operation === '-') {
+        correctAnswer = num1 - num2;
+        questionText = `What is ${num1} - ${num2}?`;
+      } else if (operation === '*') {
+        correctAnswer = num1 * num2;
+        questionText = `What is ${num1} * ${num2}?`;
+      } else if (operation === '/') {
+        correctAnswer = num1 / num2;
+        questionText = `What is ${num1} ÷ ${num2}?`;
+      }
+
+      document.getElementById("question").textContent = questionText;
       document.getElementById("answer").value = "";
       document.getElementById("result").textContent = "";
     }
 
     function checkAnswer() {
-      const playerAnswer = parseInt(document.getElementById("answer").value);
+      const playerAnswer = parseFloat(document.getElementById("answer").value);
       questionCount++;
 
       if (playerAnswer === correctAnswer) {
@@ -104,19 +126,7 @@
       }
 
       document.getElementById("score").textContent = `Score: ${currentScore} / ${questionCount}`;
-      setTimeout(() => {
-        if (questionCount < 5) {
-          generateQuestion();
-        } else {
-          endGame();
-        }
-      }, 1500);
-    }
-
-    function endGame() {
-      document.getElementById("game").style.display = "none";
-      document.getElementById("setup").style.display = "block";
-      alert(`Game over! Your final score is ${currentScore} out of ${questionCount}.`);
+      setTimeout(generateQuestion, 1500);
     }
   </script>
 </body>

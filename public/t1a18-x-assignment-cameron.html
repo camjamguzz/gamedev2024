@@ -1,61 +1,78 @@
 import random
 
 def number_guessing_game():
-    print("Welcome to the Number Guessing Game!")
+    print("🎮 Welcome to the Number Guessing Game!")
     
-    # Select Difficulty
-    print("\nChoose a difficulty level:")
-    print("1. Easy (Unlimited attempts)")
-    print("2. Medium (10 attempts)")
-    print("3. Hard (5 attempts)")
-    difficulty = input("Enter 1, 2, or 3: ")
-    
-    if difficulty == "1":
-        max_attempts = None  # Unlimited attempts
-    elif difficulty == "2":
-        max_attempts = 10
-    elif difficulty == "3":
-        max_attempts = 5
-    else:
-        print("Invalid choice, defaulting to Easy mode.")
-        max_attempts = None
-    
-    # Custom Range
-    print("\nEnter the range for the game.")
-    lower_bound = int(input("Enter the minimum number: "))
-    upper_bound = int(input("Enter the maximum number: "))
-    number_to_guess = random.randint(lower_bound, upper_bound)
+    # Initialize high score
+    high_score = None
 
-    print(f"\nI have selected a number between {lower_bound} and {upper_bound}. Can you guess it?")
-    
-    attempts = 0
-    high_score = None  # Initialize high score
-    
     while True:
-        if max_attempts and attempts >= max_attempts:
-            print(f"\nYou've reached the maximum attempts ({max_attempts}). Game over!")
-            print(f"The number was: {number_to_guess}")
-            break
+        # Select Difficulty
+        print("\nChoose a difficulty level:")
+        print("1. Easy (Unlimited attempts)")
+        print("2. Medium (10 attempts)")
+        print("3. Hard (5 attempts)")
+        difficulty = input("Enter 1, 2, or 3: ")
         
-        guess = input("Enter your guess: ")
-        if not guess.isdigit():
-            print("Please enter a valid number.")
-            continue
-
-        guess = int(guess)
-        attempts += 1
-        
-        if guess < number_to_guess:
-            print("Too low! Try again.")
-        elif guess > number_to_guess:
-            print("Too high! Try again.")
+        if difficulty == "1":
+            max_attempts = None  # Unlimited attempts
+        elif difficulty == "2":
+            max_attempts = 10
+        elif difficulty == "3":
+            max_attempts = 5
         else:
-            print(f"🎉 Congratulations! You guessed it in {attempts} attempts.")
-            if high_score is None or attempts < high_score:
-                high_score = attempts
-                print(f"🎖 New high score: {high_score} attempts!")
+            print("Invalid choice, defaulting to Easy mode.")
+            max_attempts = None
+        
+        # Custom Range
+        print("\nEnter the range for the game.")
+        while True:
+            try:
+                lower_bound = int(input("Enter the minimum number: "))
+                upper_bound = int(input("Enter the maximum number: "))
+                if lower_bound >= upper_bound:
+                    print("Minimum should be less than maximum. Try again.")
+                else:
+                    break
+            except ValueError:
+                print("Please enter valid numbers.")
+
+        number_to_guess = random.randint(lower_bound, upper_bound)
+        print(f"\nI have selected a number between {lower_bound} and {upper_bound}. Can you guess it?")
+
+        attempts = 0
+
+        while True:
+            if max_attempts is not None and attempts >= max_attempts:
+                print(f"\nYou've reached the maximum attempts ({max_attempts}). Game over!")
+                print(f"The number was: {number_to_guess}")
+                break
+
+            guess = input("Enter your guess: ")
+            if not guess.isdigit():
+                print("Please enter a valid number.")
+                continue
+
+            guess = int(guess)
+            attempts += 1
+
+            if guess < number_to_guess:
+                print("Too low! Try again.")
+            elif guess > number_to_guess:
+                print("Too high! Try again.")
             else:
-                print(f"Your high score remains: {high_score} attempts.")
+                print(f"🎉 Congratulations! You guessed it in {attempts} attempts.")
+                if high_score is None or attempts < high_score:
+                    high_score = attempts
+                    print(f"🎖 New high score: {high_score} attempts!")
+                else:
+                    print(f"Your high score remains: {high_score} attempts.")
+                break
+
+        # Ask to play again
+        play_again = input("\nWould you like to play again? (yes/no): ").strip().lower()
+        if play_again != "yes":
+            print("Thanks for playing! Goodbye! 👋")
             break
 
 # Run the game

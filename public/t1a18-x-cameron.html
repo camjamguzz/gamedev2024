@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Guessing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .game-container {
+      max-width: 500px;
+      margin: auto;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input {
+      padding: 10px;
+      width: 80%;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Number Guessing Game</h1>
+    <div id="setup">
+      <p>Select difficulty:</p>
+      <button onclick="startGame(0)">Easy</button>
+      <button onclick="startGame(10)">Medium</button>
+      <button onclick="startGame(5)">Hard</button>
+      <div style="margin-top: 20px;">
+        <label for="min-range">Enter minimum number:</label><br>
+        <input type="number" id="min-range" placeholder="Minimum number" required><br>
+        <label for="max-range">Enter maximum number:</label><br>
+        <input type="number" id="max-range" placeholder="Maximum number" required>
+      </div>
+    </div>
+
+    <div id="game" style="display: none;">
+      <p id="hint">Guess a number:</p>
+      <input type="number" id="guess" placeholder="Enter your guess">
+      <button onclick="checkGuess()">Submit Guess</button>
+      <p id="attempts"></p>
+      <p id="high-score"></p>
+    </div>
+  </div>
+
+  <script>
+    let numberToGuess, attempts, maxAttempts, highScore = null;
+
+    function startGame(attemptsLimit) {
+      const minRange = parseInt(document.getElementById("min-range").value);
+      const maxRange = parseInt(document.getElementById("max-range").value);
+
+      if (isNaN(minRange) || isNaN(maxRange) || minRange >= maxRange) {
+        alert("Please enter a valid range (minimum must be less than maximum).");
+        return;
+      }
+
+      numberToGuess = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+      attempts = 0;
+      maxAttempts = attemptsLimit;
+
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
+      document.getElementById("hint").textContent = `Guess a number between ${minRange} and ${maxRange}`;
+      document.getElementById("attempts").textContent = "";
+      document.getElementById("high-score").textContent = highScore !== null ? `Current High Score: ${highScore} attempts` : "";
+    }
+
+    function checkGuess() {
+      const guess = parseInt(document.getElementById("guess").value);
+      attempts++;
+
+      if (isNaN(guess)) {
+        alert("Please enter a valid number.");
+        return;
+      }
+
+      if (guess < numberToGuess) {
+        document.getElementById("hint").textContent = "Too low! Try again.";
+      } else if (guess > numberToGuess) {
+        document.getElementById("hint").textContent = "Too high! Try again.";
+      } else {
+        document.getElementById("hint").textContent = `🎉 Congratulations! You guessed it in ${attempts} attempts.`;
+        if (highScore === null || attempts < highScore) {
+          highScore = attempts;
+          document.getElementById("high-score").textContent = `🎖 New High Score: ${highScore} attempts!`;
+        }
+        return;
+      }
+
+      if (maxAttempts && attempts >= maxAttempts) {
+        document.getElementById("hint").textContent = `Game over! The correct number was ${numberToGuess}.`;
+      }
+
+      document.getElementById("attempts").textContent = `Attempts: ${attempts}${maxAttempts ? ` / ${maxAttempts}` : ""}`;
+    }
+  </script>
+</body>
+</html>

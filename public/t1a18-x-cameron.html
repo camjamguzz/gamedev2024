@@ -59,6 +59,7 @@
       <button onclick="checkGuess()">Submit Guess</button>
       <p id="attempts"></p>
       <p id="high-score"></p>
+      <button onclick="resetGame()">New Game</button>
     </div>
   </div>
 
@@ -103,6 +104,8 @@
         if (highScore === null || attempts < highScore) {
           highScore = attempts;
           document.getElementById("high-score").textContent = `🎖 New High Score: ${highScore} attempts!`;
+        } else {
+          document.getElementById("high-score").textContent = `Your High Score: ${highScore} attempts.`;
         }
         return;
       }
@@ -112,6 +115,14 @@
       }
 
       document.getElementById("attempts").textContent = `Attempts: ${attempts}${maxAttempts ? ` / ${maxAttempts}` : ""}`;
+    }
+
+    function resetGame() {
+      document.getElementById("setup").style.display = "block";
+      document.getElementById("game").style.display = "none";
+      document.getElementById("guess").value = "";
+      document.getElementById("min-range").value = "";
+      document.getElementById("max-range").value = "";
     }
   </script>
 </body>

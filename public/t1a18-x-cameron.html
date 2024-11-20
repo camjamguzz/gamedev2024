@@ -23,12 +23,20 @@
       margin: 10px;
       border: none;
       border-radius: 5px;
-      background-color: #4CAF50;
       color: white;
       cursor: pointer;
     }
     button:hover {
-      background-color: #45a049;
+      opacity: 0.9;
+    }
+    .easy-button {
+      background-color: #4CAF50; /* Green */
+    }
+    .medium-button {
+      background-color: #FFA500; /* Orange */
+    }
+    .hard-button {
+      background-color: #FF0000; /* Red */
     }
     input {
       padding: 10px;
@@ -42,9 +50,9 @@
     <h1>Number Guessing Game</h1>
     <div id="setup">
       <p>Select difficulty:</p>
-      <button onclick="startGame(0)">Easy</button>
-      <button onclick="startGame(10)">Medium</button>
-      <button onclick="startGame(5)">Hard</button>
+      <button class="easy-button" onclick="startGame(0)">Easy</button>
+      <button class="medium-button" onclick="startGame(10)">Medium</button>
+      <button class="hard-button" onclick="startGame(5)">Hard</button>
       <div style="margin-top: 20px;">
         <label for="min-range">Enter minimum number:</label><br>
         <input type="number" id="min-range" placeholder="Minimum number" required><br>

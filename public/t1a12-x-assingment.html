@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dodge the Falling Blocks</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #333;
+      overflow: hidden;
+    }
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-color: #222;
+    }
+    .player {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background-color: #28a745;
+      border-radius: 5px;
+    }
+    .obstacle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      background-color: #dc3545;
+      border-radius: 5px;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="score">Score: 0</div>
+    <div class="player" id="player"></div>
+    <div class="obstacle" id="obstacle"></div>
+  </div>
+
+  <script>
+    // Game variables
+    const player = document.getElementById("player");
+    const obstacle = document.getElementById("obstacle");
+    const scoreDisplay = document.getElementById("score");
+    const container = document.getElementById("game-container");
+
+    let score = 0;
+    let gameActive = true;
+
+    // Player controls
+    let playerX = window.innerWidth / 2 - 25;
+    const playerSpeed = 10;
+
+    // Obstacle controls
+    let obstacleX = Math.random() * (window.innerWidth - 50);
+    let obstacleY = 0;
+    let obstacleSpeed = 5;
+
+    // Update player position
+    document.addEventListener("keydown", (e) => {
+      if (!gameActive) return;
+      if (e.key === "ArrowLeft" && playerX > 0) {
+        playerX -= playerSpeed;
+      } else if (e.key === "ArrowRight" && playerX < window.innerWidth - 50) {
+        playerX += playerSpeed;
+      }
+      player.style.left = `${playerX}px`;
+    });
+
+    // Game loop
+    function gameLoop() {
+      if (!gameActive) return;
+
+      // Move obstacle
+      obstacleY += obstacleSpeed;
+      if (obstacleY > window.innerHeight) {
+        obstacleY = 0;
+        obstacleX = Math.random() * (window.innerWidth - 50);
+        score++;
+        obstacleSpeed += 0.5; // Increase difficulty
+        scoreDisplay.textContent = `Score: ${score}`;
+      }
+
+      obstacle.style.top = `${obstacleY}px`;
+      obstacle.style.left = `${obstacleX}px`;
+
+      // Collision detection
+      const playerRect = player.getBoundingClientRect();
+      const obstacleRect = obstacle.getBoundingClientRect();
+
+      if (
+        playerRect.left < obstacleRect.right &&
+        playerRect.right > obstacleRect.left &&
+        playerRect.top < obstacleRect.bottom &&
+        playerRect.bottom > obstacleRect.top
+      ) {
+        gameOver();
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // End game
+    function gameOver() {
+      gameActive = false;
+      scoreDisplay.textContent = `Game Over! Final Score: ${score}`;
+      obstacle.style.backgroundColor = "gray";
+      player.style.backgroundColor = "gray";
+    }
+
+    // Start the game loop
+    gameLoop();
+  </script>
+</body>
+</html>

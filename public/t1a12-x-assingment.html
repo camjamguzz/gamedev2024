@@ -43,11 +43,24 @@
       color: white;
       font-size: 20px;
     }
+    #game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 30px;
+      display: none;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div id="game-container">
     <div id="score">Score: 0</div>
+    <div id="game-over">
+      Game Over!<br>Press any key or click to restart.
+    </div>
     <div class="player" id="player"></div>
   </div>
 
@@ -55,6 +68,7 @@
     // Game variables
     const player = document.getElementById("player");
     const scoreDisplay = document.getElementById("score");
+    const gameOverDisplay = document.getElementById("game-over");
     const container = document.getElementById("game-container");
 
     let score = 0;
@@ -72,13 +86,12 @@
     for (let i = 0; i < obstacleCount; i++) {
       const obstacle = document.createElement("div");
       obstacle.classList.add("obstacle");
-      obstacle.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
       container.appendChild(obstacle);
       obstacles.push({
         element: obstacle,
-        x: parseFloat(obstacle.style.left),
-        y: Math.random() * -300, // Start off-screen
-        speed: 3 + Math.random() * 2, // Random initial speed
+        x: Math.random() * (window.innerWidth - 50),
+        y: Math.random() * -300,
+        speed: 3 + Math.random() * 2,
       });
     }
 
@@ -101,9 +114,9 @@
       for (const obstacle of obstacles) {
         obstacle.y += obstacle.speed;
         if (obstacle.y > window.innerHeight) {
-          obstacle.y = Math.random() * -200; // Reset off-screen
+          obstacle.y = Math.random() * -200;
           obstacle.x = Math.random() * (window.innerWidth - 50);
-          obstacle.speed += obstacleSpeedIncrement; // Increase speed
+          obstacle.speed += obstacleSpeedIncrement;
           score++;
           scoreDisplay.textContent = `Score: ${score}`;
         }
@@ -130,12 +143,38 @@
     // End game
     function gameOver() {
       gameActive = false;
-      scoreDisplay.textContent = `Game Over! Final Score: ${score}`;
-      for (const obstacle of obstacles) {
-        obstacle.element.style.backgroundColor = "gray";
-      }
-      player.style.backgroundColor = "gray";
+      scoreDisplay.textContent = `Final Score: ${score}`;
+      gameOverDisplay.style.display = "block";
     }
+
+    // Reset game
+    function resetGame() {
+      score = 0;
+      gameActive = true;
+      playerX = window.innerWidth / 2 - 25;
+      player.style.left = `${playerX}px`;
+      scoreDisplay.textContent = `Score: ${score}`;
+      gameOverDisplay.style.display = "none";
+
+      for (const obstacle of obstacles) {
+        obstacle.y = Math.random() * -300;
+        obstacle.x = Math.random() * (window.innerWidth - 50);
+        obstacle.speed = 3 + Math.random() * 2;
+        obstacle.element.style.top = `${obstacle.y}px`;
+        obstacle.element.style.left = `${obstacle.x}px`;
+      }
+
+      gameLoop();
+    }
+
+    // Event listeners for restarting
+    document.addEventListener("keydown", () => {
+      if (!gameActive) resetGame();
+    });
+
+    container.addEventListener("click", () => {
+      if (!gameActive) resetGame();
+    });
 
     // Start the game loop
     gameLoop();

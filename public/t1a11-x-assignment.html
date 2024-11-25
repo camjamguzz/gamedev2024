@@ -30,6 +30,11 @@
     }
     #click-button:disabled {
       background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #timer {
+      font-size: 20px;
+      margin: 10px 0;
     }
   </style>
 </head>
@@ -40,6 +45,35 @@
     <button id="click-button">Click Me!</button>
     <p id="timer">Time Left: 10 seconds</p>
   </div>
-  <script src="game.js"></script>
+  <script>
+    // Game variables
+    let score = 0;
+    let timeLeft = 10;
+
+    // DOM elements
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const clickButton = document.getElementById("click-button");
+
+    // Button click event
+    clickButton.addEventListener("click", () => {
+      if (timeLeft > 0) {
+        score++;
+        scoreDisplay.textContent = `Score: ${score}`;
+      }
+    });
+
+    // Countdown timer
+    const timerInterval = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        timerDisplay.textContent = `Time Left: ${timeLeft} seconds`;
+      } else {
+        clearInterval(timerInterval); // Stop timer
+        clickButton.disabled = true; // Disable button
+        timerDisplay.textContent = "Game Over!"; // End message
+      }
+    }, 1000);
+  </script>
 </body>
 </html>

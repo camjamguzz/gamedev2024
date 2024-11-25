@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dodge the Falling Blocks</title>
+  <title>Multi-Dodge Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,7 +31,6 @@
     .obstacle {
       position: absolute;
       top: 0;
-      left: 0;
       width: 50px;
       height: 50px;
       background-color: #dc3545;
@@ -50,29 +49,40 @@
   <div id="game-container">
     <div id="score">Score: 0</div>
     <div class="player" id="player"></div>
-    <div class="obstacle" id="obstacle"></div>
   </div>
 
   <script>
     // Game variables
     const player = document.getElementById("player");
-    const obstacle = document.getElementById("obstacle");
     const scoreDisplay = document.getElementById("score");
     const container = document.getElementById("game-container");
 
     let score = 0;
     let gameActive = true;
 
-    // Player controls
+    // Player position
     let playerX = window.innerWidth / 2 - 25;
     const playerSpeed = 10;
 
-    // Obstacle controls
-    let obstacleX = Math.random() * (window.innerWidth - 50);
-    let obstacleY = 0;
-    let obstacleSpeed = 5;
+    // Obstacles
+    const obstacles = [];
+    const obstacleCount = 5; // Number of obstacles
+    const obstacleSpeedIncrement = 0.2;
 
-    // Update player position
+    for (let i = 0; i < obstacleCount; i++) {
+      const obstacle = document.createElement("div");
+      obstacle.classList.add("obstacle");
+      obstacle.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+      container.appendChild(obstacle);
+      obstacles.push({
+        element: obstacle,
+        x: parseFloat(obstacle.style.left),
+        y: Math.random() * -300, // Start off-screen
+        speed: 3 + Math.random() * 2, // Random initial speed
+      });
+    }
+
+    // Player controls
     document.addEventListener("keydown", (e) => {
       if (!gameActive) return;
       if (e.key === "ArrowLeft" && playerX > 0) {
@@ -87,30 +97,31 @@
     function gameLoop() {
       if (!gameActive) return;
 
-      // Move obstacle
-      obstacleY += obstacleSpeed;
-      if (obstacleY > window.innerHeight) {
-        obstacleY = 0;
-        obstacleX = Math.random() * (window.innerWidth - 50);
-        score++;
-        obstacleSpeed += 0.5; // Increase difficulty
-        scoreDisplay.textContent = `Score: ${score}`;
-      }
+      // Update obstacles
+      for (const obstacle of obstacles) {
+        obstacle.y += obstacle.speed;
+        if (obstacle.y > window.innerHeight) {
+          obstacle.y = Math.random() * -200; // Reset off-screen
+          obstacle.x = Math.random() * (window.innerWidth - 50);
+          obstacle.speed += obstacleSpeedIncrement; // Increase speed
+          score++;
+          scoreDisplay.textContent = `Score: ${score}`;
+        }
+        obstacle.element.style.top = `${obstacle.y}px`;
+        obstacle.element.style.left = `${obstacle.x}px`;
 
-      obstacle.style.top = `${obstacleY}px`;
-      obstacle.style.left = `${obstacleX}px`;
+        // Collision detection
+        const playerRect = player.getBoundingClientRect();
+        const obstacleRect = obstacle.element.getBoundingClientRect();
 
-      // Collision detection
-      const playerRect = player.getBoundingClientRect();
-      const obstacleRect = obstacle.getBoundingClientRect();
-
-      if (
-        playerRect.left < obstacleRect.right &&
-        playerRect.right > obstacleRect.left &&
-        playerRect.top < obstacleRect.bottom &&
-        playerRect.bottom > obstacleRect.top
-      ) {
-        gameOver();
+        if (
+          playerRect.left < obstacleRect.right &&
+          playerRect.right > obstacleRect.left &&
+          playerRect.top < obstacleRect.bottom &&
+          playerRect.bottom > obstacleRect.top
+        ) {
+          gameOver();
+        }
       }
 
       requestAnimationFrame(gameLoop);
@@ -120,7 +131,9 @@
     function gameOver() {
       gameActive = false;
       scoreDisplay.textContent = `Game Over! Final Score: ${score}`;
-      obstacle.style.backgroundColor = "gray";
+      for (const obstacle of obstacles) {
+        obstacle.element.style.backgroundColor = "gray";
+      }
       player.style.backgroundColor = "gray";
     }
 

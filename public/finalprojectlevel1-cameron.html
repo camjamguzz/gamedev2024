@@ -30,15 +30,15 @@
 
         // Game constants
         const GRAVITY = 0.5;
-        const JUMP_FORCE = -10;
+        const JUMP_FORCE = -12; // Stronger jump for bigger sprite
         const PLAYER_SPEED = 5;
 
         // Player properties
         const player = {
             x: 100,
             y: 100,
-            width: 50,
-            height: 50,
+            width: 70, // Increased width for bigger sprite
+            height: 100, // Increased height for bigger sprite
             dx: 0,
             dy: 0,
             isJumping: false,
@@ -66,7 +66,7 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') keys.left = true;
             if (e.key === 'ArrowRight') keys.right = true;
-            if (e.key === 'Space' && player.isOnGround) {
+            if (e.key === 'ArrowUp' && player.isOnGround) { // Jump with ArrowUp
                 keys.jump = true;
                 player.isJumping = true;
             }

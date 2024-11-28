@@ -34,36 +34,20 @@
         const PLAYER_SPEED = 5;
 
         // Player properties
-const player = {
-    x: 100,
-    y: 100,
-    width: 30,
-    height: 50,
-    dx: 0,
-    dy: 0,
-    isJumping: false,
-    isOnGround: false,
-    image: new Image(),
-};
+        const player = {
+            x: 100,
+            y: 100,
+            width: 50, // Adjusted for sprite size
+            height: 50,
+            dx: 0,
+            dy: 0,
+            isJumping: false,
+            isOnGround: false,
+            image: new Image(),
+        };
 
-// Load the player sprite
-player.image.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
-
-// Updated draw function
-function draw() {
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw player sprite
-    ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
-
-    // Draw platforms
-    ctx.fillStyle = 'gray';
-    platforms.forEach((platform) => {
-        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-    });
-}
-
+        // Load the player sprite
+        player.image.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
 
         // Platform properties
         const platforms = [
@@ -140,15 +124,20 @@ function draw() {
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw player
-            ctx.fillStyle = 'white';
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-
             // Draw platforms
             ctx.fillStyle = 'gray';
             platforms.forEach((platform) => {
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
             });
+
+            // Draw player
+            if (player.image.complete) {
+                ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+            } else {
+                // Fallback if image hasn't loaded yet
+                ctx.fillStyle = 'white';
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
         }
 
         function gameLoop() {

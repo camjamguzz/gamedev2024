@@ -34,16 +34,36 @@
         const PLAYER_SPEED = 5;
 
         // Player properties
-        const player = {
-            x: 100,
-            y: 100,
-            width: 30,
-            height: 50,
-            dx: 0,
-            dy: 0,
-            isJumping: false,
-            isOnGround: false,
-        };
+const player = {
+    x: 100,
+    y: 100,
+    width: 30,
+    height: 50,
+    dx: 0,
+    dy: 0,
+    isJumping: false,
+    isOnGround: false,
+    image: new Image(),
+};
+
+// Load the player sprite
+player.image.src = 'player.png';
+
+// Updated draw function
+function draw() {
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw player sprite
+    ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+
+    // Draw platforms
+    ctx.fillStyle = 'gray';
+    platforms.forEach((platform) => {
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+    });
+}
+
 
         // Platform properties
         const platforms = [

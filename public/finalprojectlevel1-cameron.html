@@ -30,15 +30,15 @@
 
         // Game constants
         const GRAVITY = 0.5;
-        const JUMP_FORCE = -12; // Stronger jump for bigger sprite
+        const JUMP_FORCE = -12;
         const PLAYER_SPEED = 5;
 
         // Player properties
         const player = {
             x: 100,
             y: 100,
-            width: 70, // Increased width for bigger sprite
-            height: 100, // Increased height for bigger sprite
+            width: 70,
+            height: 100,
             dx: 0,
             dy: 0,
             isJumping: false,
@@ -66,7 +66,7 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') keys.left = true;
             if (e.key === 'ArrowRight') keys.right = true;
-            if (e.key === 'ArrowUp' && player.isOnGround) { // Jump with ArrowUp
+            if (e.key === 'ArrowUp' && player.isOnGround) {
                 keys.jump = true;
                 player.isJumping = true;
             }
@@ -101,8 +101,9 @@
             // Check collision with platforms
             player.isOnGround = false;
             platforms.forEach((platform) => {
+                // Check for collision from above
                 if (
-                    player.x < platform.x + platform.width && // Within platform width
+                    player.x < platform.x + platform.width && // Within platform's width
                     player.x + player.width > platform.x &&
                     player.y + player.height <= platform.y && // Above the platform
                     player.y + player.height + player.dy >= platform.y // Moving onto the platform
@@ -110,6 +111,17 @@
                     player.dy = 0; // Stop vertical movement
                     player.isOnGround = true; // Player is on the ground
                     player.y = platform.y - player.height; // Place player on top of the platform
+                }
+
+                // Prevent clipping into the platform from below
+                if (
+                    player.x < platform.x + platform.width &&
+                    player.x + player.width > platform.x &&
+                    player.y >= platform.y + platform.height && // Below the platform
+                    player.y + player.dy <= platform.y + platform.height
+                ) {
+                    player.dy = GRAVITY; // Simulate fall below the platform
+                    player.y = platform.y + platform.height; // Place player just below the platform
                 }
             });
 

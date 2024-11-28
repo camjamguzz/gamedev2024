@@ -37,7 +37,7 @@
         const player = {
             x: 100,
             y: 100,
-            width: 50, // Adjusted for sprite size
+            width: 50,
             height: 50,
             dx: 0,
             dy: 0,
@@ -88,6 +88,7 @@
             if (keys.jump) {
                 player.dy = JUMP_FORCE;
                 keys.jump = false;
+                player.isOnGround = false;
             }
 
             // Apply gravity
@@ -101,19 +102,19 @@
             player.isOnGround = false;
             platforms.forEach((platform) => {
                 if (
-                    player.x < platform.x + platform.width &&
+                    player.x < platform.x + platform.width && // Within platform width
                     player.x + player.width > platform.x &&
-                    player.y + player.height <= platform.y &&
-                    player.y + player.height + player.dy >= platform.y
+                    player.y + player.height <= platform.y && // Above the platform
+                    player.y + player.height + player.dy >= platform.y // Moving onto the platform
                 ) {
-                    player.dy = 0;
-                    player.isOnGround = true;
+                    player.dy = 0; // Stop vertical movement
+                    player.isOnGround = true; // Player is on the ground
                     player.y = platform.y - player.height; // Place player on top of the platform
                 }
             });
 
             // Prevent the player from falling off the canvas
-            if (player.y > canvas.height) {
+            if (player.y > canvas.height - player.height) {
                 player.y = canvas.height - player.height;
                 player.dy = 0;
                 player.isOnGround = true;

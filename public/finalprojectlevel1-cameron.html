@@ -29,7 +29,7 @@
         const ctx = canvas.getContext('2d');
 
         // Game constants
-        const GRAVITY = 0.5;
+        const GRAVITY = 0.6;
         const JUMP_FORCE = -12;
         const PLAYER_SPEED = 5;
 
@@ -37,8 +37,8 @@
         const player = {
             x: 100,
             y: 100,
-            width: 70,
-            height: 100,
+            width: 50,
+            height: 75,
             dx: 0,
             dy: 0,
             isJumping: false,
@@ -49,35 +49,34 @@
         // Load the player sprite
         player.image.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
 
-        // Platforms for levels
+        // Levels and platforms
         const levels = [
-            [
-                { x: 50, y: 500, width: 200, height: 20 },
-                { x: 300, y: 400, width: 150, height: 20 },
-                { x: 500, y: 300, width: 200, height: 20 },
-            ],
-            [
-                { x: 50, y: 450, width: 100, height: 20 },
-                { x: 200, y: 350, width: 150, height: 20 },
-                { x: 400, y: 250, width: 100, height: 20 },
-                { x: 600, y: 150, width: 200, height: 20 },
-            ],
+            {
+                platforms: [
+                    { x: 50, y: 500, width: 200, height: 20 },
+                    { x: 300, y: 400, width: 150, height: 20 },
+                    { x: 500, y: 300, width: 200, height: 20 },
+                ],
+                door: { x: 700, y: 450, width: 50, height: 100 }
+            },
+            {
+                platforms: [
+                    { x: 50, y: 450, width: 150, height: 20 },
+                    { x: 250, y: 350, width: 150, height: 20 },
+                    { x: 450, y: 250, width: 100, height: 20 },
+                    { x: 600, y: 150, width: 200, height: 20 },
+                ],
+                door: { x: 700, y: 100, width: 50, height: 100 }
+            }
         ];
 
         let currentLevel = 0;
-        let platforms = levels[currentLevel];
-
-        // Door properties
-        const door = {
-            x: 700,
-            y: 450,
-            width: 50,
-            height: 100,
-            image: new Image(),
-        };
+        let platforms = levels[currentLevel].platforms;
+        let door = levels[currentLevel].door;
 
         // Load the door sprite
-        door.image.src = 'https://piskel-imgstore-b.appspot.com/img/fb9e7c9f-adbf-11ef-9938-d9c0f7c08e34.gif';
+        const doorImage = new Image();
+        doorImage.src = 'https://piskel-imgstore-b.appspot.com/img/fb9e7c9f-adbf-11ef-9938-d9c0f7c08e34.gif';
 
         // Key handling
         const keys = {
@@ -100,7 +99,28 @@
             if (e.key === 'ArrowRight') keys.right = false;
         });
 
-        // Game loop
+        function resetPlayer() {
+            player.x = 100;
+            player.y = 100;
+            player.dx = 0;
+            player.dy = 0;
+        }
+
+        function nextLevel() {
+            currentLevel++;
+            if (currentLevel < levels.length) {
+                platforms = levels[currentLevel].platforms;
+                door = levels[currentLevel].door;
+                resetPlayer();
+            } else {
+                alert('Congratulations! You completed the game!');
+                currentLevel = 0;
+                platforms = levels[currentLevel].platforms;
+                door = levels[currentLevel].door;
+                resetPlayer();
+            }
+        }
+
         function update() {
             // Horizontal movement
             if (keys.left) player.dx = -PLAYER_SPEED;
@@ -155,23 +175,6 @@
             }
         }
 
-        function nextLevel() {
-            currentLevel++;
-            if (currentLevel < levels.length) {
-                platforms = levels[currentLevel];
-                player.x = 100;
-                player.y = 100;
-                player.dy = 0;
-            } else {
-                alert('Congratulations! You finished the game!');
-                currentLevel = 0;
-                platforms = levels[currentLevel];
-                player.x = 100;
-                player.y = 100;
-                player.dy = 0;
-            }
-        }
-
         function draw() {
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -192,8 +195,8 @@
             }
 
             // Draw door
-            if (door.image.complete) {
-                ctx.drawImage(door.image, door.x, door.y, door.width, door.height);
+            if (doorImage.complete) {
+                ctx.drawImage(doorImage, door.x, door.y, door.width, door.height);
             } else {
                 ctx.fillStyle = 'blue';
                 ctx.fillRect(door.x, door.y, door.width, door.height);

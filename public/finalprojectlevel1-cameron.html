@@ -36,7 +36,7 @@
         // Player properties
         const player = {
             x: 100,
-            y: 100,
+            y: canvas.height - 150, // Start near the ground
             width: 50,
             height: 75,
             dx: 0,
@@ -49,7 +49,7 @@
         // Load the player sprite
         player.image.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
 
-        // Levels and platforms
+        // Platforms and levels
         const levels = [
             {
                 platforms: [
@@ -57,7 +57,7 @@
                     { x: 300, y: 400, width: 150, height: 20 },
                     { x: 500, y: 300, width: 200, height: 20 },
                 ],
-                door: { x: 700, y: 500, width: 50, height: 100 }
+                door: { x: 700, y: 450, width: 50, height: 100 }
             },
             {
                 platforms: [
@@ -101,7 +101,7 @@
 
         function resetPlayer() {
             player.x = 100;
-            player.y = 100;
+            player.y = canvas.height - player.height - 10; // Reset near the ground
             player.dx = 0;
             player.dy = 0;
         }
@@ -141,13 +141,6 @@
             player.x += player.dx;
             player.y += player.dy;
 
-            // Prevent falling through the ground
-            if (player.y + player.height > canvas.height) {
-                player.y = canvas.height - player.height;
-                player.dy = 0;
-                player.isOnGround = true;
-            }
-
             // Check collision with platforms
             player.isOnGround = false;
             platforms.forEach((platform) => {
@@ -163,6 +156,13 @@
                     player.y = platform.y - player.height; // Place player on top of the platform
                 }
             });
+
+            // Prevent the player from falling off the canvas
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height; // Stay on the ground
+                player.dy = 0;
+                player.isOnGround = true;
+            }
 
             // Check collision with the door
             if (

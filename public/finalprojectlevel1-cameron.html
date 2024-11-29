@@ -29,16 +29,16 @@
         const ctx = canvas.getContext('2d');
 
         // Game constants
-        const GRAVITY = 0.6;
+        const GRAVITY = 0.5;
         const JUMP_FORCE = -12;
         const PLAYER_SPEED = 5;
 
         // Player properties
         const player = {
             x: 100,
-            y: canvas.height - 150, // Start near the ground
-            width: 50,
-            height: 75,
+            y: 100,
+            width: 70,
+            height: 100,
             dx: 0,
             dy: 0,
             isJumping: false,
@@ -49,34 +49,12 @@
         // Load the player sprite
         player.image.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
 
-        // Platforms and levels
-        const levels = [
-            {
-                platforms: [
-                    { x: 50, y: 500, width: 200, height: 20 },
-                    { x: 300, y: 400, width: 150, height: 20 },
-                    { x: 500, y: 300, width: 200, height: 20 },
-                ],
-                door: { x: 700, y: 450, width: 50, height: 100 }
-            },
-            {
-                platforms: [
-                    { x: 50, y: 450, width: 150, height: 20 },
-                    { x: 250, y: 350, width: 150, height: 20 },
-                    { x: 450, y: 250, width: 100, height: 20 },
-                    { x: 600, y: 150, width: 200, height: 20 },
-                ],
-                door: { x: 700, y: 100, width: 50, height: 100 }
-            }
+        // Platform properties
+        const platforms = [
+            { x: 50, y: 500, width: 200, height: 20 },
+            { x: 300, y: 400, width: 150, height: 20 },
+            { x: 500, y: 300, width: 200, height: 20 },
         ];
-
-        let currentLevel = 0;
-        let platforms = levels[currentLevel].platforms;
-        let door = levels[currentLevel].door;
-
-        // Load the door sprite
-        const doorImage = new Image();
-        doorImage.src = 'https://piskel-imgstore-b.appspot.com/img/fb9e7c9f-adbf-11ef-9938-d9c0f7c08e34.gif';
 
         // Key handling
         const keys = {
@@ -99,28 +77,7 @@
             if (e.key === 'ArrowRight') keys.right = false;
         });
 
-        function resetPlayer() {
-            player.x = 100;
-            player.y = canvas.height - player.height - 10; // Reset near the ground
-            player.dx = 0;
-            player.dy = 0;
-        }
-
-        function nextLevel() {
-            currentLevel++;
-            if (currentLevel < levels.length) {
-                platforms = levels[currentLevel].platforms;
-                door = levels[currentLevel].door;
-                resetPlayer();
-            } else {
-                alert('Congratulations! You completed the game!');
-                currentLevel = 0;
-                platforms = levels[currentLevel].platforms;
-                door = levels[currentLevel].door;
-                resetPlayer();
-            }
-        }
-
+        // Game loop
         function update() {
             // Horizontal movement
             if (keys.left) player.dx = -PLAYER_SPEED;
@@ -155,23 +112,24 @@
                     player.isOnGround = true; // Player is on the ground
                     player.y = platform.y - player.height; // Place player on top of the platform
                 }
+
+                // Prevent clipping into the platform from below
+                if (
+                    player.x < platform.x + platform.width &&
+                    player.x + player.width > platform.x &&
+                    player.y >= platform.y + platform.height && // Below the platform
+                    player.y + player.dy <= platform.y + platform.height
+                ) {
+                    player.dy = GRAVITY; // Simulate fall below the platform
+                    player.y = platform.y + platform.height; // Place player just below the platform
+                }
             });
 
             // Prevent the player from falling off the canvas
-            if (player.y + player.height > canvas.height) {
-                player.y = canvas.height - player.height; // Stay on the ground
+            if (player.y > canvas.height - player.height) {
+                player.y = canvas.height - player.height;
                 player.dy = 0;
                 player.isOnGround = true;
-            }
-
-            // Check collision with the door
-            if (
-                player.x + player.width > door.x &&
-                player.x < door.x + door.width &&
-                player.y + player.height > door.y &&
-                player.y < door.y + door.height
-            ) {
-                nextLevel();
             }
         }
 
@@ -193,14 +151,6 @@
                 ctx.fillStyle = 'white';
                 ctx.fillRect(player.x, player.y, player.width, player.height);
             }
-
-            // Draw door
-            if (doorImage.complete) {
-                ctx.drawImage(doorImage, door.x, door.y, door.width, door.height);
-            } else {
-                ctx.fillStyle = 'blue';
-                ctx.fillRect(door.x, door.y, door.width, door.height);
-            }
         }
 
         function gameLoop() {
@@ -213,4 +163,4 @@
         gameLoop();
     </script>
 </body>
-</html>
+</html> 

@@ -57,7 +57,7 @@
                     { x: 300, y: 400, width: 150, height: 20 },
                     { x: 500, y: 300, width: 200, height: 20 },
                 ],
-                door: { x: 700, y: 450, width: 50, height: 100 }
+                door: { x: 700, y: 500, width: 50, height: 100 }
             },
             {
                 platforms: [
@@ -141,6 +141,13 @@
             player.x += player.dx;
             player.y += player.dy;
 
+            // Prevent falling through the ground
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height;
+                player.dy = 0;
+                player.isOnGround = true;
+            }
+
             // Check collision with platforms
             player.isOnGround = false;
             platforms.forEach((platform) => {
@@ -156,13 +163,6 @@
                     player.y = platform.y - player.height; // Place player on top of the platform
                 }
             });
-
-            // Prevent the player from falling off the canvas
-            if (player.y > canvas.height - player.height) {
-                player.y = canvas.height - player.height;
-                player.dy = 0;
-                player.isOnGround = true;
-            }
 
             // Check collision with the door
             if (

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixed Hollow Knight Style Game</title>
+    <title>Hollow Knight Style Game</title>
     <style>
         body {
             margin: 0;
@@ -24,6 +24,7 @@
 <body>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
+        // Select the canvas and set up the context
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -35,24 +36,25 @@
         // Player properties
         const player = {
             x: 100,
-            y: 400, // Start near the ground
-            width: 50,
-            height: 75,
+            y: 100,
+            width: 70,
+            height: 100,
             dx: 0,
             dy: 0,
             isJumping: false,
             isOnGround: false,
+            image: new Image(),
         };
 
-        // Platforms
+        // Load the player sprite
+        player.image.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
+
+        // Platform properties
         const platforms = [
             { x: 50, y: 500, width: 200, height: 20 },
             { x: 300, y: 400, width: 150, height: 20 },
             { x: 500, y: 300, width: 200, height: 20 },
         ];
-
-        // Door properties
-        const door = { x: 700, y: 450, width: 50, height: 100 };
 
         // Key handling
         const keys = {
@@ -75,6 +77,7 @@
             if (e.key === 'ArrowRight') keys.right = false;
         });
 
+        // Game loop
         function update() {
             // Horizontal movement
             if (keys.left) player.dx = -PLAYER_SPEED;
@@ -95,48 +98,43 @@
             player.x += player.dx;
             player.y += player.dy;
 
-            // Collision detection with platforms
+            // Check collision with platforms
             player.isOnGround = false;
             platforms.forEach((platform) => {
+                // Check for collision from above
+                if (
+                    player.x < platform.x + platform.width && // Within platform's width
+                    player.x + player.width > platform.x &&
+                    player.y + player.height <= platform.y && // Above the platform
+                    player.y + player.height + player.dy >= platform.y // Moving onto the platform
+                ) {
+                    player.dy = 0; // Stop vertical movement
+                    player.isOnGround = true; // Player is on the ground
+                    player.y = platform.y - player.height; // Place player on top of the platform
+                }
+
+                // Prevent clipping into the platform from below
                 if (
                     player.x < platform.x + platform.width &&
                     player.x + player.width > platform.x &&
-                    player.y + player.height <= platform.y &&
-                    player.y + player.height + player.dy >= platform.y
+                    player.y >= platform.y + platform.height && // Below the platform
+                    player.y + player.dy <= platform.y + platform.height
                 ) {
-                    player.dy = 0;
-                    player.isOnGround = true;
-                    player.y = platform.y - player.height;
+                    player.dy = GRAVITY; // Simulate fall below the platform
+                    player.y = platform.y + platform.height; // Place player just below the platform
                 }
             });
 
-            // Prevent the player from falling below the canvas
-            if (player.y + player.height > canvas.height) {
+            // Prevent the player from falling off the canvas
+            if (player.y > canvas.height - player.height) {
                 player.y = canvas.height - player.height;
                 player.dy = 0;
                 player.isOnGround = true;
             }
-
-            // Door collision detection
-            if (
-                player.x + player.width > door.x &&
-                player.x < door.x + door.width &&
-                player.y + player.height > door.y &&
-                player.y < door.y + door.height
-            ) {
-                alert('Level Complete!');
-                resetPlayer();
-            }
-        }
-
-        function resetPlayer() {
-            player.x = 100;
-            player.y = 400; // Reset near the ground
-            player.dx = 0;
-            player.dy = 0;
         }
 
         function draw() {
+            // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw platforms
@@ -146,12 +144,13 @@
             });
 
             // Draw player
-            ctx.fillStyle = 'white';
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-
-            // Draw door
-            ctx.fillStyle = 'blue';
-            ctx.fillRect(door.x, door.y, door.width, door.height);
+            if (player.image.complete) {
+                ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+            } else {
+                // Fallback if image hasn't loaded yet
+                ctx.fillStyle = 'white';
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
         }
 
         function gameLoop() {
@@ -160,7 +159,8 @@
             requestAnimationFrame(gameLoop);
         }
 
+        // Start the game
         gameLoop();
     </script>
 </body>
-</html>
+</html> 

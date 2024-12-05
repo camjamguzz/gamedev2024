@@ -46,38 +46,12 @@
         #menu button:hover {
             background: #555;
         }
-        #levelSelect {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-        #levelSelect button {
-            font-size: 18px;
-            background: #444;
-            color: white;
-            border: 2px solid white;
-            padding: 15px 30px;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        #levelSelect button:hover {
-            background: #666;
-        }
     </style>
 </head>
 <body>
     <div id="menu">
         <button id="playGame">Play Game</button>
         <button id="chooseLevel">Choose Level</button>
-        <div id="levelSelect">
-            <button class="levelButton" data-level="1">Level 1</button>
-            <button class="levelButton" data-level="2">Level 2</button>
-            <button class="levelButton" data-level="3">Level 3</button>
-            <button class="levelButton" data-level="4">Level 4</button>
-            <button class="levelButton" data-level="5">Level 5</button>
-        </div>
     </div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
@@ -86,36 +60,30 @@
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
                 this.menu = document.getElementById('menu');
-                this.levelSelect = document.getElementById('levelSelect');
                 this.initMenu();
             }
 
             initMenu() {
                 const playGameButton = document.getElementById('playGame');
                 const chooseLevelButton = document.getElementById('chooseLevel');
-                const levelButtons = document.querySelectorAll('.levelButton');
 
                 playGameButton.addEventListener('click', () => {
                     this.startGame(1); // Start from level 1
                 });
 
                 chooseLevelButton.addEventListener('click', () => {
-                    this.menu.style.display = 'none';
-                    this.levelSelect.style.display = 'flex'; // Show level buttons
-                });
-
-                // Add event listeners for level selection buttons
-                levelButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const level = parseInt(button.getAttribute('data-level'), 10);
+                    const levelChoice = prompt('Enter level number (1-5):');
+                    const level = parseInt(levelChoice, 10);
+                    if (level >= 1 && level <= 5) {
                         this.startGame(level);
-                    });
+                    } else {
+                        alert('Invalid level number. Please enter a number between 1 and 5.');
+                    }
                 });
             }
 
             startGame(level) {
-                this.levelSelect.style.display = 'none'; // Hide level selection
-                this.menu.style.display = 'none'; // Hide main menu
+                this.menu.style.display = 'none';
                 this.init(level);
             }
 
@@ -221,31 +189,37 @@
             handleInput() {
                 const player = this.player;
 
-                if (this.keys.has('ArrowLeft')) {
-                    player.dx = -this.PLAYER_SPEED;
-                } else if (this.keys.has('ArrowRight')) {
-                    player.dx = this.PLAYER_SPEED;
-                } else {
-                    player.dx = 0;
-                }
+                // Horizontal movement
+                if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
+                else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
+                else player.dx = 0;
 
-                if (this.keys.has(' ')) {
-                    if (player.isOnGround && !player.isJumping) {
-                        player.dy = this.JUMP_FORCE;
-                        player.isOnGround = false;
-                        player.isJumping = true;
-                    }
+                // Jump
+                if (this.keys.has('ArrowUp') && player.isOnGround) {
+                    player.dy = this.JUMP_FORCE;
+                    player.isOnGround = false;
                 }
             }
 
             applyPhysics() {
                 const player = this.player;
 
+                // Apply gravity
                 player.dy += this.GRAVITY;
+
+                // Update position
                 player.x += player.dx;
                 player.y += player.dy;
 
+                // Check collisions with platforms
                 this.checkPlatformCollisions();
+
+                // Prevent falling off the bottom
+                if (player.y > this.canvas.height - player.height) {
+                    player.y = this.canvas.height - player.height;
+                    player.dy = 0;
+                    player.isOnGround = true;
+                }
             }
 
             checkPlatformCollisions() {
@@ -259,6 +233,7 @@
                         player.y + player.height <= platform.y &&
                         player.y + player.height + player.dy >= platform.y
                     ) {
+                        // Land on top of platform
                         player.dy = 0;
                         player.isOnGround = true;
                         player.y = platform.y - player.height;
@@ -284,12 +259,12 @@
                 this.currentLevel++;
                 if (this.currentLevel > this.levels.length) {
                     alert("Congratulations! You've completed all levels!");
-                    this.menu.style.display = 'flex'; 
+                    this.menu.style.display = 'flex'; // Show menu again
                 } else {
                     const newLevel = this.levels[this.currentLevel - 1];
                     this.platforms = newLevel.platforms;
                     this.goal = newLevel.goal;
-                    this.player.x = 100;
+                    this.player.x = 100; // Reset player position
                     this.player.y = 100;
                     this.levelCompleted = false;
                 }
@@ -300,23 +275,29 @@
                 const player = this.player;
                 const goal = this.goal;
 
+                // Clear canvas
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+                // Draw platforms
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
+                // Draw goal box
                 ctx.fillStyle = 'gold';
                 ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
 
+                // Draw player
                 if (player.image.complete) {
                     ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
                 } else {
+                    // Fallback if image hasn't loaded
                     ctx.fillStyle = 'white';
                     ctx.fillRect(player.x, player.y, player.width, player.height);
                 }
 
+                // Display level complete message
                 if (this.levelCompleted) {
                     ctx.fillStyle = 'white';
                     ctx.font = '30px Arial';
@@ -338,6 +319,7 @@
             }
         }
 
+        // Start the game
         new Game('gameCanvas');
     </script>
 </body>

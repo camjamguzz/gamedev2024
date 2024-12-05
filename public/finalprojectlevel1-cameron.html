@@ -225,22 +225,11 @@
             applyPhysics() {
                 const player = this.player;
 
-                // Apply gravity
                 player.dy += this.GRAVITY;
-
-                // Update position
                 player.x += player.dx;
                 player.y += player.dy;
 
-                // Check collisions with platforms
                 this.checkPlatformCollisions();
-
-                // Prevent falling off the bottom
-                if (player.y > this.canvas.height - player.height) {
-                    player.y = this.canvas.height - player.height;
-                    player.dy = 0;
-                    player.isOnGround = true;
-                }
             }
 
             checkPlatformCollisions() {
@@ -254,7 +243,6 @@
                         player.y + player.height <= platform.y &&
                         player.y + player.height + player.dy >= platform.y
                     ) {
-                        // Land on top of platform
                         player.dy = 0;
                         player.isOnGround = true;
                         player.y = platform.y - player.height;
@@ -280,12 +268,12 @@
                 this.currentLevel++;
                 if (this.currentLevel > this.levels.length) {
                     alert("Congratulations! You've completed all levels!");
-                    this.menu.style.display = 'flex'; // Show menu again
+                    this.menu.style.display = 'flex'; 
                 } else {
                     const newLevel = this.levels[this.currentLevel - 1];
                     this.platforms = newLevel.platforms;
                     this.goal = newLevel.goal;
-                    this.player.x = 100; // Reset player position
+                    this.player.x = 100;
                     this.player.y = 100;
                     this.levelCompleted = false;
                 }
@@ -296,29 +284,23 @@
                 const player = this.player;
                 const goal = this.goal;
 
-                // Clear canvas
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Draw platforms
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
-                // Draw goal box
                 ctx.fillStyle = 'gold';
                 ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
 
-                // Draw player
                 if (player.image.complete) {
                     ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
                 } else {
-                    // Fallback if image hasn't loaded
                     ctx.fillStyle = 'white';
                     ctx.fillRect(player.x, player.y, player.width, player.height);
                 }
 
-                // Display level complete message
                 if (this.levelCompleted) {
                     ctx.fillStyle = 'white';
                     ctx.font = '30px Arial';
@@ -340,7 +322,6 @@
             }
         }
 
-        // Start the game
         new Game('gameCanvas');
     </script>
 </body>

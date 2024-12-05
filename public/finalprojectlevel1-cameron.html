@@ -40,6 +40,8 @@
                 // Game objects
                 this.player = this.createPlayer();
                 this.platforms = this.createPlatforms();
+                this.goal = this.createGoal();
+                this.levelCompleted = false;
 
                 // Input tracking
                 this.keys = new Set();
@@ -74,6 +76,15 @@
                     { x: 300, y: 400, width: 150, height: 20 },
                     { x: 500, y: 300, width: 200, height: 20 },
                 ];
+            }
+
+            createGoal() {
+                return {
+                    x: 700,
+                    y: 250,
+                    width: 50,
+                    height: 50,
+                };
             }
 
             setupInputHandlers() {
@@ -136,9 +147,24 @@
                 });
             }
 
+            checkGoalCollision() {
+                const player = this.player;
+                const goal = this.goal;
+
+                if (
+                    player.x < goal.x + goal.width &&
+                    player.x + player.width > goal.x &&
+                    player.y < goal.y + goal.height &&
+                    player.y + player.height > goal.y
+                ) {
+                    this.levelCompleted = true;
+                }
+            }
+
             draw() {
                 const ctx = this.ctx;
                 const player = this.player;
+                const goal = this.goal;
 
                 // Clear canvas
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -149,6 +175,10 @@
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
+                // Draw goal box
+                ctx.fillStyle = 'gold';
+                ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
+
                 // Draw player
                 if (player.image.complete) {
                     ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
@@ -157,11 +187,22 @@
                     ctx.fillStyle = 'white';
                     ctx.fillRect(player.x, player.y, player.width, player.height);
                 }
+
+                // Display level complete message
+                if (this.levelCompleted) {
+                    ctx.fillStyle = 'white';
+                    ctx.font = '30px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Level Complete!', this.canvas.width / 2, this.canvas.height / 2);
+                }
             }
 
             gameLoop() {
-                this.handleInput();
-                this.applyPhysics();
+                if (!this.levelCompleted) {
+                    this.handleInput();
+                    this.applyPhysics();
+                    this.checkGoalCollision();
+                }
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
             }

@@ -47,12 +47,23 @@
             background: #555;
         }
         #levelSelect {
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
         }
         #levelSelect button {
             font-size: 18px;
+            background: #444;
+            color: white;
+            border: 2px solid white;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        #levelSelect button:hover {
+            background: #666;
         }
     </style>
 </head>
@@ -60,7 +71,7 @@
     <div id="menu">
         <button id="playGame">Play Game</button>
         <button id="chooseLevel">Choose Level</button>
-        <div id="levelSelect" style="display: none;">
+        <div id="levelSelect">
             <button class="levelButton" data-level="1">Level 1</button>
             <button class="levelButton" data-level="2">Level 2</button>
             <button class="levelButton" data-level="3">Level 3</button>
@@ -210,15 +221,20 @@
             handleInput() {
                 const player = this.player;
 
-                // Horizontal movement
-                if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
-                else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
-                else player.dx = 0;
+                if (this.keys.has('ArrowLeft')) {
+                    player.dx = -this.PLAYER_SPEED;
+                } else if (this.keys.has('ArrowRight')) {
+                    player.dx = this.PLAYER_SPEED;
+                } else {
+                    player.dx = 0;
+                }
 
-                // Jump
-                if (this.keys.has('ArrowUp') && player.isOnGround) {
-                    player.dy = this.JUMP_FORCE;
-                    player.isOnGround = false;
+                if (this.keys.has(' ')) {
+                    if (player.isOnGround && !player.isJumping) {
+                        player.dy = this.JUMP_FORCE;
+                        player.isOnGround = false;
+                        player.isJumping = true;
+                    }
                 }
             }
 

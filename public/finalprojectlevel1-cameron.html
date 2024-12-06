@@ -60,6 +60,7 @@
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
                 this.menu = document.getElementById('menu');
+                this.winScreenShown = false;
                 this.initMenu();
             }
 
@@ -147,38 +148,6 @@
                         ],
                         goal: { x: 750, y: 200, width: 50, height: 50 },
                     },
-                    {
-                        platforms: [
-                            { x: 50, y: 550, width: 80, height: 20 },
-                            { x: 150, y: 450, width: 70, height: 20 },
-                            { x: 300, y: 350, width: 60, height: 20 },
-                            { x: 450, y: 250, width: 50, height: 20 },
-                            { x: 600, y: 150, width: 40, height: 20 },
-                        ],
-                        goal: { x: 700, y: 100, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 100, height: 20 },
-                            { x: 200, y: 400, width: 120, height: 20 },
-                            { x: 400, y: 450, width: 90, height: 20 },
-                            { x: 350, y: 300, width: 80, height: 20 },
-                            { x: 600, y: 350, width: 150, height: 20 },
-                            { x: 500, y: 200, width: 70, height: 20 },
-                        ],
-                        goal: { x: 750, y: 150, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 200, y: 430, width: 50, height: 20 },
-                            { x: 400, y: 450, width: 50, height: 20 },
-                            { x: 600, y: 350, width: 50, height: 20 },
-                            { x: 500, y: 220, width: 50, height: 20 },
-                            { x: 300, y: 200, width: 50, height: 20 },
-                        ],
-                        goal: { x: 0, y: 100, width: 50, height: 50 },
-                    },
                 ];
             }
 
@@ -259,8 +228,7 @@
             loadNextLevel() {
                 this.currentLevel++;
                 if (this.currentLevel > this.levels.length) {
-                    alert("Congratulations! You've completed all levels!");
-                    this.menu.style.display = 'flex'; // Show menu again
+                    this.showWinScreen(); // Show win screen
                 } else {
                     const newLevel = this.levels[this.currentLevel - 1];
                     this.platforms = newLevel.platforms;
@@ -271,8 +239,28 @@
                 }
             }
 
+            showWinScreen() {
+                this.winScreenShown = true;
+                const ctx = this.ctx;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw win message
+                ctx.fillStyle = 'white';
+                ctx.font = '50px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Congratulations! You Win!', this.canvas.width / 2, this.canvas.height / 2);
+
+                // Optionally add more visuals or confetti
+            }
+
             draw() {
                 const ctx = this.ctx;
+
+                // If win screen is active, skip drawing game objects
+                if (this.winScreenShown) return;
+
                 const player = this.player;
                 const goal = this.goal;
 
@@ -293,17 +281,8 @@
                 if (player.image.complete) {
                     ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
                 } else {
-                    // Fallback if image hasn't loaded
                     ctx.fillStyle = 'white';
                     ctx.fillRect(player.x, player.y, player.width, player.height);
-                }
-
-                // Display level complete message
-                if (this.levelCompleted) {
-                    ctx.fillStyle = 'white';
-                    ctx.font = '30px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Level Complete!', this.canvas.width / 2, this.canvas.height / 2);
                 }
             }
 
@@ -316,12 +295,11 @@
                     this.loadNextLevel();
                 }
                 this.draw();
-                requestAnimationFrame(() => this.gameLoop());
+                if (!this.winScreenShown) requestAnimationFrame(() => this.gameLoop());
             }
         }
 
-        // Start the game
         new Game('gameCanvas');
     </script>
 </body>
-</html> 
+</html>

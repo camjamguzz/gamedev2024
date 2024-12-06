@@ -203,29 +203,52 @@
             }
 
             applyPhysics() {
-                const player = this.player;
+    const player = this.player;
 
-                // Apply gravity
-                player.dy += this.GRAVITY;
+    // Apply gravity
+    player.dy += this.GRAVITY;
 
-                // Update position
-                player.x += player.dx;
-                player.y += player.dy;
+    // Update position
+    player.x += player.dx;
+    player.y += player.dy;
 
-                // Check collisions with platforms
-                this.checkPlatformCollisions();
+    // Check collisions with platforms
+    this.checkPlatformCollisions();
 
-                // Prevent falling off the bottom
-                if (player.y > this.canvas.height - player.height) {
-                    player.y = this.canvas.height - player.height;
-                    player.dy = 0;
-                    player.isOnGround = true;
-                }
-            }
+    // Prevent falling off the bottom or handle death
+    if (player.y > this.canvas.height - player.height) {
+        if (this.currentLevel === 1) {
+            // Level 1: Just reset position on the floor
+            player.y = this.canvas.height - player.height;
+            player.dy = 0;
+            player.isOnGround = true;
+        } else {
+            // Other levels: Reset to start position and show death message
+            this.playerDies();
+        }
+    }
+}
 
-            checkPlatformCollisions() {
-                const player = this.player;
-                player.isOnGround = false;
+playerDies() {
+    // Reset player position
+    const player = this.player;
+    player.x = 100; // Starting X position
+    player.y = 100; // Starting Y position
+    player.dx = 0;
+    player.dy = 0;
+
+    // Display "You Died" message
+    const ctx = this.ctx;
+    ctx.fillStyle = 'red';
+    ctx.font = '50px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('You Died!', this.canvas.width / 2, this.canvas.height / 2);
+
+    // Brief delay to let the player see the message
+    setTimeout(() => {
+        this.levelCompleted = false; // Allow the game loop to continue
+    }, 1000);
+}
 
                 this.platforms.forEach((platform) => {
                     if (

@@ -60,6 +60,7 @@
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
                 this.menu = document.getElementById('menu');
+                this.confetti = [];
                 this.initMenu();
             }
 
@@ -88,26 +89,21 @@
             }
 
             init(level = 1) {
-                // Game constants
                 this.GRAVITY = 0.5;
                 this.JUMP_FORCE = -12;
                 this.PLAYER_SPEED = 5;
 
-                // Game objects
                 this.player = this.createPlayer();
                 this.currentLevel = level;
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
                 this.levelCompleted = false;
+                this.isWin = false;
 
-                // Input tracking
                 this.keys = new Set();
-
-                // Event listeners
                 this.setupInputHandlers();
-
-                // Start game loop
+                this.initConfetti();
                 this.gameLoop();
             }
 
@@ -138,47 +134,6 @@
                         ],
                         goal: { x: 700, y: 250, width: 50, height: 50 },
                     },
-                    {
-                        platforms: [
-                            { x: 50, y: 550, width: 100, height: 20 },
-                            { x: 200, y: 450, width: 100, height: 20 },
-                            { x: 400, y: 350, width: 80, height: 20 },
-                            { x: 600, y: 250, width: 70, height: 20 },
-                        ],
-                        goal: { x: 750, y: 200, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 550, width: 80, height: 20 },
-                            { x: 150, y: 450, width: 70, height: 20 },
-                            { x: 300, y: 350, width: 60, height: 20 },
-                            { x: 450, y: 250, width: 50, height: 20 },
-                            { x: 600, y: 150, width: 40, height: 20 },
-                        ],
-                        goal: { x: 700, y: 100, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 100, height: 20 },
-                            { x: 200, y: 400, width: 120, height: 20 },
-                            { x: 400, y: 450, width: 90, height: 20 },
-                            { x: 350, y: 300, width: 80, height: 20 },
-                            { x: 600, y: 350, width: 150, height: 20 },
-                            { x: 500, y: 200, width: 70, height: 20 },
-                        ],
-                        goal: { x: 750, y: 150, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 200, y: 430, width: 50, height: 20 },
-                            { x: 400, y: 450, width: 50, height: 20 },
-                            { x: 600, y: 350, width: 50, height: 20 },
-                            { x: 500, y: 220, width: 50, height: 20 },
-                            { x: 300, y: 200, width: 50, height: 20 },
-                        ],
-                        goal: { x: 0, y: 100, width: 50, height: 50 },
-                    },
                 ];
             }
 
@@ -189,13 +144,10 @@
 
             handleInput() {
                 const player = this.player;
-
-                // Horizontal movement
                 if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
                 else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
                 else player.dx = 0;
 
-                // Jump
                 if (this.keys.has('ArrowUp') && player.isOnGround) {
                     player.dy = this.JUMP_FORCE;
                     player.isOnGround = false;
@@ -204,18 +156,10 @@
 
             applyPhysics() {
                 const player = this.player;
-
-                // Apply gravity
                 player.dy += this.GRAVITY;
-
-                // Update position
                 player.x += player.dx;
                 player.y += player.dy;
-
-                // Check collisions with platforms
                 this.checkPlatformCollisions();
-
-                // Prevent falling off the bottom
                 if (player.y > this.canvas.height - player.height) {
                     player.y = this.canvas.height - player.height;
                     player.dy = 0;
@@ -226,7 +170,6 @@
             checkPlatformCollisions() {
                 const player = this.player;
                 player.isOnGround = false;
-
                 this.platforms.forEach((platform) => {
                     if (
                         player.x < platform.x + platform.width &&
@@ -234,7 +177,6 @@
                         player.y + player.height <= platform.y &&
                         player.y + player.height + player.dy >= platform.y
                     ) {
-                        // Land on top of platform
                         player.dy = 0;
                         player.isOnGround = true;
                         player.y = platform.y - player.height;
@@ -245,7 +187,6 @@
             checkGoalCollision() {
                 const player = this.player;
                 const goal = this.goal;
-
                 if (
                     player.x < goal.x + goal.width &&
                     player.x + player.width > goal.x &&
@@ -259,13 +200,12 @@
             loadNextLevel() {
                 this.currentLevel++;
                 if (this.currentLevel > this.levels.length) {
-                    alert("Congratulations! You've completed all levels!");
-                    this.menu.style.display = 'flex'; // Show menu again
+                    this.isWin = true;
                 } else {
                     const newLevel = this.levels[this.currentLevel - 1];
                     this.platforms = newLevel.platforms;
                     this.goal = newLevel.goal;
-                    this.player.x = 100; // Reset player position
+                    this.player.x = 100;
                     this.player.y = 100;
                     this.levelCompleted = false;
                 }
@@ -276,39 +216,30 @@
                 const player = this.player;
                 const goal = this.goal;
 
-                // Clear canvas
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Draw platforms
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
-                // Draw goal box
                 ctx.fillStyle = 'gold';
                 ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
 
-                // Draw player
                 if (player.image.complete) {
                     ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
                 } else {
-                    // Fallback if image hasn't loaded
                     ctx.fillStyle = 'white';
                     ctx.fillRect(player.x, player.y, player.width, player.height);
                 }
 
-                // Display level complete message
-                if (this.levelCompleted) {
-                    ctx.fillStyle = 'white';
-                    ctx.font = '30px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Level Complete!', this.canvas.width / 2, this.canvas.height / 2);
-                }
+                if (this.isWin) this.showWinScreen();
             }
 
             gameLoop() {
-                if (!this.levelCompleted) {
+                if (this.isWin) {
+                    this.showWinScreen();
+                } else if (!this.levelCompleted) {
                     this.handleInput();
                     this.applyPhysics();
                     this.checkGoalCollision();
@@ -318,9 +249,46 @@
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
             }
+
+            showWinScreen() {
+                const ctx = this.ctx;
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '50px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('You Win!', this.canvas.width / 2, this.canvas.height / 2 - 50);
+                this.updateConfetti();
+            }
+
+            initConfetti() {
+                for (let i = 0; i < 100; i++) {
+                    this.confetti.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        dx: (Math.random() - 0.5) * 2,
+                        dy: Math.random() * 2 + 1,
+                        width: Math.random() * 10 + 5,
+                        height: Math.random() * 10 + 5,
+                        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    });
+                }
+            }
+
+            updateConfetti() {
+                const ctx = this.ctx;
+                this.confetti.forEach((confetti) => {
+                    confetti.x += confetti.dx;
+                    confetti.y += confetti.dy;
+                    if (confetti.y > this.canvas.height) {
+                        confetti.y = 0;
+                        confetti.x = Math.random() * this.canvas.width;
+                    }
+                    ctx.fillStyle = confetti.color;
+                    ctx.fillRect(confetti.x, confetti.y, confetti.width, confetti.height);
+                });
+            }
         }
 
-        // Start the game
         new Game('gameCanvas');
     </script>
 </body>

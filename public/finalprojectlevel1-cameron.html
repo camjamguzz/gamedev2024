@@ -84,15 +84,15 @@
                 this.notificationsContainer = document.getElementById('notifications');
                 this.initMenu();
             }
-        
+
             initMenu() {
                 const playGameButton = document.getElementById('playGame');
                 const chooseLevelButton = document.getElementById('chooseLevel');
-        
+
                 playGameButton.addEventListener('click', () => {
                     this.startGame(1); // Start from level 1
                 });
-        
+
                 chooseLevelButton.addEventListener('click', () => {
                     const levelChoice = prompt('Enter level number (1-5):');
                     const level = parseInt(levelChoice, 10);
@@ -103,45 +103,45 @@
                     }
                 });
             }
-        
+
             startGame(level) {
                 this.menu.style.display = 'none';
                 this.init(level);
             }
-        
+
             showNotification(message) {
                 const notification = document.createElement('div');
                 notification.className = 'notification';
                 notification.textContent = message;
                 this.notificationsContainer.appendChild(notification);
-        
+
                 setTimeout(() => {
                     notification.remove();
                 }, 3000);
             }
-        
+
+            // Rest of the Game methods remain the same...
             init(level = 1) {
                 this.GRAVITY = 0.5;
                 this.JUMP_FORCE = -12;
                 this.PLAYER_SPEED = 5;
-        
+
                 this.player = this.createPlayer();
-                this.enemies = [this.createEnemy()]; // Add enemy creation here
                 this.currentLevel = level;
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
                 this.levelCompleted = false;
-        
+
                 this.keys = new Set();
                 this.setupInputHandlers();
                 this.gameLoop();
             }
-        
+
             createPlayer() {
                 const playerImage = new Image();
                 playerImage.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
-        
+
                 return {
                     x: 100,
                     y: 100,
@@ -154,25 +154,10 @@
                     image: playerImage,
                 };
             }
-        
-            createEnemy() {
-                const enemyImage = new Image();
-                enemyImage.src = 'New Piskel (7).gif'; // Use uploaded file as the enemy sprite
-        
-                return {
-                    x: 500,
-                    y: 100,
-                    width: 50,
-                    height: 50,
-                    dx: -2, // Enemy speed
-                    dy: 0,
-                    image: enemyImage,
-                };
-            }
-        
+
             createLevels() {
                 return [
-                    {
+                {
                         platforms: [
                             { x: 50, y: 500, width: 200, height: 20 },
                             { x: 300, y: 400, width: 150, height: 20 },
@@ -180,33 +165,87 @@
                         ],
                         goal: { x: 700, y: 250, width: 50, height: 50 },
                     },
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 100, height: 20 },
+                            { x: 200, y: 450, width: 100, height: 20 },
+                            { x: 400, y: 350, width: 80, height: 20 },
+                            { x: 600, y: 250, width: 70, height: 20 },
+                        ],
+                        goal: { x: 750, y: 200, width: 50, height: 50 },
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 80, height: 20 },
+                            { x: 150, y: 450, width: 70, height: 20 },
+                            { x: 300, y: 350, width: 60, height: 20 },
+                            { x: 450, y: 250, width: 50, height: 20 },
+                            { x: 600, y: 150, width: 40, height: 20 },
+                        ],
+                        goal: { x: 700, y: 100, width: 50, height: 50 },
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 500, width: 100, height: 20 },
+                            { x: 200, y: 400, width: 120, height: 20 },
+                            { x: 400, y: 450, width: 90, height: 20 },
+                            { x: 350, y: 300, width: 80, height: 20 },
+                            { x: 600, y: 350, width: 150, height: 20 },
+                            { x: 500, y: 200, width: 70, height: 20 },
+                        ],
+                        goal: { x: 750, y: 150, width: 50, height: 50 },
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 500, width: 50, height: 20 },
+                            { x: 200, y: 430, width: 50, height: 20 },
+                            { x: 400, y: 450, width: 50, height: 20 },
+                            { x: 600, y: 350, width: 50, height: 20 },
+                            { x: 500, y: 220, width: 50, height: 20 },
+                            { x: 300, y: 200, width: 50, height: 20 },
+                        ],
+                        goal: { x: 0, y: 100, width: 50, height: 50 },
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 500, width: 50, height: 20 },
+                            { x: 200, y: 400, width: 50, height: 20 },
+                            { x: 400, y: 450, width: 50, height: 20 },
+                            { x: 600, y: 350, width: 50, height: 20 },
+                            { x: 500, y: 220, width: 50, height: 20 },
+                            { x: 330, y: 100, width: 50, height: 200 },
+                            { x: 400, y: -20, width: 50, height: 20 },
+                            { x: 210, y: -50, width: 50, height: 20 },
+                        ],
+                        goal: { x: 0, y: 0, width: 50, height: 50 },
+                    },
                 ];
             }
-        
+
             setupInputHandlers() {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
             }
-        
+
             handleInput() {
                 const player = this.player;
-        
+
                 if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
                 else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
                 else player.dx = 0;
-        
+
                 if (this.keys.has('ArrowUp') && player.isOnGround) {
                     player.dy = this.JUMP_FORCE;
                     player.isOnGround = false;
                 }
             }
-        
+
             applyPhysics() {
                 const player = this.player;
                 player.dy += this.GRAVITY;
                 player.x += player.dx;
                 player.y += player.dy;
-        
+
                 this.checkPlatformCollisions();
                 if (player.y > this.canvas.height - player.height) {
                     player.y = this.canvas.height - player.height;
@@ -214,11 +253,11 @@
                     player.isOnGround = true;
                 }
             }
-        
+
             checkPlatformCollisions() {
                 const player = this.player;
                 player.isOnGround = false;
-        
+
                 this.platforms.forEach((platform) => {
                     if (
                         player.x < platform.x + platform.width &&
@@ -232,11 +271,11 @@
                     }
                 });
             }
-        
+
             checkGoalCollision() {
                 const player = this.player;
                 const goal = this.goal;
-        
+
                 if (
                     player.x < goal.x + goal.width &&
                     player.x + player.width > goal.x &&
@@ -246,74 +285,56 @@
                     this.levelCompleted = true;
                 }
             }
-        
-            checkEnemyCollision() {
-                const player = this.player;
-        
-                this.enemies.forEach((enemy) => {
-                    if (
-                        player.x < enemy.x + enemy.width &&
-                        player.x + player.width > enemy.x &&
-                        player.y < enemy.y + enemy.height &&
-                        player.y + player.height > enemy.y
-                    ) {
-                        this.showNotification('You were caught by the enemy! Restarting level...');
-                        this.init(this.currentLevel); // Restart level
-                    }
-                });
+
+            loadNextLevel() {
+                this.currentLevel++;
+                if (this.currentLevel > this.levels.length) {
+                    this.showNotification("Congratulations! You've completed all levels!");
+                    this.menu.style.display = 'flex';
+                } else {
+                    const newLevel = this.levels[this.currentLevel - 1];
+                    this.platforms = newLevel.platforms;
+                    this.goal = newLevel.goal;
+                    this.player.x = 100;
+                    this.player.y = 100;
+                    this.levelCompleted = false;
+                }
             }
-        
-            updateEnemy() {
-                this.enemies.forEach((enemy) => {
-                    enemy.x += enemy.dx;
-        
-                    // Reverse direction at canvas edges
-                    if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
-                        enemy.dx *= -1;
-                    }
-                });
-            }
-        
+
             draw() {
                 const ctx = this.ctx;
                 const player = this.player;
                 const goal = this.goal;
-        
+
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
+
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
-        
+
                 ctx.fillStyle = 'gold';
                 ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
-        
+
                 if (player.image.complete) {
                     ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
                 } else {
                     ctx.fillStyle = 'white';
                     ctx.fillRect(player.x, player.y, player.width, player.height);
                 }
-        
-                // Draw enemies
-                this.enemies.forEach((enemy) => {
-                    if (enemy.image.complete) {
-                        ctx.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
-                    } else {
-                        ctx.fillStyle = 'red';
-                        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-                    }
-                });
+
+                if (this.levelCompleted) {
+                    ctx.fillStyle = 'white';
+                    ctx.font = '30px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Level Complete!', this.canvas.width / 2, this.canvas.height / 2);
+                }
             }
-        
+
             gameLoop() {
                 if (!this.levelCompleted) {
                     this.handleInput();
                     this.applyPhysics();
-                    this.checkPlatformCollisions();
-                    this.updateEnemy();
-                    this.checkEnemyCollision();
                     this.checkGoalCollision();
                 } else {
                     this.loadNextLevel();
@@ -322,9 +343,8 @@
                 requestAnimationFrame(() => this.gameLoop());
             }
         }
-        
+
         new Game('gameCanvas');
-        </script>
-        
+    </script>
 </body>
 </html>

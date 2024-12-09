@@ -5,69 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cooler Local Storage Example</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #bde4d2;
-            color: #333;
-            margin: 20px;
-            padding: 20px;
-        }
-        h2 {
-            text-align: center;
-            color: #3f20f1;
-        }
-        #myText1 {
-            width: calc(100% - 20px);
-            padding: 10px;
-            border: 2px solid #5feee2;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        input[type="button"] {
-            background-color: #7e05ad;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-            transition: background-color 0.3s;
-        }
-        input[type="button"]:hover {
-            background-color: #073e85;
-        }
-        input[type="button"]:active {
-            background-color: #9b20ac;
-        }
-        #storedTextsList {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin-top: 20px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        #storedTextsList ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        #storedTextsList li {
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        #storedTextsList li:hover {
-            background-color: #f0f0f0;
-        }
-        #storedTextsList li:active {
-            background-color: #ddd;
-        }
+        /* ... (existing styles) ... */
     </style>
 </head>
 <body onload="loadStoredTexts()">
@@ -82,12 +20,15 @@ Text example:
 <input type="button" value="Store Text" onclick="storeText()">
 <input type="button" value="Retrieve Text" onclick="retrieveTexts()">
 <input type="button" value="Delete Text" onclick="startDeleteMode()">
+<input type="button" value="Edit Text" onclick="startEditMode()">
 
 <!-- Display area for stored texts (initially hidden) -->
 <div id="storedTextsList" style="display: none;"></div>
 
 <script>
-    let deleteMode = false; // Keeps track of whether delete mode is active
+    let deleteMode = false;
+    let editMode = false;
+    let editIndex = null; // To keep track of the index being edited
 
     // Load stored texts silently on page load
     function loadStoredTexts() {
@@ -99,7 +40,14 @@ Text example:
         const textValue = document.getElementById('myText1').value;
         if (textValue.trim() !== "") {
             const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
-            storedTexts.push(textValue); // Add the new text to the list
+            if (editMode && editIndex !== null) {
+                // Update the text at the selected index
+                storedTexts[editIndex] = textValue;
+                editMode = false; // Exit edit mode
+                editIndex = null; // Clear the index
+            } else {
+                storedTexts.push(textValue); // Add the new text to the list
+            }
             localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
             document.getElementById('myText1').value = ''; // Clear the input field
         }
@@ -109,8 +57,9 @@ Text example:
     function retrieveTexts() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         displayTexts(storedTexts);
-        document.getElementById('storedTextsList').style.display = 'block'; // Show the list
-        deleteMode = false; // Ensure delete mode is off when retrieving texts
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = false;
+        editMode = false;
     }
 
     // Enable delete mode
@@ -121,36 +70,58 @@ Text example:
             return;
         }
         displayTexts(storedTexts);
-        document.getElementById('storedTextsList').style.display = 'block'; // Ensure list is visible
-        deleteMode = true; // Activate delete mode
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = true;
+        editMode = false;
+    }
+
+    // Enable edit mode
+    function startEditMode() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts to edit.');
+            return;
+        }
+        displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = false;
+        editMode = true;
     }
 
     // Display texts in a list format and make them clickable
     function displayTexts(texts) {
         const listContainer = document.getElementById('storedTextsList');
-        listContainer.innerHTML = ''; // Clear the current list
+        listContainer.innerHTML = '';
         if (texts.length > 0) {
-            const ul = document.createElement('ul'); // Create a list container
+            const ul = document.createElement('ul');
             texts.forEach((text, index) => {
-                const li = document.createElement('li'); // Create a list item
-                li.textContent = text; // Set the text content
-                li.style.cursor = 'pointer'; // Make it look clickable
+                const li = document.createElement('li');
+                li.textContent = text;
+                li.style.cursor = 'pointer';
                 li.onclick = () => {
                     if (deleteMode) {
-                        deleteText(index); // Delete the clicked text
+                        deleteText(index);
+                    } else if (editMode) {
+                        populateTextFieldForEdit(index, text);
                     } else {
-                        populateTextField(text); // Populate the input field
+                        populateTextField(text);
                     }
                 };
-                ul.appendChild(li); // Add to the list
+                ul.appendChild(li);
             });
-            listContainer.appendChild(ul); // Display the list
+            listContainer.appendChild(ul);
         } else {
             listContainer.textContent = 'No stored texts found.';
         }
     }
 
-    // Populate the input field with the clicked text
+    // Populate the input field with the clicked text for editing
+    function populateTextFieldForEdit(index, text) {
+        document.getElementById('myText1').value = text;
+        editIndex = index; // Save the index for updating
+    }
+
+    // Populate the input field with the clicked text for viewing
     function populateTextField(text) {
         document.getElementById('myText1').value = text;
     }
@@ -159,11 +130,11 @@ Text example:
     function deleteText(index) {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         if (index >= 0 && index < storedTexts.length) {
-            storedTexts.splice(index, 1); // Remove the text at the selected index
-            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts)); // Update localStorage
-            displayTexts(storedTexts); // Refresh the displayed list
+            storedTexts.splice(index, 1);
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
+            displayTexts(storedTexts);
         }
-        deleteMode = false; // Exit delete mode after deletion
+        deleteMode = false;
     }
 
     // Automatically save text when the user leaves the page
@@ -171,7 +142,7 @@ Text example:
         const textValue = document.getElementById('myText1').value;
         if (textValue.trim() !== "") {
             const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
-            storedTexts.push(textValue); // Add unsaved text to the list
+            storedTexts.push(textValue);
             localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
         }
     };

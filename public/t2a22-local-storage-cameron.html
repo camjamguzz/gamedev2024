@@ -5,145 +5,190 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cooler Local Storage Example</title>
     <style>
-        /* General body styles */
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background-color: #e3f2fd;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* Main container styling */
-        .container {
-            width: 90%;
-            max-width: 600px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Title styling */
-        h2 {
-            color: #1976d2;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        /* Input field styling */
-        #myText1 {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #90caf9;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        /* Buttons styling */
-        input[type="button"] {
-            background-color: #42a5f5;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        input[type="button"]:hover {
-            background-color: #1e88e5;
-            transform: translateY(-2px);
-        }
-
-        input[type="button"]:active {
-            background-color: #1565c0;
-            transform: translateY(0px);
-        }
-
-        /* Stored texts list container */
-        #storedTextsList {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f1f8e9;
-            border: 1px solid #c5e1a5;
-            border-radius: 5px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        #storedTextsList ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #storedTextsList li {
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #e8f5e9;
-            border: 1px solid #aed581;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        #storedTextsList li:hover {
-            background-color: #dcedc8;
-            transform: translateX(5px);
-        }
-
-        #storedTextsList li:active {
-            background-color: #c5e1a5;
-            transform: translateX(0);
-        }
-
-        /* Footer message */
-        footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #666;
-        }
+        /* ... (existing styles) ... */
     </style>
 </head>
 <body onload="loadStoredTexts()">
 
-<div class="container">
-    <h2>Cooler Local Storage Example</h2>
+<h2>Cooler Local Storage Example</h2>
 
-    <!-- Input for storing and retrieving text -->
-    <input id="myText1" type="text" placeholder="Write here to store..."><br>
+<!-- Input for storing and retrieving text -->
+Text example: 
+<input id="myText1" type="text" placeholder="Write here to store..."><br>
 
-    <!-- Buttons for actions -->
-    <input type="button" value="Store Text" onclick="storeText()">
-    <input type="button" value="Retrieve Text" onclick="retrieveTexts()">
-    <input type="button" value="Delete Text" onclick="startDeleteMode()">
-    <input type="button" value="Edit Text" onclick="startEditMode()">
-    <input type="button" value="Copy Text" onclick="startCopyMode()">
-    <input type="button" value="Random Word" onclick="displayRandomWord()">
+<!-- Buttons for actions -->
+<input type="button" value="Store Text" onclick="storeText()">
+<input type="button" value="Retrieve Text" onclick="retrieveTexts()">
+<input type="button" value="Delete Text" onclick="startDeleteMode()">
+<input type="button" value="Edit Text" onclick="startEditMode()">
+<input type="button" value="Copy Text" onclick="startCopyMode()">
+<input type="button" value="Random Word" onclick="displayRandomWord()">
 
-    <!-- Display area for stored texts (initially hidden) -->
-    <div id="storedTextsList" style="display: none;"></div>
-</div>
-
-<footer>
-    Made with ❤️ to demonstrate cool local storage features.
-</footer>
+<!-- Display area for stored texts (initially hidden) -->
+<div id="storedTextsList" style="display: none;"></div>
 
 <script>
-    // JavaScript code remains the same as in the previous implementation.
-    /* ... */
+    let deleteMode = false;
+    let editMode = false;
+    let copyMode = false;
+    let editIndex = null;
+
+    // Load stored texts silently on page load
+    function loadStoredTexts() {
+        JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+    }
+
+    // Store text into localStorage
+    function storeText() {
+        const textValue = document.getElementById('myText1').value;
+        if (textValue.trim() !== "") {
+            const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+            if (editMode && editIndex !== null) {
+                storedTexts[editIndex] = textValue; // Update the text
+                editMode = false;
+                editIndex = null;
+            } else {
+                storedTexts.push(textValue); // Add the new text
+            }
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
+            document.getElementById('myText1').value = ''; // Clear the input field
+        }
+    }
+
+    // Retrieve and display all stored texts
+    function retrieveTexts() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = false;
+        editMode = false;
+        copyMode = false;
+    }
+
+    // Enable delete mode
+    function startDeleteMode() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts to delete.');
+            return;
+        }
+        displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = true;
+        editMode = false;
+        copyMode = false;
+    }
+
+    // Enable edit mode
+    function startEditMode() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts to edit.');
+            return;
+        }
+        displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = false;
+        editMode = true;
+        copyMode = false;
+    }
+
+    // Enable copy mode
+    function startCopyMode() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts to copy.');
+            return;
+        }
+        displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = false;
+        editMode = false;
+        copyMode = true;
+    }
+
+    // Display texts in a list format and make them clickable
+    function displayTexts(texts) {
+        const listContainer = document.getElementById('storedTextsList');
+        listContainer.innerHTML = '';
+        if (texts.length > 0) {
+            const ul = document.createElement('ul');
+            texts.forEach((text, index) => {
+                const li = document.createElement('li');
+                li.textContent = text;
+                li.style.cursor = 'pointer';
+                li.onclick = () => {
+                    if (deleteMode) {
+                        deleteText(index);
+                    } else if (editMode) {
+                        populateTextFieldForEdit(index, text);
+                    } else if (copyMode) {
+                        copyTextToClipboard(text);
+                    } else {
+                        populateTextField(text);
+                    }
+                };
+                ul.appendChild(li);
+            });
+            listContainer.appendChild(ul);
+        } else {
+            listContainer.textContent = 'No stored texts found.';
+        }
+    }
+
+    // Display a random word
+    function displayRandomWord() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts available.');
+            return;
+        }
+        const randomIndex = Math.floor(Math.random() * storedTexts.length);
+        const randomWord = storedTexts[randomIndex];
+        alert(`Random Word: "${randomWord}"`);
+    }
+
+    // Populate the input field with the clicked text for editing
+    function populateTextFieldForEdit(index, text) {
+        document.getElementById('myText1').value = text;
+        editIndex = index; // Save the index for updating
+    }
+
+    // Populate the input field with the clicked text for viewing
+    function populateTextField(text) {
+        document.getElementById('myText1').value = text;
+    }
+
+    // Copy a text to the clipboard
+    function copyTextToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert(`Copied to clipboard: "${text}"`);
+        }).catch(err => {
+            alert('Failed to copy text: ' + err);
+        });
+        copyMode = false;
+    }
+
+    // Delete a text by its index
+    function deleteText(index) {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (index >= 0 && index < storedTexts.length) {
+            storedTexts.splice(index, 1);
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
+            displayTexts(storedTexts);
+        }
+        deleteMode = false;
+    }
+
+    // Automatically save text when the user leaves the page
+    window.onunload = function () {
+        const textValue = document.getElementById('myText1').value;
+        if (textValue.trim() !== "") {
+            const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+            storedTexts.push(textValue);
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
+        }
+    };
 </script>
 
 </body>

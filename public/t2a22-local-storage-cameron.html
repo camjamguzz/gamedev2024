@@ -21,6 +21,7 @@ Text example:
 <input type="button" value="Retrieve Text" onclick="retrieveTexts()">
 <input type="button" value="Delete Text" onclick="startDeleteMode()">
 <input type="button" value="Edit Text" onclick="startEditMode()">
+<input type="button" value="Copy Text" onclick="startCopyMode()">
 
 <!-- Display area for stored texts (initially hidden) -->
 <div id="storedTextsList" style="display: none;"></div>
@@ -28,7 +29,8 @@ Text example:
 <script>
     let deleteMode = false;
     let editMode = false;
-    let editIndex = null; // To keep track of the index being edited
+    let copyMode = false;
+    let editIndex = null;
 
     // Load stored texts silently on page load
     function loadStoredTexts() {
@@ -41,12 +43,11 @@ Text example:
         if (textValue.trim() !== "") {
             const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
             if (editMode && editIndex !== null) {
-                // Update the text at the selected index
-                storedTexts[editIndex] = textValue;
-                editMode = false; // Exit edit mode
-                editIndex = null; // Clear the index
+                storedTexts[editIndex] = textValue; // Update the text
+                editMode = false;
+                editIndex = null;
             } else {
-                storedTexts.push(textValue); // Add the new text to the list
+                storedTexts.push(textValue); // Add the new text
             }
             localStorage.setItem('myStoredTexts', JSON.stringify(storedTexts));
             document.getElementById('myText1').value = ''; // Clear the input field
@@ -60,6 +61,7 @@ Text example:
         document.getElementById('storedTextsList').style.display = 'block';
         deleteMode = false;
         editMode = false;
+        copyMode = false;
     }
 
     // Enable delete mode
@@ -73,6 +75,7 @@ Text example:
         document.getElementById('storedTextsList').style.display = 'block';
         deleteMode = true;
         editMode = false;
+        copyMode = false;
     }
 
     // Enable edit mode
@@ -86,6 +89,21 @@ Text example:
         document.getElementById('storedTextsList').style.display = 'block';
         deleteMode = false;
         editMode = true;
+        copyMode = false;
+    }
+
+    // Enable copy mode
+    function startCopyMode() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts to copy.');
+            return;
+        }
+        displayTexts(storedTexts);
+        document.getElementById('storedTextsList').style.display = 'block';
+        deleteMode = false;
+        editMode = false;
+        copyMode = true;
     }
 
     // Display texts in a list format and make them clickable
@@ -103,6 +121,8 @@ Text example:
                         deleteText(index);
                     } else if (editMode) {
                         populateTextFieldForEdit(index, text);
+                    } else if (copyMode) {
+                        copyTextToClipboard(text);
                     } else {
                         populateTextField(text);
                     }
@@ -124,6 +144,16 @@ Text example:
     // Populate the input field with the clicked text for viewing
     function populateTextField(text) {
         document.getElementById('myText1').value = text;
+    }
+
+    // Copy a text to the clipboard
+    function copyTextToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert(`Copied to clipboard: "${text}"`);
+        }).catch(err => {
+            alert('Failed to copy text: ' + err);
+        });
+        copyMode = false;
     }
 
     // Delete a text by its index

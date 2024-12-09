@@ -22,6 +22,7 @@ Text example:
 <input type="button" value="Delete Text" onclick="startDeleteMode()">
 <input type="button" value="Edit Text" onclick="startEditMode()">
 <input type="button" value="Copy Text" onclick="startCopyMode()">
+<input type="button" value="Random Word" onclick="displayRandomWord()">
 
 <!-- Display area for stored texts (initially hidden) -->
 <div id="storedTextsList" style="display: none;"></div>
@@ -133,6 +134,18 @@ Text example:
         } else {
             listContainer.textContent = 'No stored texts found.';
         }
+    }
+
+    // Display a random word
+    function displayRandomWord() {
+        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        if (storedTexts.length === 0) {
+            alert('No stored texts available.');
+            return;
+        }
+        const randomIndex = Math.floor(Math.random() * storedTexts.length);
+        const randomWord = storedTexts[randomIndex];
+        alert(`Random Word: "${randomWord}"`);
     }
 
     // Populate the input field with the clicked text for editing

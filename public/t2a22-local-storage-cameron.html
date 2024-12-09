@@ -225,16 +225,18 @@ Text example:
         }
     }
 
-    function displayRandomWord() {
-        const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
-        if (storedTexts.length === 0) {
-            alert('No stored texts available.');
-            return;
-        }
-        const randomIndex = Math.floor(Math.random() * storedTexts.length);
-        const randomWord = storedTexts[randomIndex];
-        alert(`Random Word: "${randomWord}"`);
+   // Display a random word in the input field
+function displayRandomWord() {
+    const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+    if (storedTexts.length === 0) {
+        alert('No stored texts available.');
+        return;
     }
+    const randomIndex = Math.floor(Math.random() * storedTexts.length);
+    const randomWord = storedTexts[randomIndex];
+    document.getElementById('myText1').value = randomWord;
+}
+
 
     function populateTextFieldForEdit(index, text) {
         document.getElementById('myText1').value = text;

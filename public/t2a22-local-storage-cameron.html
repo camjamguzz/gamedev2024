@@ -5,7 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cooler Local Storage Example</title>
     <style>
-        /* ... (existing styles) ... */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #4A4E69;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            margin: 10px auto;
+            font-size: 1rem;
+            border: 2px solid #4A4E69;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #74ebd5;
+        }
+
+        input[type="button"] {
+            background-color: #4A4E69;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        input[type="button"]:hover {
+            background-color: #9face6;
+            transform: translateY(-3px);
+        }
+
+        #storedTextsList {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #storedTextsList ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #storedTextsList li {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #storedTextsList li:hover {
+            background: #e4e9f0;
+            transform: translateY(-2px);
+        }
+
+        /* Alert animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        alert {
+            animation: fadeIn 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body onload="loadStoredTexts()">
@@ -24,10 +118,11 @@ Text example:
 <input type="button" value="Copy Text" onclick="startCopyMode()">
 <input type="button" value="Random Word" onclick="displayRandomWord()">
 
-<!-- Display area for stored texts (initially hidden) -->
+<!-- Display area for stored texts -->
 <div id="storedTextsList" style="display: none;"></div>
 
 <script>
+    // JavaScript code remains unchanged
     let deleteMode = false;
     let editMode = false;
     let copyMode = false;
@@ -38,7 +133,6 @@ Text example:
         JSON.parse(localStorage.getItem('myStoredTexts')) || [];
     }
 
-    // Store text into localStorage
     function storeText() {
         const textValue = document.getElementById('myText1').value;
         if (textValue.trim() !== "") {
@@ -55,7 +149,6 @@ Text example:
         }
     }
 
-    // Retrieve and display all stored texts
     function retrieveTexts() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         displayTexts(storedTexts);
@@ -65,7 +158,6 @@ Text example:
         copyMode = false;
     }
 
-    // Enable delete mode
     function startDeleteMode() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         if (storedTexts.length === 0) {
@@ -79,7 +171,6 @@ Text example:
         copyMode = false;
     }
 
-    // Enable edit mode
     function startEditMode() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         if (storedTexts.length === 0) {
@@ -93,7 +184,6 @@ Text example:
         copyMode = false;
     }
 
-    // Enable copy mode
     function startCopyMode() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         if (storedTexts.length === 0) {
@@ -107,7 +197,6 @@ Text example:
         copyMode = true;
     }
 
-    // Display texts in a list format and make them clickable
     function displayTexts(texts) {
         const listContainer = document.getElementById('storedTextsList');
         listContainer.innerHTML = '';
@@ -136,7 +225,6 @@ Text example:
         }
     }
 
-    // Display a random word
     function displayRandomWord() {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         if (storedTexts.length === 0) {
@@ -148,18 +236,15 @@ Text example:
         alert(`Random Word: "${randomWord}"`);
     }
 
-    // Populate the input field with the clicked text for editing
     function populateTextFieldForEdit(index, text) {
         document.getElementById('myText1').value = text;
         editIndex = index; // Save the index for updating
     }
 
-    // Populate the input field with the clicked text for viewing
     function populateTextField(text) {
         document.getElementById('myText1').value = text;
     }
 
-    // Copy a text to the clipboard
     function copyTextToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
             alert(`Copied to clipboard: "${text}"`);
@@ -169,7 +254,6 @@ Text example:
         copyMode = false;
     }
 
-    // Delete a text by its index
     function deleteText(index) {
         const storedTexts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         if (index >= 0 && index < storedTexts.length) {
@@ -180,7 +264,6 @@ Text example:
         deleteMode = false;
     }
 
-    // Automatically save text when the user leaves the page
     window.onunload = function () {
         const textValue = document.getElementById('myText1').value;
         if (textValue.trim() !== "") {

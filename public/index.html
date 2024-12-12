@@ -3,116 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cameron's Projects</title>
+    <title>Cameron's Index</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        a {
-            display: inline-block;
-            margin: 5px;
-            padding: 10px 15px;
-            text-decoration: none;
+            background-color: #282c34;
             color: white;
-            background-color: #4e0a75;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        a:hover {
-            background-color: #510564;
-            transform: translateY(-2px);
-        }
-        .links-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background-color: white;
+            margin: 0;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #61dafb;
+        }
+        .link-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
         }
-        .highlight {
-            color: #2d0b3d;
-            font-weight: bold;
-            margin: 10px 0;
+        .link {
             display: block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #61dafb;
+            color: #282c34;
+            text-decoration: none;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            font-size: 1rem;
+            transition: transform 0.3s, background-color 0.3s;
         }
-        .section {
-            margin-top: 30px;
+        .link:hover {
+            background-color: #21a1f1;
+            transform: translateY(-5px);
+        }
+        .status {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #0060f0;
         }
     </style>
 </head>
 <body>
-    <h1>Cameron Guzz</h1>
-    
-    <!-- GitHub Link -->
-    <div class="links-container">
-        <a href="https://github.com/camjamguzz/gamedev2024" target="_blank" rel="noopener noreferrer">Cameron GitHub</a>
+    <h1>Cameron's Index</h1>
+
+    <div class="link-container">
+        <a class="link" href="https://github.com/camjamguzz/gamedev2024">Cameron GitHub</a>
     </div>
 
-    <!-- Projects Section -->
-    <div class="links-container section">
-        <span class="highlight">Projects:</span>
-        <nav>
-            <a href="t1a01-basic-cameron.html">t1a01</a>
-            <a href="t1a02-proper-cameron.html">t1a02</a>
-            <a href="t1a03-table-list-cameron.html">t1a03</a>
-            <a href="t1a04-forms-cameron.html">t1a04</a>
-            <a href="t1a05-css-cameron.html">t1a05</a>
-            <a href="t1a06-in-out-cameron.html">t1a06</a>
-            <a href="t1a07-functions-cameron.html">t1a07</a>
-            <a href="t1a08-variables-cameron.html">t1a08</a>
-            <a href="t1a09-decisions-cameron.html">t1a09</a>
-            <a href="t1a10-loops-cameron.html">t1a10</a>
-            <a href="t1a11-arrays-cameron.html">t1a11</a>
-            <a href="t1a12-objects-structs-cameron.html">t1a12</a>
-            <a href="t1a13-json-cameron.html">t1a13</a>
-            <a href="t1a14-objects-and-arrays-cameron.html">t1a14</a>
-            <a href="t1a15-events-cameron.html">t1a15</a>
-            <a href="t1a16-multi-d-arrays-cameron.html">t1a16</a>
-            <a href="t1a17-move-cameron.html">t1a17</a>
-            <a href="t1a18-extended-class-by-cameron.html">t1a18</a>
-            <a href="t2a19-move-background-cameron.html">t2a19</a>
-            <a href="t2a20-spy-cameron.html">t2a20</a>
-            <a href="t2a21-canvas-cameron.html">t2a21</a>
-            <a href="t2a22-local-storage-cameron.html">t2a22</a>
-            <a href="t2a23-game-template-cameron.html">t2a23</a>
-            <a href="t2a24-hack-browser-cameron.html">t2a24</a>
-        </nav>
+    <h2>Term 2</h2>
+    <div class="link-container">
+        <a class="link" href="t2a19-move-background-cameron.html">t2a19 Move Background <span class="status">(marked)</span></a>
+        <a class="link" href="t2a20-spy-cameron.html">t2a20 Spy Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t2a21-canvas-cameron.html">t2a21 Canvas Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t2a22-local-storage-cameron.html">t2a22 Local Storage <span class="status">(Unmarked)</span></a>
+        <a class="link" href="t2a23-game-template-cameron.html">t2a23 Game Template <span class="status">(Marked)</span></a>
+        <a class="link" href="t2a24-hack-browser-cameron.html">t2a24 Hack Browser <span class="status">(unmarked)</span></a>
+        <a class="link" href="t2a25-storyboard-cameron.html">t2a25 Storyboard <span class="status">(Not Ready)</span></a>
     </div>
 
-    <!-- X Assignments Section -->
-    <div class="links-container section">
-        <span class="highlight">X Assignments:</span>
-        <nav>
-            <a href="t1a01-x-assignment-cameron.html">t1a01</a>
-            <a href="t1a02-x-assignment-cameron.html">t1a02</a>
-            <a href="t1a11-x-cameron.html">t1a11</a>
-            <a href="t1a12-x-assingment-cameron.html">t1a12</a>
-            <a href="t1a13-x-assignment-cameron.html">t1a13</a>
-            <a href="t1a14-x-assingment-cameron.html">t1a14</a>
-            <a href="t1a15-x-assingment-cameron.html">t1a15</a>
-            <a href="t1a16-x-assignment-cameron.html">t1a16</a>
-            <a href="t1a17-x-cameron.html">t1a17</a>
-            <a href="t1a18-x-cameron.html">t1a18</a>
-        </nav>
-    </div>
-
-    <!-- X Assignments Section -->
-    <div class="links-container section">
-        <span class="highlight">final:</span>
-        <nav>
-            <a href="finalprojectlevel1-cameron.html">final</a>
-        </nav>
+    <h2>Term 1</h2>
+    <div class="link-container">
+        <a class="link" href="t1a01-basic-cameron.html">t1a01 Basic Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a01-x-assignment-cameron.html">t1a01 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a02-proper-cameron.html">t1a02 Proper Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a02-x-assignment-cameron.html">t1a02 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a03-table-list-cameron.html">t1a03 Table List <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a04-forms-cameron.html">t1a04 Forms <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a05-css-cameron.html">t1a05 CSS Basics <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a06-in-out-cameron.html">t1a06 Input/Output <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a07-functions-cameron.html">t1a07 Functions <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a08-variables-cameron.html">t1a08 Variables <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a09-decisions-cameron.html">t1a09 Decisions <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a10-loops-cameron.html">t1a10 Loops <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a11-arrays-cameron.html">t1a11 Arrays <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a11-x-cameron.html">t1a11 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a12-objects-structs-cameron.html">t1a12 Objects & Structs <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a12-x-assingment-cameron.html">t1a12 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a13-json-cameron.html">t1a13 JSON Basics <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a13-x-assignment-cameron.html">t1a13 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a14-objects-and-arrays-cameron.html">t1a14 Objects and Arrays <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a14-x-assingment-cameron.html">t1a14 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a15-events-cameron.html">t1a15 Events <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a15-x-assingment-cameron.html">t1a15 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a16-multi-d-arrays-cameron.html">t1a16 Multi-Dimensional Arrays <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a16-x-assignment-cameron.html">t1a16 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a17-move-cameron.html">t1a17 Move Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a17-x-cameron.html">t1a17 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a18-extended-class-by-cameron.html">t1a18 Extended Class <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a18-x-cameron.html">t1a18 X Assignment <span class="status">(Marked)</span></a>
     </div>
 </body>
 </html>

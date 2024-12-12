@@ -7,66 +7,71 @@
 
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: white;
             margin: 0;
+            padding: 20px;
         }
-        td, th {
+        h1, h2 {
             text-align: center;
+            color: #61dafb;
         }
-        a {
-            margin: 0;
-            padding: 10px;
+        .link-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .link {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #61dafb;
+            color: #282c34;
             text-decoration: none;
-            color: inherit;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            font-size: 1rem;
+            transition: transform 0.3s, background-color 0.3s;
         }
-        div#indexDiv {
-            border: 2px inset whitesmoke;
-            border-radius: 10px;
-            margin: 5px 0; /* Spacing between items */
-            padding: 5px;
-            width: fit-content;
-            transition: background-color 0.1s ease;
+        .link:hover {
+            background-color: #21a1f1;
+            transform: translateY(-5px);
         }
-        div#indexDiv:hover {
-            background-color: rgb(65, 65, 65);
-        }
-        td {
-            width: 50px;
+        .status {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #f0a500;
         }
     </style>
-
-    <link rel="stylesheet" type="text/css" href="css-cameron.css">
 </head>
 <body>
-    <h1 style="text-align: center;">Cameron's Index</h1>
+    <h1>Cameron's Index</h1>
 
-    <div style="text-align: center; margin: 20px; border: none;">
-        <a id="repoLink" href="https://camjamguzz.github.io/gamedev2024/public/index.html"
-           style="border-width: 1px; border-color: whitesmoke; border-style: solid; border-radius: 10px; padding: 10px; font-size: larger;">GitHub Repo</a>
-    </div>
-
-    <div style="text-align: center; margin: 20px; border: none;">
-        <a id="repoLink2" href="https://github.com/hpssjellis/highschool-javascript-game-dev-assignment-images"
-           style="border-width: 1px; border-color: whitesmoke; border-style: solid; border-radius: 10px; font-size: larger;">Game Dev Assignments</a>
+    <div class="link-container">
+        <a class="link" href="https://camjamguzz.github.io/gamedev2024/public/index.html">GitHub Repo</a>
+        <a class="link" href="https://github.com/hpssjellis/highschool-javascript-game-dev-assignment-images">Game Dev Assignments</a>
     </div>
 
     <h2>Term 2</h2>
-    <div style="text-align: center;">
-        <div id="indexDiv"><a href="t2a19-move-background-cameron.html">t2a19 move background ardan<br><b style="color: yellow;">unmarked</b></a></div>
-        <div id="indexDiv"><a href="t2a20-spy-cameron.html">t2a20 spy cameron<br><b style="color: yellow;">marked</b></a></div>
-        <div id="indexDiv"><a href="t2a21-canvas-cameron.html">t2a21 canvas cameron<br><b style="color: yellow;">marked</b></a></div>
-        <div id="indexDiv"><a href="t2a22-local-storage-cameron.html">t2a22 local storage cameron<br><b style="color: yellow;">unmarked</b></a></div>
-        <div id="indexDiv"><a href="t2a23-game-template-cameron.html">t2a23 game template cameron<br><b style="color: yellow;">marked</b></a></div>
-        <div id="indexDiv"><a href="t2a24-hack-browser-cameron.html">t2a24 hack browser cameron<br><b style="color: yellow;">not ready X</b></a></div>
-        <div id="indexDiv"><a href="t2a25-storyboard-cameron.html">t2a25 storyboard cameron<br><b style="color: yellow;">not ready X</b></a></div>
+    <div class="link-container">
+        <a class="link" href="t2a19-move-background-cameron.html">t2a19 Move Background <span class="status">(Unmarked)</span></a>
+        <a class="link" href="t2a20-spy-cameron.html">t2a20 Spy Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t2a21-canvas-cameron.html">t2a21 Canvas Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t2a22-local-storage-cameron.html">t2a22 Local Storage <span class="status">(Unmarked)</span></a>
+        <a class="link" href="t2a23-game-template-cameron.html">t2a23 Game Template <span class="status">(Marked)</span></a>
+        <a class="link" href="t2a24-hack-browser-cameron.html">t2a24 Hack Browser <span class="status">(Not Ready)</span></a>
+        <a class="link" href="t2a25-storyboard-cameron.html">t2a25 Storyboard <span class="status">(Not Ready)</span></a>
     </div>
 
     <h2>Term 1</h2>
-    <div style="text-align: center;">
-        <div id="indexDiv"><a href="t1a01-basic-cameron.html">cameron<br><b style="color: rgb(43, 223, 19);">marked</b></a></div>
-        <div id="indexDiv"><a href="t1a01-x-assignment-cameron.html">t1a01 x assignment cameron<br><b style="color: rgb(43, 223, 19);">marked</b></a></div>
-        <div id="indexDiv"><a href="t1a02-proper-cameron.html">t1a02 proper cameron<br><b style="color: rgb(43, 223, 19);">marked</b></a></div>
-        <div id="indexDiv"><a href="t1a02-x-assignment-cameron.html">t1a02 x assignment cameron<br><b style="color: rgb(43, 223, 19);">marked</b></a></div>
-        <!-- Add additional rows as needed -->
+    <div class="link-container">
+        <a class="link" href="t1a01-basic-cameron.html">t1a01 Basic Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a01-x-assignment-cameron.html">t1a01 X Assignment <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a02-proper-cameron.html">t1a02 Proper Cameron <span class="status">(Marked)</span></a>
+        <a class="link" href="t1a02-x-assignment-cameron.html">t1a02 X Assignment <span class="status">(Marked)</span></a>
     </div>
 </body>
 </html>

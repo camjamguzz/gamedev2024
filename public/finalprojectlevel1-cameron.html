@@ -196,17 +196,20 @@
             }
 
             handleInput() {
-                const player = this.player;
+    const player = this.player;
 
-                if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
-                else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
-                else player.dx = 0;
+    // Horizontal movement
+    if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
+    else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
+    else player.dx = 0;
 
-                if (this.keys.has('ArrowUp') && player.isOnGround) {
-                    player.dy = this.JUMP_FORCE;
-                    player.isOnGround = false;
-                }
-            }
+    // Jumping
+    if (this.keys.has('ArrowUp') && player.isOnGround) {
+        player.dy = this.JUMP_FORCE; // Apply upward force
+        player.isOnGround = false;  // Player is now in the air
+    }
+}
+
 
             applyPhysics() {
                 const player = this.player;

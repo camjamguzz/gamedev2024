@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Selection</title>
+    <title>Game Menu</title>
     <style>
         body {
             margin: 0;
@@ -18,18 +18,10 @@
         #menu {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            align-items: center;
+            gap: 20px;
         }
-        .hidden {
-            display: none;
-        }
-        .level-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .level-buttons button {
+        button {
             background: #333;
             color: white;
             border: 2px solid white;
@@ -39,11 +31,14 @@
             border-radius: 5px;
             transition: background 0.3s;
         }
-        .level-buttons button:hover {
+        button:hover {
             background: #555;
         }
-        canvas {
-            border: 1px solid white;
+        #gameCanvas {
+            display: none;
+        }
+        #notifications {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -51,40 +46,56 @@
     <div id="menu">
         <button id="playGame">Play Game</button>
         <button id="chooseLevel">Choose Level</button>
-        <div id="levelButtons" class="hidden level-buttons">
-            <button onclick="selectLevel(1)">Level 1</button>
-            <button onclick="selectLevel(2)">Level 2</button>
-            <button onclick="selectLevel(3)">Level 3</button>
-            <button onclick="selectLevel(4)">Level 4</button>
-            <button onclick="selectLevel(5)">Level 5</button>
-            <button onclick="selectLevel(6)">Level 6</button>
-            <button onclick="selectLevel(7)">Level 7</button>
-        </div>
     </div>
-    <canvas id="gameCanvas" width="800" height="600" class="hidden"></canvas>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
     <div id="notifications"></div>
     <script>
-        function selectLevel(level) {
-            localStorage.setItem('selectedLevel', level); // Save the selected level
-            startGame(level); // Start the game with the selected level
-        }
-
-        function startGame(level) {
-            document.getElementById('menu').style.display = 'none';
-            const canvas = document.getElementById('gameCanvas');
-            canvas.classList.remove('hidden');
-            new Game('gameCanvas', level);
-        }
-
         class Game {
-            constructor(canvasId, level = 1) {
+            constructor(canvasId) {
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
+                this.menu = document.getElementById('menu');
                 this.notificationsContainer = document.getElementById('notifications');
+                this.initMenu();
+            }
+
+            initMenu() {
+                const playGameButton = document.getElementById('playGame');
+                const chooseLevelButton = document.getElementById('chooseLevel');
+
+                playGameButton.addEventListener('click', () => {
+                    this.startGame(1); // Start from level 1
+                });
+
+                chooseLevelButton.addEventListener('click', () => {
+                    const levelChoice = prompt('Enter level number (1-7):');
+                    const level = parseInt(levelChoice, 10);
+                    if (level >= 1 && level <= 7) {
+                        this.startGame(level);
+                    } else {
+                        this.showNotification('Invalid level number. Please enter a number between 1 and 7.');
+                    }
+                });
+            }
+
+            startGame(level) {
+                this.menu.style.display = 'none';
+                this.canvas.style.display = 'block';
                 this.init(level);
             }
 
-            init(level) {
+            showNotification(message) {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.textContent = message;
+                this.notificationsContainer.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+
+            init(level = 1) {
                 this.GRAVITY = 0.5;
                 this.JUMP_FORCE = -12;
                 this.PLAYER_SPEED = 5;
@@ -199,8 +210,9 @@
             loadNextLevel() {
                 this.currentLevel++;
                 if (this.currentLevel > this.levels.length) {
-                    alert("Congratulations! You've completed all levels!");
-                    location.reload();
+                    this.showNotification("Congratulations! You've completed all levels!");
+                    this.menu.style.display = 'flex';
+                    this.canvas.style.display = 'none';
                 } else {
                     const newLevel = this.levels[this.currentLevel - 1];
                     this.platforms = newLevel.platforms;
@@ -254,9 +266,7 @@
             }
         }
 
-        document.getElementById('chooseLevel').addEventListener('click', () => {
-            document.getElementById('levelButtons').classList.remove('hidden');
-        });
+        new Game('gameCanvas');
     </script>
 </body>
 </html>

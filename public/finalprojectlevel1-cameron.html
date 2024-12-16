@@ -233,22 +233,24 @@
             }
 
             checkPlatformCollisions() {
-                const player = this.player;
-                player.isOnGround = false;
+    const player = this.player;
+    player.isOnGround = false; // Reset grounded status
 
-                this.platforms.forEach((platform) => {
-                    if (
-                        player.x < platform.x + platform.width &&
-                        player.x + player.width > platform.x &&
-                        player.y + player.height <= platform.y &&
-                        player.y + player.height + player.dy >= platform.y
-                    ) {
-                        player.dy = 0;
-                        player.isOnGround = true;
-                        player.y = platform.y - player.height;
-                    }
-                });
-            }
+    this.platforms.forEach((platform) => {
+        // Check if player lands on the platform from above
+        if (
+            player.x < platform.x + platform.width &&
+            player.x + player.width > platform.x &&
+            player.y + player.height <= platform.y &&
+            player.y + player.height + player.dy >= platform.y
+        ) {
+            player.dy = 0; // Stop downward motion
+            player.isOnGround = true; // Set grounded
+            player.y = platform.y - player.height; // Place player on top of the platform
+        }
+    });
+}
+
 
             checkGoalCollision() {
                 const player = this.player;

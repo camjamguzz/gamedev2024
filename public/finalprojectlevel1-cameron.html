@@ -210,16 +210,23 @@
 
             applyPhysics() {
                 const player = this.player;
+
                 player.dy += this.GRAVITY;
                 player.x += player.dx;
                 player.y += player.dy;
 
-                this.checkPlatformCollisions();
+                if (player.x < 0) player.x = 0;
+                if (player.x + player.width > this.canvas.width) {
+                    player.x = this.canvas.width - player.width;
+                }
+                if (player.y < 0) player.y = 0;
                 if (player.y > this.canvas.height - player.height) {
                     player.y = this.canvas.height - player.height;
                     player.dy = 0;
                     player.isOnGround = true;
                 }
+
+                this.checkPlatformCollisions();
             }
 
             checkPlatformCollisions() {
@@ -258,6 +265,7 @@
                 this.currentLevel++;
                 if (this.currentLevel > this.levels.length) {
                     this.showNotification("Congratulations! You've completed all levels!");
+                    this.canvas.style.display = 'none';
                     this.menu.style.display = 'flex';
                 } else {
                     const newLevel = this.levels[this.currentLevel - 1];
@@ -316,3 +324,9 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+

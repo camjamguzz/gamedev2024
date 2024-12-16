@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Menu</title>
+    <title>Level Selection</title>
     <style>
         body {
             margin: 0;
@@ -19,7 +19,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 10px;
         }
         button {
             background: #333;
@@ -34,11 +34,8 @@
         button:hover {
             background: #555;
         }
-        #gameCanvas {
-            display: none;
-        }
-        #notifications {
-            margin-top: 20px;
+        canvas {
+            border: 2px solid white;
         }
     </style>
 </head>
@@ -80,7 +77,6 @@
 
             startGame(level) {
                 this.menu.style.display = 'none';
-                this.canvas.style.display = 'block';
                 this.init(level);
             }
 
@@ -105,6 +101,7 @@
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
+                this.barriers = this.levels[this.currentLevel - 1].barriers || [];
                 this.levelCompleted = false;
 
                 this.keys = new Set();
@@ -131,13 +128,16 @@
 
             createLevels() {
                 return [
-                {
+                    {
                         platforms: [
                             { x: 50, y: 500, width: 200, height: 20 },
                             { x: 300, y: 400, width: 150, height: 20 },
                             { x: 500, y: 300, width: 200, height: 20 },
                         ],
                         goal: { x: 700, y: 250, width: 50, height: 50 },
+                        barriers: [
+                            { x: 400, y: 350, width: 20, height: 150 },
+                        ],
                     },
                     {
                         platforms: [
@@ -147,6 +147,9 @@
                             { x: 600, y: 250, width: 70, height: 20 },
                         ],
                         goal: { x: 750, y: 200, width: 50, height: 50 },
+                        barriers: [
+                            { x: 500, y: 400, width: 20, height: 100 },
+                        ],
                     },
                     {
                         platforms: [
@@ -157,57 +160,8 @@
                             { x: 600, y: 150, width: 40, height: 20 },
                         ],
                         goal: { x: 700, y: 100, width: 50, height: 50 },
+                        barriers: [],
                     },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 100, height: 20 },
-                            { x: 200, y: 400, width: 120, height: 20 },
-                            { x: 400, y: 450, width: 90, height: 20 },
-                            { x: 350, y: 300, width: 80, height: 20 },
-                            { x: 600, y: 350, width: 150, height: 20 },
-                            { x: 500, y: 200, width: 70, height: 20 },
-                        ],
-                        goal: { x: 750, y: 150, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 200, y: 430, width: 50, height: 20 },
-                            { x: 400, y: 450, width: 50, height: 20 },
-                            { x: 600, y: 350, width: 50, height: 20 },
-                            { x: 500, y: 220, width: 50, height: 20 },
-                            { x: 300, y: 200, width: 50, height: 20 },
-                        ],
-                        goal: { x: 0, y: 100, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 200, y: 400, width: 50, height: 20 },
-                            { x: 400, y: 450, width: 50, height: 20 },
-                            { x: 600, y: 350, width: 50, height: 20 },
-                            { x: 500, y: 220, width: 50, height: 20 },
-                            { x: 330, y: 100, width: 50, height: 200 },
-                            { x: 400, y: -20, width: 50, height: 20 },
-                            { x: 210, y: -50, width: 50, height: 20 },
-                        ],
-                        goal: { x: 0, y: 0, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 100, y: 200, width: 50, height: 500 },
-                            { x: 150, y: 500, width: 50, height: 20 },
-                            { x: -50, y: 300, width: 50, height: 20 },
-                            { x: 50, y: 300, width: 50, height: 20 },
-                            { x: -50, y: 400, width: 50, height: 20 },
-                            { x: 200, y: 350, width: 50, height: 20 },
-                            { x: 300, y: 200, width: 50, height: 20 },
-                            { x: 600, y: 200, width: 50, height: 20 },
-                        ],
-                        goal: { x: 750, y: 0, width: 50, height: 50 },
-                    },
-                    // Additional levels...
                 ];
             }
 
@@ -236,6 +190,8 @@
                 player.y += player.dy;
 
                 this.checkPlatformCollisions();
+                this.checkBarrierCollisions();
+
                 if (player.y > this.canvas.height - player.height) {
                     player.y = this.canvas.height - player.height;
                     player.dy = 0;
@@ -261,6 +217,26 @@
                 });
             }
 
+            checkBarrierCollisions() {
+                const player = this.player;
+
+                this.barriers.forEach((barrier) => {
+                    if (
+                        player.x < barrier.x + barrier.width &&
+                        player.x + player.width > barrier.x &&
+                        player.y < barrier.y + barrier.height &&
+                        player.y + player.height > barrier.y
+                    ) {
+                        if (player.dx > 0) {
+                            player.x = barrier.x - player.width;
+                        } else if (player.dx < 0) {
+                            player.x = barrier.x + barrier.width;
+                        }
+                        player.dx = 0;
+                    }
+                });
+            }
+
             checkGoalCollision() {
                 const player = this.player;
                 const goal = this.goal;
@@ -280,10 +256,10 @@
                 if (this.currentLevel > this.levels.length) {
                     this.showNotification("Congratulations! You've completed all levels!");
                     this.menu.style.display = 'flex';
-                    this.canvas.style.display = 'none';
                 } else {
                     const newLevel = this.levels[this.currentLevel - 1];
                     this.platforms = newLevel.platforms;
+                    this.barriers = newLevel.barriers || [];
                     this.goal = newLevel.goal;
                     this.player.x = 100;
                     this.player.y = 100;
@@ -301,6 +277,11 @@
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                });
+
+                ctx.fillStyle = 'red';
+                this.barriers.forEach((barrier) => {
+                    ctx.fillRect(barrier.x, barrier.y, barrier.width, barrier.height);
                 });
 
                 ctx.fillStyle = 'gold';

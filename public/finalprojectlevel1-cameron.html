@@ -3,274 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Selection</title>
+    <title>Hollow Knight-Inspired Game</title>
     <style>
         body {
             margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
             background: black;
             color: white;
+        }
+
+        #gameUI {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            gap: 5px;
         }
-        h1 {
-            margin-bottom: 20px;
+
+        #gameUI div {
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        canvas {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <h1>Game Menu</h1>
-    <div id="menu">
-        <button id="playGame">Play Game</button>
-        <button id="chooseLevel">Choose Level</button>
+    <div id="gameUI">
+        <div id="levelDisplay">Level: 1</div>
+        <div id="healthDisplay">Health: ♥♥♥</div>
     </div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="notifications"></div>
     <script>
         class Game {
             constructor(canvasId) {
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
-                this.menu = document.getElementById('menu');
-                this.notificationsContainer = document.getElementById('notifications');
-                this.initMenu();
-            }
+                this.ui = {
+                    level: document.getElementById('levelDisplay'),
+                    health: document.getElementById('healthDisplay'),
+                };
 
-            initMenu() {
-                const playGameButton = document.getElementById('playGame');
-                const chooseLevelButton = document.getElementById('chooseLevel');
-
-                playGameButton.addEventListener('click', () => {
-                    this.startGame(1); // Start from level 1
-                });
-
-                chooseLevelButton.addEventListener('click', () => {
-                    const levelChoice = prompt('Enter level number (1-7):');
-                    const level = parseInt(levelChoice, 10);
-                    if (level >= 1 && level <= 7) {
-                        this.startGame(level);
-                    } else {
-                        this.showNotification('Invalid level number. Please enter a number between 1 and 7.');
-                    }
-                });
-            }
-
-            startGame(level) {
-                this.menu.style.display = 'none';
-                this.init(level);
-            }
-
-            showNotification(message) {
-                const notification = document.createElement('div');
-                notification.className = 'notification';
-                notification.textContent = message;
-                this.notificationsContainer.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.remove();
-                }, 3000);
-            }
-
-            // Rest of the Game methods remain the same...
-            init(level = 1) {
-                this.GRAVITY = 0.5;
-                this.JUMP_FORCE = -12;
-                this.PLAYER_SPEED = 5;
-
+                this.keys = new Set();
                 this.player = this.createPlayer();
-                this.currentLevel = level;
+                this.health = 3;
+
+                this.currentLevel = 1;
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
-                this.levelCompleted = false;
+                this.enemies = this.levels[this.currentLevel - 1].enemies;
+                this.spikes = this.levels[this.currentLevel - 1].spikes;
 
-                this.keys = new Set();
-                this.setupInputHandlers();
+                this.initInputHandlers();
                 this.gameLoop();
             }
 
             createPlayer() {
-                const playerImage = new Image();
-                playerImage.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
+                const idleImage = new Image();
+                idleImage.src = 'idle_animation.gif'; // Replace with actual idle animation
+                const runImage = new Image();
+                runImage.src = 'run_animation.gif'; // Replace with actual running animation
 
                 return {
                     x: 100,
-                    y: 100,
-                    width: 70,
-                    height: 100,
+                    y: 500,
+                    width: 50,
+                    height: 70,
                     dx: 0,
                     dy: 0,
                     isJumping: false,
                     isOnGround: false,
-                    image: playerImage,
+                    idleImage,
+                    runImage,
+                    animationState: 'idle', // 'idle' or 'running'
                 };
             }
 
             createLevels() {
                 return [
-                {
-                        platforms: [
-                            { x: 50, y: 500, width: 200, height: 20 },
-                            { x: 300, y: 400, width: 150, height: 20 },
-                            { x: 500, y: 300, width: 200, height: 20 },
-                        ],
-                        goal: { x: 700, y: 250, width: 50, height: 50 },
-                    },
                     {
                         platforms: [
-                            { x: 50, y: 550, width: 100, height: 20 },
-                            { x: 200, y: 450, width: 100, height: 20 },
-                            { x: 400, y: 350, width: 80, height: 20 },
-                            { x: 600, y: 250, width: 70, height: 20 },
+                            { x: 50, y: 550, width: 200, height: 20 },
+                            { x: 300, y: 450, width: 150, height: 20 },
+                            { x: 500, y: 350, width: 200, height: 20 },
                         ],
-                        goal: { x: 750, y: 200, width: 50, height: 50 },
+                        goal: { x: 750, y: 300, width: 50, height: 50 },
+                        enemies: [
+                            { x: 400, y: 320, width: 50, height: 20, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 10 },
+                        ],
                     },
-                    {
-                        platforms: [
-                            { x: 50, y: 550, width: 80, height: 20 },
-                            { x: 150, y: 450, width: 70, height: 20 },
-                            { x: 300, y: 350, width: 60, height: 20 },
-                            { x: 450, y: 250, width: 50, height: 20 },
-                            { x: 600, y: 150, width: 40, height: 20 },
-                        ],
-                        goal: { x: 700, y: 100, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 100, height: 20 },
-                            { x: 200, y: 400, width: 120, height: 20 },
-                            { x: 400, y: 450, width: 90, height: 20 },
-                            { x: 350, y: 300, width: 80, height: 20 },
-                            { x: 600, y: 350, width: 150, height: 20 },
-                            { x: 500, y: 200, width: 70, height: 20 },
-                        ],
-                        goal: { x: 750, y: 150, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 200, y: 430, width: 50, height: 20 },
-                            { x: 400, y: 450, width: 50, height: 20 },
-                            { x: 600, y: 350, width: 50, height: 20 },
-                            { x: 500, y: 220, width: 50, height: 20 },
-                            { x: 300, y: 200, width: 50, height: 20 },
-                        ],
-                        goal: { x: 0, y: 100, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 200, y: 400, width: 50, height: 20 },
-                            { x: 400, y: 450, width: 50, height: 20 },
-                            { x: 600, y: 350, width: 50, height: 20 },
-                            { x: 500, y: 220, width: 50, height: 20 },
-                            { x: 210, y: 20, width: 50, height: 20 },
-                        ],
-                        barriers: [
-                            { x: 330, y: 100, width: 50, height: 100},
-                        ],
-                        goal: { x: 0, y: 0, width: 50, height: 50 },
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 500, width: 50, height: 20 },
-                            { x: 100, y: 200, width: 50, height: 500 },
-                            { x: 150, y: 500, width: 50, height: 20 },
-                            { x: 100, y: 300, width: 50, height: 20 },
-                            { x: 50, y: 300, width: 50, height: 20 },
-                            { x: -50, y: 400, width: 50, height: 20 },
-                            { x: 200, y: 350, width: 50, height: 20 },
-                            { x: 300, y: 200, width: 50, height: 20 },
-                            { x: 600, y: 200, width: 50, height: 20 },
-                        ],
-                        goal: { x: 750, y: 0, width: 50, height: 50 },
-                    },
-                    // Additional levels as in the original code...
+                    // Add more levels here
                 ];
             }
 
-            setupInputHandlers() {
+            initInputHandlers() {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
             }
 
             handleInput() {
-    const player = this.player;
+                const player = this.player;
+                player.dx = 0;
 
-    // Horizontal movement
-    if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
-    else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
-    else player.dx = 0;
+                if (this.keys.has('ArrowLeft')) {
+                    player.dx = -5;
+                    player.animationState = 'running';
+                } else if (this.keys.has('ArrowRight')) {
+                    player.dx = 5;
+                    player.animationState = 'running';
+                } else {
+                    player.animationState = 'idle';
+                }
 
-    // Jumping
-    if (this.keys.has('ArrowUp') && player.isOnGround) {
-        player.dy = this.JUMP_FORCE; // Apply upward force
-        player.isOnGround = false;  // Player is now in the air
-    }
-}
-
+                if (this.keys.has('ArrowUp') && player.isOnGround) {
+                    player.dy = -15;
+                    player.isJumping = true;
+                    player.isOnGround = false;
+                }
+            }
 
             applyPhysics() {
                 const player = this.player;
 
-                player.dy += this.GRAVITY;
+                player.dy += 0.8; // Gravity
                 player.x += player.dx;
                 player.y += player.dy;
-               // Define custom boundaries for the level
-const BOUNDARY = { left: -100, right: 1000, top: -200, bottom: 700 };
 
-// Enforce horizontal boundaries
-if (player.x < BOUNDARY.left) player.x = BOUNDARY.left;
-if (player.x + player.width > BOUNDARY.right) {
-    player.x = BOUNDARY.right - player.width;
-}
+                if (player.y > this.canvas.height - player.height) {
+                    player.y = this.canvas.height - player.height;
+                    player.dy = 0;
+                    player.isOnGround = true;
+                }
 
-// Enforce vertical boundaries
-if (player.y < BOUNDARY.top) player.y = BOUNDARY.top;
-if (player.y > BOUNDARY.bottom - player.height) {
-    player.y = BOUNDARY.bottom - player.height;
-    player.dy = 0; // Reset vertical velocity
-    player.isOnGround = true; // Set the player as grounded
-}
+                // Collision detection with platforms
+                this.platforms.forEach((platform) => {
+                    if (
+                        player.x < platform.x + platform.width &&
+                        player.x + player.width > platform.x &&
+                        player.y + player.height <= platform.y &&
+                        player.y + player.height + player.dy >= platform.y
+                    ) {
+                        player.dy = 0;
+                        player.isOnGround = true;
+                        player.y = platform.y - player.height;
+                    }
+                });
 
+                // Collision detection with enemies
+                this.enemies.forEach((enemy) => {
+                    if (
+                        player.x < enemy.x + enemy.width &&
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &&
+                        player.y + player.height > enemy.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
 
-checkPlatformCollisions() {
-    const player = this.player;
-    // player.isOnGround = false; // Reset grounded status
-    this.platforms.forEach((platform) => {
-        // Check if player lands on the platform from above
-        if (
-            player.x < platform.x + platform.width &&
-            player.x + player.width > platform.x &&
-            player.y + player.height <= platform.y &&
-            player.y + player.height + player.dy >= platform.y
-        ) {
-            player.dy = 0; // Stop downward motion
-            player.isOnGround = true; // Set grounded
-            player.y = platform.y - player.height; // Place player on top of the platform
-        }
-    });
-}
+                // Collision detection with spikes
+                this.spikes.forEach((spike) => {
+                    if (
+                        player.x < spike.x + spike.width &&
+                        player.x + player.width > spike.x &&
+                        player.y < spike.y + spike.height &&
+                        player.y + player.height > spike.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
 
-    // player.isOnGround = false; // Reset grounded status
+                // Prevent player from going off-screen
+                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+            }
 
-    this.platforms.forEach((platform) => {
-        // Check if player lands on the platform from above
-        if (
-            player.x < platform.x + platform.width &&
-            player.x + player.width > platform.x &&
-            player.y + player.height <= platform.y &&
-            player.y + player.height + player.dy >= platform.y
-        ) {
-            player.dy = 0; // Stop downward motion
-            player.isOnGround = true; // Set grounded
-            player.y = platform.y - player.height; // Place player on top of the platform
-        }
-    });
-}
-
+            takeDamage() {
+                this.health--;
+                if (this.health <= 0) {
+                    alert('Game Over!');
+                    window.location.reload();
+                }
+            }
 
             checkGoalCollision() {
                 const player = this.player;
@@ -282,65 +206,70 @@ checkPlatformCollisions() {
                     player.y < goal.y + goal.height &&
                     player.y + player.height > goal.y
                 ) {
-                    this.levelCompleted = true;
+                    this.currentLevel++;
+                    if (this.currentLevel > this.levels.length) {
+                        alert('Congratulations! You completed all levels!');
+                        window.location.reload();
+                    } else {
+                        this.loadLevel(this.currentLevel);
+                    }
                 }
             }
 
-            loadNextLevel() {
-                this.currentLevel++;
-                if (this.currentLevel > this.levels.length) {
-                    this.showNotification("Congratulations! You've completed all levels!");
-                    this.canvas.style.display = 'none';
-                    this.menu.style.display = 'flex';
-                } else {
-                    const newLevel = this.levels[this.currentLevel - 1];
-                    this.platforms = newLevel.platforms;
-                    this.goal = newLevel.goal;
-                    this.player.x = 100;
-                    this.player.y = 100;
-                    this.levelCompleted = false;
-                }
+            loadLevel(level) {
+                const newLevel = this.levels[level - 1];
+                this.platforms = newLevel.platforms;
+                this.goal = newLevel.goal;
+                this.enemies = newLevel.enemies;
+                this.spikes = newLevel.spikes;
+
+                this.player.x = 100;
+                this.player.y = 500;
+                this.health = 3;
             }
 
             draw() {
                 const ctx = this.ctx;
                 const player = this.player;
-                const goal = this.goal;
 
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+                // Draw platforms
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
+                // Draw goal
                 ctx.fillStyle = 'gold';
-                ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
+                ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-                if (player.image.complete) {
-                    ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
-                } else {
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(player.x, player.y, player.width, player.height);
-                }
+                // Draw enemies
+                ctx.fillStyle = 'red';
+                this.enemies.forEach((enemy) => {
+                    ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                });
 
-                if (this.levelCompleted) {
-                    ctx.fillStyle = 'white';
-                    ctx.font = '30px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Level Complete!', this.canvas.width / 2, this.canvas.height / 2);
+                // Draw spikes
+                ctx.fillStyle = 'darkred';
+                this.spikes.forEach((spike) => {
+                    ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
+                });
+
+                // Draw player
+                if (player.animationState === 'idle' && player.idleImage.complete) {
+                    ctx.drawImage(player.idleImage, player.x, player.y, player.width, player.height);
+                } else if (player.runImage.complete) {
+                    ctx.drawImage(player.runImage, player.x, player.y, player.width, player.height);
                 }
             }
 
             gameLoop() {
-                if (!this.levelCompleted) {
-                    this.handleInput();
-                    this.applyPhysics();
-                    this.checkGoalCollision();
-                } else {
-                    this.loadNextLevel();
-                }
+                this.handleInput();
+                this.applyPhysics();
+                this.checkGoalCollision();
                 this.draw();
+
                 requestAnimationFrame(() => this.gameLoop());
             }
         }
@@ -349,9 +278,3 @@ checkPlatformCollisions() {
     </script>
 </body>
 </html>
-
-
-
-
-
-

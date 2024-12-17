@@ -332,15 +332,29 @@ updateEnemyAnimation(enemy) {
         player.width, // Destination width
         player.height // Destination height
     );
-}
 
-            gameLoop() ;
-                this.handleInput();
-                this.applyPhysics();
-                this.checkGoalCollision();
-                this.draw();
 
-                requestAnimationFrame(() => this.gameLoop());
+gameLoop() ;
+    if (!this.levelCompleted) {
+        this.handleInput();
+        this.applyPhysics();
+        this.checkGoalCollision();
+
+        // Update animations
+        this.updatePlayerAnimation();
+        this.enemies.forEach(enemy => this.updateEnemyAnimation(enemy)); // Update enemy animations
+    } else {
+        this.loadNextLevel();
+    }
+
+    // Draw everything
+    this.draw();
+    this.drawPlayer(this.ctx, this.player); // Draw the player
+    this.enemies.forEach(enemy => this.drawEnemy(this.ctx, enemy)); // Draw all enemies
+
+    requestAnimationFrame(() => this.gameLoop());
+
+
             
         
 

@@ -41,7 +41,7 @@
         <div id="levelDisplay">Level: 1</div>
         <div id="healthDisplay">Health: ♥♥♥</div>
     </div>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas"></canvas>
     <script>
         class Game {
             constructor(canvasId) {
@@ -69,7 +69,15 @@
                 this.enemies = [this.createEnemy()];
 
                 this.initInputHandlers();
+                this.resizeCanvas(); // Set initial canvas size
+                window.addEventListener('resize', () => this.resizeCanvas()); // Resize canvas on window resize
                 this.gameLoop();
+            }
+
+            resizeCanvas() {
+                // Set canvas size to full screen
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
             }
 
             createPlayer() {
@@ -144,16 +152,16 @@
                 return [
                     {
                         platforms: [
-                            { x: 50, y: 550, width: 200, height: 20 },
-                            { x: 300, y: 450, width: 150, height: 20 },
-                            { x: 500, y: 350, width: 200, height: 20 },
+                            { x: 50, y: this.canvas.height - 50, width: 200, height: 20 },
+                            { x: 300, y: this.canvas.height - 150, width: 150, height: 20 },
+                            { x: 500, y: this.canvas.height - 250, width: 200, height: 20 },
                         ],
-                        goal: { x: 750, y: 300, width: 50, height: 50 },
+                        goal: { x: this.canvas.width - 100, y: this.canvas.height - 250, width: 50, height: 50 },
                         enemies: [
-                            { x: 400, y: 320, width: 50, height: 20, dx: 2 },
+                            { x: 400, y: this.canvas.height - 150, width: 50, height: 20, dx: 2 },
                         ],
                         spikes: [
-                            { x: 250, y: 570, width: 50, height: 10 },
+                            { x: 250, y: this.canvas.height - 30, width: 50, height: 10 },
                         ],
                     },
                 ];
@@ -248,7 +256,7 @@
                 this.spikes = newLevel.spikes;
 
                 this.player.x = 100;
-                this.player.y = 500;
+                this.player.y = this.canvas.height - 100;
                 this.health = 3;
             }
 
@@ -311,9 +319,8 @@
                     this.handleInput();
                     this.applyPhysics();
                     this.checkGoalCollision();
-
                     this.updatePlayerAnimation();
-                    this.enemies.forEach(enemy => this.updateEnemyAnimation(enemy));
+                    this.enemies.forEach((enemy) => this.updateEnemyAnimation(enemy));
                 }
 
                 this.draw();

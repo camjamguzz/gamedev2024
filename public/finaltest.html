@@ -32,7 +32,6 @@
 
         canvas {
             display: block;
-            background-color: #2e2e2e;
         }
     </style>
 </head>
@@ -41,7 +40,7 @@
         <div id="levelDisplay">Level: 1</div>
         <div id="healthDisplay">Health: ♥♥♥</div>
     </div>
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
         class Game {
             constructor(canvasId) {
@@ -53,48 +52,31 @@
                 };
 
                 this.keys = new Set();
-                this.player = this.createPlayer();
                 this.health = 3;
-
                 this.GRAVITY = 0.5;
                 this.JUMP_FORCE = -12;
                 this.PLAYER_SPEED = 5;
-
+                this.levelCompleted = false;
                 this.currentLevel = 1;
+
+                this.init(this.currentLevel);
+            }
+
+            init(level) {
+                this.player = this.createPlayer();
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
-                this.levelCompleted = false;
+                this.enemies = [this.createEnemy()]; // Add more enemies as needed
 
-                this.enemies = [this.createEnemy()];
-
-                this.camera = {
-                    x: 0,
-                    y: 0,
-                    width: this.canvas.width,
-                    height: this.canvas.height,
-                    follow: this.player,
-                };
-
-                this.initInputHandlers();
-                this.resizeCanvas(); // Set initial canvas size
-                window.addEventListener('resize', () => this.resizeCanvas()); // Resize canvas on window resize
+                this.spikes = this.levels[this.currentLevel - 1].spikes;
+                this.setupInputHandlers();
                 this.gameLoop();
-            }
-
-            resizeCanvas() {
-                // Set canvas size to full screen
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
-
-                // Update the camera size based on the new canvas size
-                this.camera.width = this.canvas.width;
-                this.camera.height = this.canvas.height;
             }
 
             createPlayer() {
                 const playerSprite = new Image();
-                playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your actual player sprite image path
+                playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your Piskel sprite sheet
 
                 return {
                     x: 100,
@@ -118,20 +100,9 @@
                 };
             }
 
-            updatePlayerAnimation() {
-                const player = this.player;
-                player.tickCount++;
-
-                if (player.tickCount > player.animationSpeed) {
-                    player.tickCount = 0;
-                    const totalFrames = player.framesPerState[player.currentState];
-                    player.frameIndex = (player.frameIndex + 1) % totalFrames;
-                }
-            }
-
             createEnemy() {
                 const enemySprite = new Image();
-                enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with actual enemy sprite image path
+                enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with your Piskel sprite sheet
 
                 return {
                     x: 400,
@@ -150,36 +121,27 @@
                 };
             }
 
-            updateEnemyAnimation(enemy) {
-                enemy.tickCount++;
-
-                if (enemy.tickCount > enemy.animationSpeed) {
-                    enemy.tickCount = 0;
-                    const totalFrames = enemy.framesPerState[enemy.currentState];
-                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
-                }
-            }
-
             createLevels() {
                 return [
                     {
                         platforms: [
-                            { x: 50, y: this.canvas.height - 50, width: 200, height: 20 },
-                            { x: 300, y: this.canvas.height - 150, width: 150, height: 20 },
-                            { x: 500, y: this.canvas.height - 250, width: 200, height: 20 },
+                            { x: 50, y: 550, width: 200, height: 20 },
+                            { x: 300, y: 450, width: 150, height: 20 },
+                            { x: 500, y: 350, width: 200, height: 20 },
                         ],
-                        goal: { x: this.canvas.width - 100, y: this.canvas.height - 250, width: 50, height: 50 },
+                        goal: { x: 750, y: 300, width: 50, height: 50 },
                         enemies: [
-                            { x: 400, y: this.canvas.height - 150, width: 50, height: 20, dx: 2 },
+                            { x: 400, y: 320, width: 50, height: 20, dx: 2 },
                         ],
                         spikes: [
-                            { x: 250, y: this.canvas.height - 30, width: 50, height: 10 },
+                            { x: 250, y: 570, width: 50, height: 10 },
                         ],
                     },
+                    // Add more levels here
                 ];
             }
 
-            initInputHandlers() {
+            setupInputHandlers() {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
             }
@@ -230,6 +192,30 @@
                         player.y = platform.y - player.height;
                     }
                 });
+
+                this.enemies.forEach((enemy) => {
+                    if (
+                        player.x < enemy.x + enemy.width &&
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &&
+                        player.y + player.height > enemy.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+
+                this.spikes.forEach((spike) => {
+                    if (
+                        player.x < spike.x + spike.width &&
+                        player.x + player.width > spike.x &&
+                        player.y < spike.y + spike.height &&
+                        player.y + player.height > spike.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+
+                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
             }
 
             takeDamage() {
@@ -268,52 +254,91 @@
                 this.spikes = newLevel.spikes;
 
                 this.player.x = 100;
-                this.player.y = this.canvas.height - 100;
+                this.player.y = 500;
                 this.health = 3;
             }
 
-            updateCamera() {
-                // Follow the player within boundaries of the level
-                const player = this.camera.follow;
-                const halfWidth = this.camera.width / 2;
-                const halfHeight = this.camera.height / 2;
+            updatePlayerAnimation() {
+                const player = this.player;
+                player.tickCount++;
 
-                this.camera.x = Math.max(0, Math.min(player.x - halfWidth, this.canvas.width - this.levels[0].platforms[this.levels[0].platforms.length - 1].x - 200));
-                this.camera.y = Math.max(0, Math.min(player.y - halfHeight, this.canvas.height - 200));
+                if (player.tickCount > player.animationSpeed) {
+                    player.tickCount = 0;
+                    const totalFrames = player.framesPerState[player.currentState];
+                    player.frameIndex = (player.frameIndex + 1) % totalFrames;
+                }
+            }
+
+            updateEnemyAnimation(enemy) {
+                enemy.tickCount++;
+
+                if (enemy.tickCount > enemy.animationSpeed) {
+                    enemy.tickCount = 0;
+                    const totalFrames = enemy.framesPerState[enemy.currentState];
+                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
+                }
             }
 
             draw() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Update camera position
-                this.updateCamera();
-
                 // Draw platforms
+                this.ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
-                    this.ctx.fillStyle = '#00FF00';
-                    this.ctx.fillRect(platform.x - this.camera.x, platform.y - this.camera.y, platform.width, platform.height);
+                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
-                // Draw exit
-                this.ctx.fillStyle = '#FFD700';
-                this.ctx.fillRect(this.goal.x - this.camera.x, this.goal.y - this.camera.y, this.goal.width, this.goal.height);
+                // Draw goal
+                this.ctx.fillStyle = 'gold';
+                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-                // Draw enemies
-                this.enemies.forEach((enemy) => {
-                    this.ctx.fillStyle = '#FF0000';
-                    this.ctx.fillRect(enemy.x - this.camera.x, enemy.y - this.camera.y, enemy.width, enemy.height);
+                // Draw spikes
+                this.ctx.fillStyle = 'darkred';
+                this.spikes.forEach((spike) => {
+                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
                 });
 
-                // Draw player
-                this.ctx.drawImage(
-                    this.player.sprite,
-                    this.player.frameIndex * 50, 0, 50, 50, 
-                    this.player.x - this.camera.x, this.player.y - this.camera.y, this.player.width, this.player.height
-                );
+                this.drawPlayer();
+                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                // Draw UI
+                // Update UI
                 this.ui.level.textContent = `Level: ${this.currentLevel}`;
                 this.ui.health.textContent = `Health: ♥`.repeat(this.health);
+            }
+
+            drawPlayer() {
+                const player = this.player;
+                const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
+                const spriteHeight = player.sprite.height;
+
+                this.ctx.drawImage(
+                    player.sprite,
+                    player.frameIndex * spriteWidth,
+                    0,
+                    spriteWidth,
+                    spriteHeight,
+                    player.x,
+                    player.y,
+                    player.width,
+                    player.height
+                );
+            }
+
+            drawEnemy(enemy) {
+                const spriteWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];
+                const spriteHeight = enemy.sprite.height;
+
+                this.ctx.drawImage(
+                    enemy.sprite,
+                    enemy.frameIndex * spriteWidth,
+                    0,
+                    spriteWidth,
+                    spriteHeight,
+                    enemy.x,
+                    enemy.y,
+                    enemy.width,
+                    enemy.height
+                );
             }
 
             gameLoop() {
@@ -323,6 +348,8 @@
                     this.checkGoalCollision();
                     this.updatePlayerAnimation();
                     this.enemies.forEach((enemy) => this.updateEnemyAnimation(enemy));
+                } else {
+                    this.loadLevel(this.currentLevel + 1);
                 }
 
                 this.draw();

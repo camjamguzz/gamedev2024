@@ -68,25 +68,71 @@
 
             createPlayer() {
     const playerSprite = new Image();
-    playerSprite.src = 'c:\Users\1146614\Downloads\New Piskel (6).gif'; // Replace with your sprite sheet path
+    playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your Piskel sprite sheet
 
     return {
         x: 100,
         y: 100,
-        width: 50, // Set player width to fit sprite size
-        height: 75, // Set player height to fit sprite size
+        width: 50, // Match your sprite sheet's frame size
+        height: 50, // Match your sprite sheet's frame size
         dx: 0,
         dy: 0,
         isJumping: false,
         isOnGround: false,
-        sprite: playerSprite, // Store the sprite
-        frameIndex: 0, // For animation frames
-        animationSpeed: 5, // Adjust speed of frame changes
-        tickCount: 0, // Control frame rate
-        totalFrames: 6, // Number of frames in the sprite sheet
-        state: 'idle', // Can be 'idle', 'running', or 'jumping'
+        sprite: playerSprite,
+        frameIndex: 0, // Start at the first animation frame
+        tickCount: 0, // Used to manage animation speed
+        animationSpeed: 5, // Lower values = faster animation
+        framesPerState: {
+            idle: 4,   // Frames for the idle animation
+            running: 6, // Frames for running
+            jumping: 2, // Frames for jumping
+        },
+        currentState: 'idle', // Start in the "idle" state
     };
 }
+updatePlayerAnimation() {
+    const player = this.player;
+    player.tickCount++;
+
+    if (player.tickCount > player.animationSpeed) {
+        player.tickCount = 0; // Reset tick counter
+        const totalFrames = player.framesPerState[player.currentState]; // Get current state's frame count
+        player.frameIndex = (player.frameIndex + 1) % totalFrames; // Loop frames
+    }
+}
+
+createEnemy() {
+    const enemySprite = new Image();
+    enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with your Piskel sprite sheet
+
+    return {
+        x: 400,
+        y: 400,
+        width: 50,
+        height: 50,
+        sprite: enemySprite,
+        frameIndex: 0,
+        tickCount: 0,
+        animationSpeed: 10, // Adjust for enemy animation speed
+        framesPerState: {
+            idle: 3, // Frames for idle
+            attacking: 4, // Frames for attack
+        },
+        currentState: 'idle', // Start in idle state
+    };
+}
+updateEnemyAnimation(enemy) {
+    enemy.tickCount++;
+
+    if (enemy.tickCount > enemy.animationSpeed) {
+        enemy.tickCount = 0; // Reset tick counter
+        const totalFrames = enemy.framesPerState[enemy.currentState]; // Get current state's frame count
+        enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames; // Loop frames
+    }
+}
+
+
 
 
             createLevels() {
@@ -115,25 +161,26 @@
             }
 
             handleInput() {
-                const player = this.player;
-                player.dx = 0;
+    const player = this.player;
 
-                if (this.keys.has('ArrowLeft')) {
-                    player.dx = -5;
-                    player.animationState = 'running';
-                } else if (this.keys.has('ArrowRight')) {
-                    player.dx = 5;
-                    player.animationState = 'running';
-                } else {
-                    player.animationState = 'idle';
-                }
+    if (this.keys.has('ArrowLeft')) {
+        player.dx = -this.PLAYER_SPEED;
+        player.currentState = 'running'; // Set state to running
+    } else if (this.keys.has('ArrowRight')) {
+        player.dx = this.PLAYER_SPEED;
+        player.currentState = 'running'; // Set state to running
+    } else {
+        player.dx = 0;
+        player.currentState = 'idle'; // Set state to idle
+    }
 
-                if (this.keys.has('ArrowUp') && player.isOnGround) {
-                    player.dy = -15;
-                    player.isJumping = true;
-                    player.isOnGround = false;
-                }
-            }
+    if (this.keys.has('ArrowUp') && player.isOnGround) {
+        player.dy = this.JUMP_FORCE; // Apply jump force
+        player.isOnGround = false;
+        player.currentState = 'jumping'; // Set state to jumping
+    }
+}
+
 
             applyPhysics() {
                 const player = this.player;
@@ -246,11 +293,23 @@
                 ctx.fillStyle = 'gold';
                 ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-                // Draw enemies
-                ctx.fillStyle = 'red';
-                this.enemies.forEach((enemy) => {
-                    ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-                });
+                drawEnemy(ctx, enemy) ;
+    const spriteWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState]; // Single frame width
+    const spriteHeight = enemy.sprite.height; // Sprite sheet height
+
+    ctx.drawImage(
+        enemy.sprite,
+        enemy.frameIndex * spriteWidth,
+        0,
+        spriteWidth,
+        spriteHeight,
+        enemy.x,
+        enemy.y,
+        enemy.width,
+        enemy.height
+    );
+            }
+
 
                 // Draw spikes
                 ctx.fillStyle = 'darkred';
@@ -258,23 +317,32 @@
                     ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
                 });
 
-                // Draw player
-                if (player.animationState === 'idle' && player.idleImage.complete) {
-                    ctx.drawImage(player.idleImage, player.x, player.y, player.width, player.height);
-                } else if (player.runImage.complete) {
-                    ctx.drawImage(player.runImage, player.x, player.y, player.width, player.height);
-                }
-            }
+                drawPlayer(ctx, player) ;
+    const spriteWidth = player.sprite.width / player.framesPerState[player.currentState]; // Single frame width
+    const spriteHeight = player.sprite.height; // Sprite sheet height
 
-            gameLoop() {
+    ctx.drawImage(
+        player.sprite,
+        player.frameIndex * spriteWidth, // Source X: frame index * frame width
+        0, // Source Y: assumes animations are on one row
+        spriteWidth, // Source width
+        spriteHeight, // Source height
+        player.x, // Destination X
+        player.y, // Destination Y
+        player.width, // Destination width
+        player.height // Destination height
+    );
+}
+
+            gameLoop() ;
                 this.handleInput();
                 this.applyPhysics();
                 this.checkGoalCollision();
                 this.draw();
 
                 requestAnimationFrame(() => this.gameLoop());
-            }
-        }
+            
+        
 
         new Game('gameCanvas');
     </script>

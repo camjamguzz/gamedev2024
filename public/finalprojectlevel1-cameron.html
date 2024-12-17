@@ -67,25 +67,27 @@
             }
 
             createPlayer() {
-                const idleImage = new Image();
-                idleImage.src = 'idle_animation.gif'; // Replace with actual idle animation
-                const runImage = new Image();
-                runImage.src = 'run_animation.gif'; // Replace with actual running animation
+    const playerSprite = new Image();
+    playerSprite.src = 'path/to/sprite-sheet.png'; // Replace with your sprite sheet path
 
-                return {
-                    x: 100,
-                    y: 500,
-                    width: 50,
-                    height: 70,
-                    dx: 0,
-                    dy: 0,
-                    isJumping: false,
-                    isOnGround: false,
-                    idleImage,
-                    runImage,
-                    animationState: 'idle', // 'idle' or 'running'
-                };
-            }
+    return {
+        x: 100,
+        y: 100,
+        width: 50, // Set player width to fit sprite size
+        height: 75, // Set player height to fit sprite size
+        dx: 0,
+        dy: 0,
+        isJumping: false,
+        isOnGround: false,
+        sprite: playerSprite, // Store the sprite
+        frameIndex: 0, // For animation frames
+        animationSpeed: 5, // Adjust speed of frame changes
+        tickCount: 0, // Control frame rate
+        totalFrames: 6, // Number of frames in the sprite sheet
+        state: 'idle', // Can be 'idle', 'running', or 'jumping'
+    };
+}
+
 
             createLevels() {
                 return [

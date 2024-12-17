@@ -32,6 +32,7 @@
 
         canvas {
             display: block;
+            background-color: #2e2e2e;
         }
     </style>
 </head>
@@ -73,27 +74,27 @@
 
             createPlayer() {
                 const playerSprite = new Image();
-                playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your Piskel sprite sheet
+                playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your actual player sprite image path
 
                 return {
                     x: 100,
                     y: 100,
-                    width: 50, // Match your sprite sheet's frame size
-                    height: 50, // Match your sprite sheet's frame size
+                    width: 50,
+                    height: 50,
                     dx: 0,
                     dy: 0,
                     isJumping: false,
                     isOnGround: false,
                     sprite: playerSprite,
-                    frameIndex: 0, // Start at the first animation frame
-                    tickCount: 0, // Used to manage animation speed
-                    animationSpeed: 5, // Lower values = faster animation
+                    frameIndex: 0,
+                    tickCount: 0,
+                    animationSpeed: 5,
                     framesPerState: {
-                        idle: 4,   // Frames for the idle animation
-                        running: 6, // Frames for running
-                        jumping: 2, // Frames for jumping
+                        idle: 4,
+                        running: 6,
+                        jumping: 2,
                     },
-                    currentState: 'idle', // Start in the "idle" state
+                    currentState: 'idle',
                 };
             }
 
@@ -102,15 +103,15 @@
                 player.tickCount++;
 
                 if (player.tickCount > player.animationSpeed) {
-                    player.tickCount = 0; // Reset tick counter
-                    const totalFrames = player.framesPerState[player.currentState]; // Get current state's frame count
-                    player.frameIndex = (player.frameIndex + 1) % totalFrames; // Loop frames
+                    player.tickCount = 0;
+                    const totalFrames = player.framesPerState[player.currentState];
+                    player.frameIndex = (player.frameIndex + 1) % totalFrames;
                 }
             }
 
             createEnemy() {
                 const enemySprite = new Image();
-                enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with your Piskel sprite sheet
+                enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with actual enemy sprite image path
 
                 return {
                     x: 400,
@@ -120,12 +121,12 @@
                     sprite: enemySprite,
                     frameIndex: 0,
                     tickCount: 0,
-                    animationSpeed: 10, // Adjust for enemy animation speed
+                    animationSpeed: 10,
                     framesPerState: {
-                        idle: 3, // Frames for idle
-                        attacking: 4, // Frames for attack
+                        idle: 3,
+                        attacking: 4,
                     },
-                    currentState: 'idle', // Start in idle state
+                    currentState: 'idle',
                 };
             }
 
@@ -133,9 +134,9 @@
                 enemy.tickCount++;
 
                 if (enemy.tickCount > enemy.animationSpeed) {
-                    enemy.tickCount = 0; // Reset tick counter
-                    const totalFrames = enemy.framesPerState[enemy.currentState]; // Get current state's frame count
-                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames; // Loop frames
+                    enemy.tickCount = 0;
+                    const totalFrames = enemy.framesPerState[enemy.currentState];
+                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
                 }
             }
 
@@ -155,7 +156,6 @@
                             { x: 250, y: 570, width: 50, height: 10 },
                         ],
                     },
-                    // Add more levels here
                 ];
             }
 
@@ -169,26 +169,26 @@
 
                 if (this.keys.has('ArrowLeft')) {
                     player.dx = -this.PLAYER_SPEED;
-                    player.currentState = 'running'; // Set state to running
+                    player.currentState = 'running';
                 } else if (this.keys.has('ArrowRight')) {
                     player.dx = this.PLAYER_SPEED;
-                    player.currentState = 'running'; // Set state to running
+                    player.currentState = 'running';
                 } else {
                     player.dx = 0;
-                    player.currentState = 'idle'; // Set state to idle
+                    player.currentState = 'idle';
                 }
 
                 if (this.keys.has('ArrowUp') && player.isOnGround) {
-                    player.dy = this.JUMP_FORCE; // Apply jump force
+                    player.dy = this.JUMP_FORCE;
                     player.isOnGround = false;
-                    player.currentState = 'jumping'; // Set state to jumping
+                    player.currentState = 'jumping';
                 }
             }
 
             applyPhysics() {
                 const player = this.player;
 
-                player.dy += this.GRAVITY; // Gravity
+                player.dy += this.GRAVITY;
                 player.x += player.dx;
                 player.y += player.dy;
 
@@ -198,7 +198,6 @@
                     player.isOnGround = true;
                 }
 
-                // Collision detection with platforms
                 this.platforms.forEach((platform) => {
                     if (
                         player.x < platform.x + platform.width &&
@@ -211,33 +210,6 @@
                         player.y = platform.y - player.height;
                     }
                 });
-
-                // Collision detection with enemies
-                this.enemies.forEach((enemy) => {
-                    if (
-                        player.x < enemy.x + enemy.width &&
-                        player.x + player.width > enemy.x &&
-                        player.y < enemy.y + enemy.height &&
-                        player.y + player.height > enemy.y
-                    ) {
-                        this.takeDamage();
-                    }
-                });
-
-                // Collision detection with spikes
-                this.spikes.forEach((spike) => {
-                    if (
-                        player.x < spike.x + spike.width &&
-                        player.x + player.width > spike.x &&
-                        player.y < spike.y + spike.height &&
-                        player.y + player.height > spike.y
-                    ) {
-                        this.takeDamage();
-                    }
-                });
-
-                // Prevent player from going off-screen
-                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
             }
 
             takeDamage() {
@@ -286,39 +258,34 @@
 
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Draw platforms
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
-                // Draw goal
                 ctx.fillStyle = 'gold';
                 ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-                // Draw spikes
                 ctx.fillStyle = 'darkred';
                 this.spikes.forEach((spike) => {
                     ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
                 });
 
-                // Draw player
                 const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
                 const spriteHeight = player.sprite.height;
 
                 ctx.drawImage(
                     player.sprite,
-                    player.frameIndex * spriteWidth, // Source X: frame index * frame width
-                    0, // Source Y: assumes animations are on one row
-                    spriteWidth, // Source width
-                    spriteHeight, // Source height
-                    player.x, // Destination X
-                    player.y, // Destination Y
-                    player.width, // Destination width
-                    player.height // Destination height
+                    player.frameIndex * spriteWidth,
+                    0,
+                    spriteWidth,
+                    spriteHeight,
+                    player.x,
+                    player.y,
+                    player.width,
+                    player.height
                 );
 
-                // Draw enemies
                 this.enemies.forEach((enemy) => {
                     const enemyWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];
                     const enemyHeight = enemy.sprite.height;
@@ -334,6 +301,9 @@
                         enemy.height
                     );
                 });
+
+                this.ui.level.textContent = `Level: ${this.currentLevel}`;
+                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
             }
 
             gameLoop() {
@@ -342,14 +312,10 @@
                     this.applyPhysics();
                     this.checkGoalCollision();
 
-                    // Update animations
                     this.updatePlayerAnimation();
-                    this.enemies.forEach(enemy => this.updateEnemyAnimation(enemy)); // Update enemy animations
-                } else {
-                    this.loadNextLevel();
+                    this.enemies.forEach(enemy => this.updateEnemyAnimation(enemy));
                 }
 
-                // Draw everything
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
             }

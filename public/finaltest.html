@@ -3,169 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Selection</title>
+    <title>Hollow Knight-Inspired Game</title>
     <style>
         body {
             margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
             background: black;
             color: white;
+        }
+
+        #gameUI {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            gap: 5px;
         }
-        #menu {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        button {
-            background: #333;
-            color: white;
-            border: 2px solid white;
-            padding: 10px 20px;
-            font-size: 20px;
-            cursor: pointer;
+
+        #gameUI div {
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.7);
             border-radius: 5px;
-            transition: background 0.3s;
+            font-size: 14px;
         }
-        button:hover {
-            background: #555;
-        }
+
         canvas {
-            border: 2px solid white;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div id="menu">
-        <button id="playGame">Play Game</button>
-        <button id="chooseLevel">Choose Level</button>
+    <div id="gameUI">
+        <div id="levelDisplay">Level: 1</div>
+        <div id="healthDisplay">Health: ♥♥♥</div>
     </div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="notifications"></div>
     <script>
         class Game {
             constructor(canvasId) {
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
-                this.menu = document.getElementById('menu');
-                this.notificationsContainer = document.getElementById('notifications');
-                this.initMenu();
-            }
+                this.ui = {
+                    level: document.getElementById('levelDisplay'),
+                    health: document.getElementById('healthDisplay'),
+                };
 
-            initMenu() {
-                const playGameButton = document.getElementById('playGame');
-                const chooseLevelButton = document.getElementById('chooseLevel');
+                this.keys = new Set();
+                this.player = this.createPlayer();
+                this.health = 3;
 
-                playGameButton.addEventListener('click', () => {
-                    this.startGame(1); // Start from level 1
-                });
-
-                chooseLevelButton.addEventListener('click', () => {
-                    const levelChoice = prompt('Enter level number (1-7):');
-                    const level = parseInt(levelChoice, 10);
-                    if (level >= 1 && level <= 7) {
-                        this.startGame(level);
-                    } else {
-                        this.showNotification('Invalid level number. Please enter a number between 1 and 7.');
-                    }
-                });
-            }
-
-            startGame(level) {
-                this.menu.style.display = 'none';
-                this.init(level);
-            }
-
-            showNotification(message) {
-                const notification = document.createElement('div');
-                notification.className = 'notification';
-                notification.textContent = message;
-                this.notificationsContainer.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.remove();
-                }, 3000);
-            }
-
-            init(level = 1) {
                 this.GRAVITY = 0.5;
                 this.JUMP_FORCE = -12;
                 this.PLAYER_SPEED = 5;
 
-                this.player = this.createPlayer();
-                this.currentLevel = level;
+                this.currentLevel = 1;
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
-                this.barriers = this.levels[this.currentLevel - 1].barriers || [];
                 this.levelCompleted = false;
 
-                this.keys = new Set();
-                this.setupInputHandlers();
+                this.enemies = [this.createEnemy()];
+
+                this.initInputHandlers();
                 this.gameLoop();
             }
 
             createPlayer() {
-                const playerImage = new Image();
-                playerImage.src = 'https://piskel-imgstore-b.appspot.com/img/6a4ffc1e-adbe-11ef-9938-d9c0f7c08e34.gif';
+                const playerSprite = new Image();
+                playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your Piskel sprite sheet
 
                 return {
                     x: 100,
                     y: 100,
-                    width: 70,
-                    height: 100,
+                    width: 50, // Match your sprite sheet's frame size
+                    height: 50, // Match your sprite sheet's frame size
                     dx: 0,
                     dy: 0,
                     isJumping: false,
                     isOnGround: false,
-                    image: playerImage,
+                    sprite: playerSprite,
+                    frameIndex: 0, // Start at the first animation frame
+                    tickCount: 0, // Used to manage animation speed
+                    animationSpeed: 5, // Lower values = faster animation
+                    framesPerState: {
+                        idle: 4,   // Frames for the idle animation
+                        running: 6, // Frames for running
+                        jumping: 2, // Frames for jumping
+                    },
+                    currentState: 'idle', // Start in the "idle" state
                 };
+            }
+
+            updatePlayerAnimation() {
+                const player = this.player;
+                player.tickCount++;
+
+                if (player.tickCount > player.animationSpeed) {
+                    player.tickCount = 0; // Reset tick counter
+                    const totalFrames = player.framesPerState[player.currentState]; // Get current state's frame count
+                    player.frameIndex = (player.frameIndex + 1) % totalFrames; // Loop frames
+                }
+            }
+
+            createEnemy() {
+                const enemySprite = new Image();
+                enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with your Piskel sprite sheet
+
+                return {
+                    x: 400,
+                    y: 400,
+                    width: 50,
+                    height: 50,
+                    sprite: enemySprite,
+                    frameIndex: 0,
+                    tickCount: 0,
+                    animationSpeed: 10, // Adjust for enemy animation speed
+                    framesPerState: {
+                        idle: 3, // Frames for idle
+                        attacking: 4, // Frames for attack
+                    },
+                    currentState: 'idle', // Start in idle state
+                };
+            }
+
+            updateEnemyAnimation(enemy) {
+                enemy.tickCount++;
+
+                if (enemy.tickCount > enemy.animationSpeed) {
+                    enemy.tickCount = 0; // Reset tick counter
+                    const totalFrames = enemy.framesPerState[enemy.currentState]; // Get current state's frame count
+                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames; // Loop frames
+                }
             }
 
             createLevels() {
                 return [
                     {
                         platforms: [
-                            { x: 50, y: 500, width: 200, height: 20 },
-                            { x: 300, y: 400, width: 150, height: 20 },
-                            { x: 500, y: 300, width: 200, height: 20 },
+                            { x: 50, y: 550, width: 200, height: 20 },
+                            { x: 300, y: 450, width: 150, height: 20 },
+                            { x: 500, y: 350, width: 200, height: 20 },
                         ],
-                        goal: { x: 700, y: 250, width: 50, height: 50 },
-                        barriers: [
-                            { x: 400, y: 350, width: 20, height: 150 },
+                        goal: { x: 750, y: 300, width: 50, height: 50 },
+                        enemies: [
+                            { x: 400, y: 320, width: 50, height: 20, dx: 2 },
                         ],
-                    },
-                    {
-                        platforms: [
-                            { x: 50, y: 550, width: 100, height: 20 },
-                            { x: 200, y: 450, width: 100, height: 20 },
-                            { x: 400, y: 350, width: 80, height: 20 },
-                            { x: 600, y: 250, width: 70, height: 20 },
-                        ],
-                        goal: { x: 750, y: 200, width: 50, height: 50 },
-                        barriers: [
-                            { x: 500, y: 400, width: 20, height: 100 },
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 10 },
                         ],
                     },
-                    {
-                        platforms: [
-                            { x: 50, y: 550, width: 80, height: 20 },
-                            { x: 150, y: 450, width: 70, height: 20 },
-                            { x: 300, y: 350, width: 60, height: 20 },
-                            { x: 450, y: 250, width: 50, height: 20 },
-                            { x: 600, y: 150, width: 40, height: 20 },
-                        ],
-                        goal: { x: 700, y: 100, width: 50, height: 50 },
-                        barriers: [],
-                    },
+                    // Add more levels here
                 ];
             }
 
-            setupInputHandlers() {
+            initInputHandlers() {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
             }
@@ -173,36 +167,38 @@
             handleInput() {
                 const player = this.player;
 
-                if (this.keys.has('ArrowLeft')) player.dx = -this.PLAYER_SPEED;
-                else if (this.keys.has('ArrowRight')) player.dx = this.PLAYER_SPEED;
-                else player.dx = 0;
+                if (this.keys.has('ArrowLeft')) {
+                    player.dx = -this.PLAYER_SPEED;
+                    player.currentState = 'running'; // Set state to running
+                } else if (this.keys.has('ArrowRight')) {
+                    player.dx = this.PLAYER_SPEED;
+                    player.currentState = 'running'; // Set state to running
+                } else {
+                    player.dx = 0;
+                    player.currentState = 'idle'; // Set state to idle
+                }
 
                 if (this.keys.has('ArrowUp') && player.isOnGround) {
-                    player.dy = this.JUMP_FORCE;
+                    player.dy = this.JUMP_FORCE; // Apply jump force
                     player.isOnGround = false;
+                    player.currentState = 'jumping'; // Set state to jumping
                 }
             }
 
             applyPhysics() {
                 const player = this.player;
-                player.dy += this.GRAVITY;
+
+                player.dy += this.GRAVITY; // Gravity
                 player.x += player.dx;
                 player.y += player.dy;
-
-                this.checkPlatformCollisions();
-                this.checkBarrierCollisions();
 
                 if (player.y > this.canvas.height - player.height) {
                     player.y = this.canvas.height - player.height;
                     player.dy = 0;
                     player.isOnGround = true;
                 }
-            }
 
-            checkPlatformCollisions() {
-                const player = this.player;
-                player.isOnGround = false;
-
+                // Collision detection with platforms
                 this.platforms.forEach((platform) => {
                     if (
                         player.x < platform.x + platform.width &&
@@ -215,26 +211,41 @@
                         player.y = platform.y - player.height;
                     }
                 });
-            }
 
-            checkBarrierCollisions() {
-                const player = this.player;
-
-                this.barriers.forEach((barrier) => {
+                // Collision detection with enemies
+                this.enemies.forEach((enemy) => {
                     if (
-                        player.x < barrier.x + barrier.width &&
-                        player.x + player.width > barrier.x &&
-                        player.y < barrier.y + barrier.height &&
-                        player.y + player.height > barrier.y
+                        player.x < enemy.x + enemy.width &&
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &&
+                        player.y + player.height > enemy.y
                     ) {
-                        if (player.dx > 0) {
-                            player.x = barrier.x - player.width;
-                        } else if (player.dx < 0) {
-                            player.x = barrier.x + barrier.width;
-                        }
-                        player.dx = 0;
+                        this.takeDamage();
                     }
                 });
+
+                // Collision detection with spikes
+                this.spikes.forEach((spike) => {
+                    if (
+                        player.x < spike.x + spike.width &&
+                        player.x + player.width > spike.x &&
+                        player.y < spike.y + spike.height &&
+                        player.y + player.height > spike.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+
+                // Prevent player from going off-screen
+                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+            }
+
+            takeDamage() {
+                this.health--;
+                if (this.health <= 0) {
+                    alert('Game Over!');
+                    window.location.reload();
+                }
             }
 
             checkGoalCollision() {
@@ -247,59 +258,82 @@
                     player.y < goal.y + goal.height &&
                     player.y + player.height > goal.y
                 ) {
-                    this.levelCompleted = true;
+                    this.currentLevel++;
+                    if (this.currentLevel > this.levels.length) {
+                        alert('Congratulations! You completed all levels!');
+                        window.location.reload();
+                    } else {
+                        this.loadLevel(this.currentLevel);
+                    }
                 }
             }
 
-            loadNextLevel() {
-                this.currentLevel++;
-                if (this.currentLevel > this.levels.length) {
-                    this.showNotification("Congratulations! You've completed all levels!");
-                    this.menu.style.display = 'flex';
-                } else {
-                    const newLevel = this.levels[this.currentLevel - 1];
-                    this.platforms = newLevel.platforms;
-                    this.barriers = newLevel.barriers || [];
-                    this.goal = newLevel.goal;
-                    this.player.x = 100;
-                    this.player.y = 100;
-                    this.levelCompleted = false;
-                }
+            loadLevel(level) {
+                const newLevel = this.levels[level - 1];
+                this.platforms = newLevel.platforms;
+                this.goal = newLevel.goal;
+                this.enemies = newLevel.enemies;
+                this.spikes = newLevel.spikes;
+
+                this.player.x = 100;
+                this.player.y = 500;
+                this.health = 3;
             }
 
             draw() {
                 const ctx = this.ctx;
                 const player = this.player;
-                const goal = this.goal;
 
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+                // Draw platforms
                 ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
-                ctx.fillStyle = 'red';
-                this.barriers.forEach((barrier) => {
-                    ctx.fillRect(barrier.x, barrier.y, barrier.width, barrier.height);
+                // Draw goal
+                ctx.fillStyle = 'gold';
+                ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+
+                // Draw spikes
+                ctx.fillStyle = 'darkred';
+                this.spikes.forEach((spike) => {
+                    ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
                 });
 
-                ctx.fillStyle = 'gold';
-                ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
+                // Draw player
+                const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
+                const spriteHeight = player.sprite.height;
 
-                if (player.image.complete) {
-                    ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
-                } else {
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(player.x, player.y, player.width, player.height);
-                }
+                ctx.drawImage(
+                    player.sprite,
+                    player.frameIndex * spriteWidth, // Source X: frame index * frame width
+                    0, // Source Y: assumes animations are on one row
+                    spriteWidth, // Source width
+                    spriteHeight, // Source height
+                    player.x, // Destination X
+                    player.y, // Destination Y
+                    player.width, // Destination width
+                    player.height // Destination height
+                );
 
-                if (this.levelCompleted) {
-                    ctx.fillStyle = 'white';
-                    ctx.font = '30px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Level Complete!', this.canvas.width / 2, this.canvas.height / 2);
-                }
+                // Draw enemies
+                this.enemies.forEach((enemy) => {
+                    const enemyWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];
+                    const enemyHeight = enemy.sprite.height;
+                    ctx.drawImage(
+                        enemy.sprite,
+                        enemy.frameIndex * enemyWidth,
+                        0,
+                        enemyWidth,
+                        enemyHeight,
+                        enemy.x,
+                        enemy.y,
+                        enemy.width,
+                        enemy.height
+                    );
+                });
             }
 
             gameLoop() {
@@ -307,9 +341,15 @@
                     this.handleInput();
                     this.applyPhysics();
                     this.checkGoalCollision();
+
+                    // Update animations
+                    this.updatePlayerAnimation();
+                    this.enemies.forEach(enemy => this.updateEnemyAnimation(enemy)); // Update enemy animations
                 } else {
                     this.loadNextLevel();
                 }
+
+                // Draw everything
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
             }

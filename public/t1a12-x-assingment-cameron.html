@@ -36,7 +36,7 @@
       background-color: #dc3545;
       border-radius: 5px;
     }
-    #score {
+    #score-container {
       position: absolute;
       top: 10px;
       left: 10px;
@@ -57,7 +57,10 @@
 </head>
 <body>
   <div id="game-container">
-    <div id="score">Score: 0</div>
+    <div id="score-container">
+      <div id="score">Score: 0</div>
+      <div id="highscore">High Score: 0</div>
+    </div>
     <div id="game-over">
       Game Over!<br>Press any key or click to restart.
     </div>
@@ -68,10 +71,12 @@
     // Game variables
     const player = document.getElementById("player");
     const scoreDisplay = document.getElementById("score");
+    const highscoreDisplay = document.getElementById("highscore");
     const gameOverDisplay = document.getElementById("game-over");
     const container = document.getElementById("game-container");
 
     let score = 0;
+    let highscore = 0; // Tracks the highest score
     let gameActive = true;
 
     // Player position
@@ -143,6 +148,10 @@
     // End game
     function gameOver() {
       gameActive = false;
+      if (score > highscore) {
+        highscore = score;
+        highscoreDisplay.textContent = `High Score: ${highscore}`;
+      }
       scoreDisplay.textContent = `Final Score: ${score}`;
       gameOverDisplay.style.display = "block";
     }

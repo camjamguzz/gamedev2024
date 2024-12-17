@@ -52,88 +52,74 @@
                 };
 
                 this.keys = new Set();
-                this.player = this.createPlayer();
                 this.health = 3;
-
+                this.GRAVITY = 0.5;
+                this.JUMP_FORCE = -12;
+                this.PLAYER_SPEED = 5;
+                this.levelCompleted = false;
                 this.currentLevel = 1;
+
+                this.init(this.currentLevel);
+            }
+
+            init(level) {
+                this.player = this.createPlayer();
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
-                this.enemies = this.levels[this.currentLevel - 1].enemies;
-                this.spikes = this.levels[this.currentLevel - 1].spikes;
+                this.enemies = [this.createEnemy()]; // Add more enemies as needed
 
-                this.initInputHandlers();
+                this.spikes = this.levels[this.currentLevel - 1].spikes;
+                this.setupInputHandlers();
                 this.gameLoop();
             }
 
             createPlayer() {
-    const playerSprite = new Image();
-    playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your Piskel sprite sheet
+                const playerSprite = new Image();
+                playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your Piskel sprite sheet
 
-    return {
-        x: 100,
-        y: 100,
-        width: 50, // Match your sprite sheet's frame size
-        height: 50, // Match your sprite sheet's frame size
-        dx: 0,
-        dy: 0,
-        isJumping: false,
-        isOnGround: false,
-        sprite: playerSprite,
-        frameIndex: 0, // Start at the first animation frame
-        tickCount: 0, // Used to manage animation speed
-        animationSpeed: 5, // Lower values = faster animation
-        framesPerState: {
-            idle: 4,   // Frames for the idle animation
-            running: 6, // Frames for running
-            jumping: 2, // Frames for jumping
-        },
-        currentState: 'idle', // Start in the "idle" state
-    };
-}
-updatePlayerAnimation() {
-    const player = this.player;
-    player.tickCount++;
+                return {
+                    x: 100,
+                    y: 100,
+                    width: 50,
+                    height: 50,
+                    dx: 0,
+                    dy: 0,
+                    isJumping: false,
+                    isOnGround: false,
+                    sprite: playerSprite,
+                    frameIndex: 0,
+                    tickCount: 0,
+                    animationSpeed: 5,
+                    framesPerState: {
+                        idle: 4,
+                        running: 6,
+                        jumping: 2,
+                    },
+                    currentState: 'idle',
+                };
+            }
 
-    if (player.tickCount > player.animationSpeed) {
-        player.tickCount = 0; // Reset tick counter
-        const totalFrames = player.framesPerState[player.currentState]; // Get current state's frame count
-        player.frameIndex = (player.frameIndex + 1) % totalFrames; // Loop frames
-    }
-}
+            createEnemy() {
+                const enemySprite = new Image();
+                enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with your Piskel sprite sheet
 
-createEnemy() {
-    const enemySprite = new Image();
-    enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with your Piskel sprite sheet
-
-    return {
-        x: 400,
-        y: 400,
-        width: 50,
-        height: 50,
-        sprite: enemySprite,
-        frameIndex: 0,
-        tickCount: 0,
-        animationSpeed: 10, // Adjust for enemy animation speed
-        framesPerState: {
-            idle: 3, // Frames for idle
-            attacking: 4, // Frames for attack
-        },
-        currentState: 'idle', // Start in idle state
-    };
-}
-updateEnemyAnimation(enemy) {
-    enemy.tickCount++;
-
-    if (enemy.tickCount > enemy.animationSpeed) {
-        enemy.tickCount = 0; // Reset tick counter
-        const totalFrames = enemy.framesPerState[enemy.currentState]; // Get current state's frame count
-        enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames; // Loop frames
-    }
-}
-
-
-
+                return {
+                    x: 400,
+                    y: 400,
+                    width: 50,
+                    height: 50,
+                    sprite: enemySprite,
+                    frameIndex: 0,
+                    tickCount: 0,
+                    animationSpeed: 10,
+                    framesPerState: {
+                        idle: 3,
+                        attacking: 4,
+                    },
+                    currentState: 'idle',
+                };
+            }
 
             createLevels() {
                 return [
@@ -155,37 +141,36 @@ updateEnemyAnimation(enemy) {
                 ];
             }
 
-            initInputHandlers() {
+            setupInputHandlers() {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
             }
 
             handleInput() {
-    const player = this.player;
+                const player = this.player;
 
-    if (this.keys.has('ArrowLeft')) {
-        player.dx = -this.PLAYER_SPEED;
-        player.currentState = 'running'; // Set state to running
-    } else if (this.keys.has('ArrowRight')) {
-        player.dx = this.PLAYER_SPEED;
-        player.currentState = 'running'; // Set state to running
-    } else {
-        player.dx = 0;
-        player.currentState = 'idle'; // Set state to idle
-    }
+                if (this.keys.has('ArrowLeft')) {
+                    player.dx = -this.PLAYER_SPEED;
+                    player.currentState = 'running';
+                } else if (this.keys.has('ArrowRight')) {
+                    player.dx = this.PLAYER_SPEED;
+                    player.currentState = 'running';
+                } else {
+                    player.dx = 0;
+                    player.currentState = 'idle';
+                }
 
-    if (this.keys.has('ArrowUp') && player.isOnGround) {
-        player.dy = this.JUMP_FORCE; // Apply jump force
-        player.isOnGround = false;
-        player.currentState = 'jumping'; // Set state to jumping
-    }
-}
-
+                if (this.keys.has('ArrowUp') && player.isOnGround) {
+                    player.dy = this.JUMP_FORCE;
+                    player.isOnGround = false;
+                    player.currentState = 'jumping';
+                }
+            }
 
             applyPhysics() {
                 const player = this.player;
 
-                player.dy += 0.8; // Gravity
+                player.dy += this.GRAVITY;
                 player.x += player.dx;
                 player.y += player.dy;
 
@@ -195,7 +180,6 @@ updateEnemyAnimation(enemy) {
                     player.isOnGround = true;
                 }
 
-                // Collision detection with platforms
                 this.platforms.forEach((platform) => {
                     if (
                         player.x < platform.x + platform.width &&
@@ -209,7 +193,6 @@ updateEnemyAnimation(enemy) {
                     }
                 });
 
-                // Collision detection with enemies
                 this.enemies.forEach((enemy) => {
                     if (
                         player.x < enemy.x + enemy.width &&
@@ -221,7 +204,6 @@ updateEnemyAnimation(enemy) {
                     }
                 });
 
-                // Collision detection with spikes
                 this.spikes.forEach((spike) => {
                     if (
                         player.x < spike.x + spike.width &&
@@ -233,7 +215,6 @@ updateEnemyAnimation(enemy) {
                     }
                 });
 
-                // Prevent player from going off-screen
                 player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
             }
 
@@ -277,86 +258,104 @@ updateEnemyAnimation(enemy) {
                 this.health = 3;
             }
 
-            draw() {
-                const ctx = this.ctx;
+            updatePlayerAnimation() {
                 const player = this.player;
+                player.tickCount++;
 
-                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                if (player.tickCount > player.animationSpeed) {
+                    player.tickCount = 0;
+                    const totalFrames = player.framesPerState[player.currentState];
+                    player.frameIndex = (player.frameIndex + 1) % totalFrames;
+                }
+            }
+
+            updateEnemyAnimation(enemy) {
+                enemy.tickCount++;
+
+                if (enemy.tickCount > enemy.animationSpeed) {
+                    enemy.tickCount = 0;
+                    const totalFrames = enemy.framesPerState[enemy.currentState];
+                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
+                }
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
                 // Draw platforms
-                ctx.fillStyle = 'gray';
+                this.ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
-                    ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
                 // Draw goal
-                ctx.fillStyle = 'gold';
-                ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
-
-                drawEnemy(ctx, enemy) ;
-    const spriteWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState]; // Single frame width
-    const spriteHeight = enemy.sprite.height; // Sprite sheet height
-
-    ctx.drawImage(
-        enemy.sprite,
-        enemy.frameIndex * spriteWidth,
-        0,
-        spriteWidth,
-        spriteHeight,
-        enemy.x,
-        enemy.y,
-        enemy.width,
-        enemy.height
-    );
-            }
-
+                this.ctx.fillStyle = 'gold';
+                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
                 // Draw spikes
-                ctx.fillStyle = 'darkred';
+                this.ctx.fillStyle = 'darkred';
                 this.spikes.forEach((spike) => {
-                    ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
+                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
                 });
 
-                drawPlayer(ctx, player) ;
-    const spriteWidth = player.sprite.width / player.framesPerState[player.currentState]; // Single frame width
-    const spriteHeight = player.sprite.height; // Sprite sheet height
+                this.drawPlayer();
+                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-    ctx.drawImage(
-        player.sprite,
-        player.frameIndex * spriteWidth, // Source X: frame index * frame width
-        0, // Source Y: assumes animations are on one row
-        spriteWidth, // Source width
-        spriteHeight, // Source height
-        player.x, // Destination X
-        player.y, // Destination Y
-        player.width, // Destination width
-        player.height // Destination height
-    );
+                // Update UI
+                this.ui.level.textContent = `Level: ${this.currentLevel}`;
+                this.ui.health.textContent = `Health: ♥`.repeat(this.health);
+            }
 
+            drawPlayer() {
+                const player = this.player;
+                const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
+                const spriteHeight = player.sprite.height;
 
-gameLoop() ;
-    if (!this.levelCompleted) {
-        this.handleInput();
-        this.applyPhysics();
-        this.checkGoalCollision();
+                this.ctx.drawImage(
+                    player.sprite,
+                    player.frameIndex * spriteWidth,
+                    0,
+                    spriteWidth,
+                    spriteHeight,
+                    player.x,
+                    player.y,
+                    player.width,
+                    player.height
+                );
+            }
 
-        // Update animations
-        this.updatePlayerAnimation();
-        this.enemies.forEach(enemy => this.updateEnemyAnimation(enemy)); // Update enemy animations
-    } else {
-        this.loadNextLevel();
-    }
+            drawEnemy(enemy) {
+                const spriteWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];
+                const spriteHeight = enemy.sprite.height;
 
-    // Draw everything
-    this.draw();
-    this.drawPlayer(this.ctx, this.player); // Draw the player
-    this.enemies.forEach(enemy => this.drawEnemy(this.ctx, enemy)); // Draw all enemies
+                this.ctx.drawImage(
+                    enemy.sprite,
+                    enemy.frameIndex * spriteWidth,
+                    0,
+                    spriteWidth,
+                    spriteHeight,
+                    enemy.x,
+                    enemy.y,
+                    enemy.width,
+                    enemy.height
+                );
+            }
 
-    requestAnimationFrame(() => this.gameLoop());
+            gameLoop() {
+                if (!this.levelCompleted) {
+                    this.handleInput();
+                    this.applyPhysics();
+                    this.checkGoalCollision();
+                    this.updatePlayerAnimation();
+                    this.enemies.forEach((enemy) => this.updateEnemyAnimation(enemy));
+                } else {
+                    this.loadLevel(this.currentLevel + 1);
+                }
 
-
-            
-        
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
 
         new Game('gameCanvas');
     </script>

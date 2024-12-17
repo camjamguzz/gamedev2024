@@ -68,6 +68,14 @@
 
                 this.enemies = [this.createEnemy()];
 
+                this.camera = {
+                    x: 0,
+                    y: 0,
+                    width: this.canvas.width,
+                    height: this.canvas.height,
+                    follow: this.player,
+                };
+
                 this.initInputHandlers();
                 this.resizeCanvas(); // Set initial canvas size
                 window.addEventListener('resize', () => this.resizeCanvas()); // Resize canvas on window resize
@@ -78,6 +86,10 @@
                 // Set canvas size to full screen
                 this.canvas.width = window.innerWidth;
                 this.canvas.height = window.innerHeight;
+
+                // Update the camera size based on the new canvas size
+                this.camera.width = this.canvas.width;
+                this.camera.height = this.canvas.height;
             }
 
             createPlayer() {
@@ -260,58 +272,48 @@
                 this.health = 3;
             }
 
+            updateCamera() {
+                // Follow the player within boundaries of the level
+                const player = this.camera.follow;
+                const halfWidth = this.camera.width / 2;
+                const halfHeight = this.camera.height / 2;
+
+                this.camera.x = Math.max(0, Math.min(player.x - halfWidth, this.canvas.width - this.levels[0].platforms[this.levels[0].platforms.length - 1].x - 200));
+                this.camera.y = Math.max(0, Math.min(player.y - halfHeight, this.canvas.height - 200));
+            }
+
             draw() {
-                const ctx = this.ctx;
-                const player = this.player;
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                // Update camera position
+                this.updateCamera();
 
-                ctx.fillStyle = 'gray';
+                // Draw platforms
                 this.platforms.forEach((platform) => {
-                    ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                    this.ctx.fillStyle = '#00FF00';
+                    this.ctx.fillRect(platform.x - this.camera.x, platform.y - this.camera.y, platform.width, platform.height);
                 });
 
-                ctx.fillStyle = 'gold';
-                ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+                // Draw exit
+                this.ctx.fillStyle = '#FFD700';
+                this.ctx.fillRect(this.goal.x - this.camera.x, this.goal.y - this.camera.y, this.goal.width, this.goal.height);
 
-                ctx.fillStyle = 'darkred';
-                this.spikes.forEach((spike) => {
-                    ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
+                // Draw enemies
+                this.enemies.forEach((enemy) => {
+                    this.ctx.fillStyle = '#FF0000';
+                    this.ctx.fillRect(enemy.x - this.camera.x, enemy.y - this.camera.y, enemy.width, enemy.height);
                 });
 
-                const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
-                const spriteHeight = player.sprite.height;
-
-                ctx.drawImage(
-                    player.sprite,
-                    player.frameIndex * spriteWidth,
-                    0,
-                    spriteWidth,
-                    spriteHeight,
-                    player.x,
-                    player.y,
-                    player.width,
-                    player.height
+                // Draw player
+                this.ctx.drawImage(
+                    this.player.sprite,
+                    this.player.frameIndex * 50, 0, 50, 50, 
+                    this.player.x - this.camera.x, this.player.y - this.camera.y, this.player.width, this.player.height
                 );
 
-                this.enemies.forEach((enemy) => {
-                    const enemyWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];
-                    const enemyHeight = enemy.sprite.height;
-                    ctx.drawImage(
-                        enemy.sprite,
-                        enemy.frameIndex * enemyWidth,
-                        0,
-                        enemyWidth,
-                        enemyHeight,
-                        enemy.x,
-                        enemy.y,
-                        enemy.width,
-                        enemy.height
-                    );
-                });
-
+                // Draw UI
                 this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+                this.ui.health.textContent = `Health: ♥`.repeat(this.health);
             }
 
             gameLoop() {

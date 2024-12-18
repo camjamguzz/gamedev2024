@@ -316,22 +316,30 @@
             }
 
             drawPlayer() {
-                const player = this.player;
-                const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
-                const spriteHeight = player.sprite.height;
+    const player = this.player;
 
-                this.ctx.drawImage(
-                    player.sprite,
-                    player.frameIndex * spriteWidth,
-                    0,
-                    spriteWidth,
-                    spriteHeight,
-                    player.x,
-                    player.y,
-                    player.width,
-                    player.height
-                );
-            }
+    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+        const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
+        const spriteHeight = player.sprite.height;
+
+        this.ctx.drawImage(
+            player.sprite,
+            player.frameIndex * spriteWidth,
+            0,
+            spriteWidth,
+            spriteHeight,
+            player.x,
+            player.y,
+            player.width,
+            player.height
+        );
+    } else {
+        // Draw a placeholder rectangle if the sprite fails to load
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+}
+
 
             drawEnemy(enemy) {
                 const spriteWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];

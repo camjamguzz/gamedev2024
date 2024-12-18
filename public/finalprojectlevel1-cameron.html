@@ -75,30 +75,39 @@
             }
 
             createPlayer() {
-                const playerSprite = new Image();
-                playerSprite.src = 'https://img.itch.zone/aW1nLzIyNzcxNDUucG5n/original/9wKav7.png'; // Replace with your Piskel sprite sheet
+    const playerSprite = new Image();
+    playerSprite.src = 'https://img.itch.zone/aW1nLzIyNzcxNDUucG5n/original/9wKav7.png';
 
-                return {
-                    x: 100,
-                    y: 100,
-                    width: 50,
-                    height: 50,
-                    dx: 0,
-                    dy: 0,
-                    isJumping: false,
-                    isOnGround: false,
-                    sprite: playerSprite,
-                    frameIndex: 0,
-                    tickCount: 0,
-                    animationSpeed: 5,
-                    framesPerState: {
-                        idle: 4,
-                        running: 6,
-                        jumping: 2,
-                    },
-                    currentState: 'idle',
-                };
-            }
+    playerSprite.onload = () => {
+        console.log("Player sprite loaded successfully!");
+    };
+
+    playerSprite.onerror = () => {
+        console.error("Failed to load player sprite.");
+    };
+
+    return {
+        x: 100,
+        y: 100,
+        width: 50,
+        height: 50,
+        dx: 0,
+        dy: 0,
+        isJumping: false,
+        isOnGround: false,
+        sprite: playerSprite,
+        frameIndex: 0,
+        tickCount: 0,
+        animationSpeed: 5,
+        framesPerState: {
+            idle: 4,
+            running: 6,
+            jumping: 2,
+        },
+        currentState: 'idle',
+    };
+}
+
 
             createEnemy() {
                 const enemySprite = new Image();

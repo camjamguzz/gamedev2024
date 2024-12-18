@@ -274,7 +274,8 @@
                 if (player.tickCount > player.animationSpeed) {
                     player.tickCount = 0;
                     const totalFrames = player.framesPerState[player.currentState];
-                    player.frameIndex = (player.frameIndex + 1) % totalFrames;
+                    player.frameIndex = 0; // Set to 0 for a single frame
+
                 }
             }
 

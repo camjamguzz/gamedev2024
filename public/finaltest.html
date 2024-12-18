@@ -75,30 +75,34 @@
             }
 
             createPlayer() {
-                const playerSprite = new Image();
-                playerSprite.src = 'path/to/player-sprite-sheet.png'; // Replace with your Piskel sprite sheet
+    const playerSprite = loadSprite(
+        'file:///C:/Users/1146614/Downloads/knight%20image%20for%20gamedev.png',
+        () => console.log("Player sprite loaded successfully!"),
+        () => console.error("Failed to load player sprite.")
+    );
 
-                return {
-                    x: 100,
-                    y: 100,
-                    width: 50,
-                    height: 50,
-                    dx: 0,
-                    dy: 0,
-                    isJumping: false,
-                    isOnGround: false,
-                    sprite: playerSprite,
-                    frameIndex: 0,
-                    tickCount: 0,
-                    animationSpeed: 5,
-                    framesPerState: {
-                        idle: 4,
-                        running: 6,
-                        jumping: 2,
-                    },
-                    currentState: 'idle',
-                };
-            }
+    return {
+        x: 100,
+        y: 100,
+        width: 50,
+        height: 50,
+        dx: 0,
+        dy: 0,
+        isJumping: false,
+        isOnGround: false,
+        sprite: playerSprite,
+        frameIndex: 0,
+        tickCount: 0,
+        animationSpeed: 5,
+        framesPerState: {
+            idle: 4,
+            running: 6,
+            jumping: 2,
+        },
+        currentState: 'idle',
+    };
+}
+
 
             createEnemy() {
                 const enemySprite = new Image();

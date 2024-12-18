@@ -321,28 +321,12 @@
             drawPlayer() {
     const player = this.player;
 
-    if (!player.sprite.complete || player.sprite.naturalWidth === 0) {
-        console.warn("Sprite not loaded, drawing placeholder...");
-        this.ctx.fillStyle = 'blue';
-        this.ctx.fillRect(player.x, player.y, player.width, player.height);
-    } else {
-        console.log("Drawing sprite:", player.sprite.src);
-        const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
-        const spriteHeight = player.sprite.height;
-
-        this.ctx.drawImage(
-            player.sprite,
-            player.frameIndex * spriteWidth,
-            0,
-            spriteWidth,
-            spriteHeight,
-            player.x,
-            player.y,
-            player.width,
-            player.height
-        );
-    }
+    // Draw a simple rectangle for testing
+    this.ctx.fillStyle = 'blue';
+    this.ctx.fillRect(player.x, player.y, player.width, player.height);
 }
+
+       
 
 
 

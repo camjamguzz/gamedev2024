@@ -32,6 +32,7 @@
 
         canvas {
             display: block;
+          
         }
     </style>
 </head>
@@ -347,7 +348,7 @@
                 );
             }
 
-            gameLoop() {
+            gameLoop(){
                 if (!this.levelCompleted) {
                     this.handleInput();
                     this.applyPhysics();
@@ -360,6 +361,9 @@
 
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
+                this.ctx.fillStyle = 'red';
+this.ctx.fillRect(10, 10, 50, 50);
+
             }
         }
 

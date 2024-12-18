@@ -178,6 +178,8 @@
 
             applyPhysics() {
                 const player = this.player;
+                console.log("Player position:", player.x, player.y, player.width, player.height);
+
 
                 player.dy += this.GRAVITY;
                 player.x += player.dx;

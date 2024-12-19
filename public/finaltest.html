@@ -87,8 +87,8 @@ playerSprite.onerror = () => console.error("Failed to load player sprite.");
     return {
         x: 100,
         y: 100,
-        player,width : player.height * (spriteWidth / spriteHeight),
-
+        width: 50,
+        height: 50,
         dx: 0,
         dy: 0,
         isJumping: false,
@@ -98,11 +98,10 @@ playerSprite.onerror = () => console.error("Failed to load player sprite.");
         tickCount: 0,
         animationSpeed: 5,
         framesPerState: {
-    idle: 4,    // Adjust based on your sprite sheet
-    running: 6, // Adjust based on your sprite sheet
-    jumping: 2, // Adjust based on your sprite sheet
-},
-
+            idle: 4,
+            running: 6,
+            jumping: 2,
+        },
         currentState: 'idle',
     };
 }
@@ -177,9 +176,7 @@ playerSprite.onerror = () => console.error("Failed to load player sprite.");
 
             applyPhysics() {
                 const player = this.player;
-                console.log('Player sprite dimensions:', player.sprite.naturalWidth, player.sprite.naturalHeight);
-console.log('Enemy sprite dimensions:', enemy.sprite.naturalWidth, enemy.sprite.naturalHeight);
-
+                console.log("Player position:", player.x, player.y, player.width, player.height);
 
 
                 player.dy += this.GRAVITY;
@@ -315,16 +312,17 @@ console.log('Enemy sprite dimensions:', enemy.sprite.naturalWidth, enemy.sprite.
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
                 // Update UI
-                this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ♥`.repeat(this.health);
+                this.ui.level.textContent = Level: ${this.currentLevel};
+                this.ui.health.textContent = Health: ♥.repeat(this.health);
             }
 
             drawPlayer() {
     const player = this.player;
 
-    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-        const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
-        const spriteHeight = player.sprite.naturalHeight;
+    // If the sprite image is loaded, draw it
+    if (player.sprite.complete) {
+        const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
+        const spriteHeight = player.sprite.height;
 
         this.ctx.drawImage(
             player.sprite,
@@ -334,35 +332,33 @@ console.log('Enemy sprite dimensions:', enemy.sprite.naturalWidth, enemy.sprite.
             player.width, player.height         // Destination Width, Height
         );
     } else {
+        // Fallback if the image hasn't loaded
         this.ctx.fillStyle = 'blue';
         this.ctx.fillRect(player.x, player.y, player.width, player.height);
     }
 }
 
 
-
        
 
 
 
-drawEnemy(enemy) {
-    if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
-        const spriteWidth = enemy.sprite.naturalWidth / enemy.framesPerState[enemy.currentState];
-        const spriteHeight = enemy.sprite.naturalHeight;
+            drawEnemy(enemy) {
+                const spriteWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];
+                const spriteHeight = enemy.sprite.height;
 
-        this.ctx.drawImage(
-            enemy.sprite,
-            enemy.frameIndex * spriteWidth, 0,  // Source X, Y
-            spriteWidth, spriteHeight,          // Source Width, Height
-            enemy.x, enemy.y,                   // Destination X, Y
-            enemy.width, enemy.height           // Destination Width, Height
-        );
-    } else {
-        this.ctx.fillStyle = 'red';
-        this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-    }
-}
-
+                this.ctx.drawImage(
+                    enemy.sprite,
+                    enemy.frameIndex * spriteWidth,
+                    0,
+                    spriteWidth,
+                    spriteHeight,
+                    enemy.x,
+                    enemy.y,
+                    enemy.width,
+                    enemy.height
+                );
+            }
 
             gameLoop(){
                 if (!this.levelCompleted) {

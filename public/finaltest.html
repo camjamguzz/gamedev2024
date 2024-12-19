@@ -323,10 +323,25 @@
             drawPlayer() {
     const player = this.player;
 
-    // Draw a simple rectangle for testing
-    this.ctx.fillStyle = 'blue';
-    this.ctx.fillRect(player.x, player.y, player.width, player.height);
+    // If the sprite image is loaded, draw it
+    if (player.sprite.complete) {
+        const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
+        const spriteHeight = player.sprite.height;
+
+        this.ctx.drawImage(
+            player.sprite,
+            player.frameIndex * spriteWidth, 0,  // Source X, Y
+            spriteWidth, spriteHeight,          // Source Width, Height
+            player.x, player.y,                 // Destination X, Y
+            player.width, player.height         // Destination Width, Height
+        );
+    } else {
+        // Fallback if the image hasn't loaded
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
 }
+
 
        
 

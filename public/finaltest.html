@@ -32,6 +32,7 @@
 
         canvas {
             display: block;
+          
         }
     </style>
 </head>
@@ -73,15 +74,19 @@
                 this.setupInputHandlers();
                 this.gameLoop();
             }
-            
-
 
             createPlayer() {
-    const playerSprite = loadSprite(
-        'file:///C:/Users/1146614/Downloads/knight%20image%20for%20gamedev.png',
-        () => console.log("Player sprite loaded successfully!"),
-        () => console.error("Failed to load player sprite.")
-    );
+    const playerSprite = new Image();
+    playerSprite.src = 'file:///C:/Users/1146614/Downloads/knight%20image%20for%20gamedev.png';
+
+
+    playerSprite.onload = () => {
+        console.log("Player sprite loaded successfully!");
+    };
+
+    playerSprite.onerror = () => {
+        console.error("Failed to load player sprite.");
+    };
 
     return {
         x: 100,
@@ -175,6 +180,8 @@
 
             applyPhysics() {
                 const player = this.player;
+                console.log("Player position:", player.x, player.y, player.width, player.height);
+
 
                 player.dy += this.GRAVITY;
                 player.x += player.dx;
@@ -271,7 +278,8 @@
                 if (player.tickCount > player.animationSpeed) {
                     player.tickCount = 0;
                     const totalFrames = player.framesPerState[player.currentState];
-                    player.frameIndex = (player.frameIndex + 1) % totalFrames;
+                    player.frameIndex = 0; // Set to 0 for a single frame
+
                 }
             }
 
@@ -315,24 +323,13 @@
             drawPlayer() {
     const player = this.player;
 
-    // If the sprite image is loaded, draw it
-    if (player.sprite.complete) {
-        const spriteWidth = player.sprite.width / player.framesPerState[player.currentState];
-        const spriteHeight = player.sprite.height;
-
-        this.ctx.drawImage(
-            player.sprite,
-            player.frameIndex * spriteWidth, 0,  // Source X, Y
-            spriteWidth, spriteHeight,          // Source Width, Height
-            player.x, player.y,                 // Destination X, Y
-            player.width, player.height         // Destination Width, Height
-        );
-    } else {
-        // Fallback if the image hasn't loaded
-        this.ctx.fillStyle = 'blue';
-        this.ctx.fillRect(player.x, player.y, player.width, player.height);
-    }
+    // Draw a simple rectangle for testing
+    this.ctx.fillStyle = 'blue';
+    this.ctx.fillRect(player.x, player.y, player.width, player.height);
 }
+
+       
+
 
 
             drawEnemy(enemy) {
@@ -352,7 +349,7 @@
                 );
             }
 
-            gameLoop() {
+            gameLoop(){
                 if (!this.levelCompleted) {
                     this.handleInput();
                     this.applyPhysics();
@@ -365,6 +362,9 @@
 
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
+                this.ctx.fillStyle = 'red';
+this.ctx.fillRect(10, 10, 50, 50);
+
             }
         }
 

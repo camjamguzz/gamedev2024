@@ -177,7 +177,9 @@ playerSprite.onerror = () => console.error("Failed to load player sprite.");
 
             applyPhysics() {
                 const player = this.player;
-                console.log("Player position:", player.x, player.y, player.width, player.height);
+                console.log('Player sprite dimensions:', player.sprite.naturalWidth, player.sprite.naturalHeight);
+console.log('Enemy sprite dimensions:', enemy.sprite.naturalWidth, enemy.sprite.naturalHeight);
+
 
 
                 player.dy += this.GRAVITY;

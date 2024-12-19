@@ -269,26 +269,26 @@ playerSprite.onerror = () => console.error("Failed to load player sprite.");
             }
 
             updatePlayerAnimation() {
-                const player = this.player;
-                player.tickCount++;
+    const player = this.player;
+    player.tickCount++;
 
-                if (player.tickCount > player.animationSpeed) {
-                    player.tickCount = 0;
-                    const totalFrames = player.framesPerState[player.currentState];
-                    player.frameIndex = 0; // Set to 0 for a single frame
+    if (player.tickCount >= player.animationSpeed) {
+        player.tickCount = 0;
+        const totalFrames = player.framesPerState[player.currentState];
+        player.frameIndex = (player.frameIndex + 1) % totalFrames;
+    }
+}
 
-                }
-            }
+updateEnemyAnimation(enemy) {
+    enemy.tickCount++;
 
-            updateEnemyAnimation(enemy) {
-                enemy.tickCount++;
+    if (enemy.tickCount >= enemy.animationSpeed) {
+        enemy.tickCount = 0;
+        const totalFrames = enemy.framesPerState[enemy.currentState];
+        enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
+    }
+}
 
-                if (enemy.tickCount > enemy.animationSpeed) {
-                    enemy.tickCount = 0;
-                    const totalFrames = enemy.framesPerState[enemy.currentState];
-                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
-                }
-            }
 
             draw() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -313,8 +313,9 @@ playerSprite.onerror = () => console.error("Failed to load player sprite.");
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
                 // Update UI
-                this.ui.level.textContent = Level: ${this.currentLevel};
-                this.ui.health.textContent = Health: ♥.repeat(this.health);
+                this.ui.level.textContent = `Level: ${this.currentLevel}`;
+this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+
             }
 
             drawPlayer() {

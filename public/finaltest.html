@@ -111,6 +111,13 @@ playerSprite.onerror = () => console.error("Failed to load player sprite.");
             createEnemy() {
                 const enemySprite = new Image();
                 enemySprite.src = 'https://img.craftpix.net/2017/07/2D-Fantasy-Knight-Free-Sprite-Sheets2.jpg'; // Replace with your Piskel sprite sheet
+                this.enemies = this.levels[this.currentLevel - 1].enemies.map(enemyData => {
+    const enemy = this.createEnemy();
+    enemy.x = enemyData.x;
+    enemy.y = enemyData.y;
+    return enemy;
+});
+
 
                 return {
                     x: 400,
@@ -309,16 +316,9 @@ updateEnemyAnimation(enemy) {
                     this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
                 });
 
-                this.drawPlayer();
-                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
+               
 
-                // Update UI
-                this.ui.level.textContent = `Level: ${this.currentLevel}`;
-this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
-
-            }
-
-            drawPlayer() {
+            drawPlayer() ;
     const player = this.player;
 
     if (player.sprite.complete && player.sprite.naturalWidth > 0) {

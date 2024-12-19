@@ -32,6 +32,7 @@
 
         canvas {
             display: block;
+          
         }
     </style>
 </head>
@@ -56,8 +57,8 @@
                 this.GRAVITY = 0.5;
                 this.JUMP_FORCE = -12;
                 this.PLAYER_SPEED = 5;
-                this.currentLevel = 1;
                 this.levelCompleted = false;
+                this.currentLevel = 1;
 
                 this.init(this.currentLevel);
             }
@@ -65,31 +66,64 @@
             init(level) {
                 this.player = this.createPlayer();
                 this.levels = this.createLevels();
-                this.loadLevel(level);
+                this.platforms = this.levels[this.currentLevel - 1].platforms;
+                this.goal = this.levels[this.currentLevel - 1].goal;
+                this.enemies = [this.createEnemy()]; // Add more enemies as needed
+
+                this.spikes = this.levels[this.currentLevel - 1].spikes;
                 this.setupInputHandlers();
                 this.gameLoop();
             }
 
             createPlayer() {
-                const playerSprite = new Image();
-                playerSprite.src = 'https://img.craftpix.net/2017/07/2D-Fantasy-Knight-Free-Sprite-Sheets2.jpg'; // Replace with your sprite URL
+    const playerSprite = new Image();
+    playerSprite.src = 'https://pre00.deviantart.net/abea/th/pre/i/2014/153/f/1/tall_knight_sprite_by_obinsun-d7ksqeu.png';
+
+
+    playerSprite.onload = () => console.log("Player sprite loaded successfully!");
+playerSprite.onerror = () => console.error("Failed to load player sprite.");
+
+
+    return {
+        x: 100,
+        y: 100,
+        width: 50,
+        height: 50,
+        dx: 0,
+        dy: 0,
+        isJumping: false,
+        isOnGround: false,
+        sprite: playerSprite,
+        frameIndex: 0,
+        tickCount: 0,
+        animationSpeed: 5,
+        framesPerState: {
+    idle: 4,    // Adjust based on your sprite sheet
+    running: 6, // Adjust based on your sprite sheet
+    jumping: 2, // Adjust based on your sprite sheet
+},
+
+        currentState: 'idle',
+    };
+}
+
+
+            createEnemy() {
+                const enemySprite = new Image();
+                enemySprite.src = 'https://img.craftpix.net/2017/07/2D-Fantasy-Knight-Free-Sprite-Sheets2.jpg'; // Replace with your Piskel sprite sheet
+
                 return {
-                    x: 100,
-                    y: 100,
+                    x: 400,
+                    y: 400,
                     width: 50,
                     height: 50,
-                    dx: 0,
-                    dy: 0,
-                    isJumping: false,
-                    isOnGround: false,
-                    sprite: playerSprite,
+                    sprite: enemySprite,
                     frameIndex: 0,
                     tickCount: 0,
-                    animationSpeed: 5,
+                    animationSpeed: 10,
                     framesPerState: {
-                        idle: 4,
-                        running: 6,
-                        jumping: 2,
+                        idle: 3,
+                        attacking: 4,
                     },
                     currentState: 'idle',
                 };
@@ -105,7 +139,7 @@
                         ],
                         goal: { x: 750, y: 300, width: 50, height: 50 },
                         enemies: [
-                            { x: 400, y: 500, width: 50, height: 50 },
+                            { x: 400, y: 320, width: 50, height: 20, dx: 2 },
                         ],
                         spikes: [
                             { x: 250, y: 570, width: 50, height: 10 },
@@ -113,25 +147,6 @@
                     },
                     // Add more levels here
                 ];
-            }
-
-            loadLevel(level) {
-                const newLevel = this.levels[level - 1];
-                this.platforms = newLevel.platforms;
-                this.goal = newLevel.goal;
-                this.enemies = newLevel.enemies;
-                this.spikes = newLevel.spikes;
-                this.health = 3;
-
-                this.player.x = 100;
-                this.player.y = 100;
-
-                this.updateUI();
-            }
-
-            updateUI() {
-                this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
             }
 
             setupInputHandlers() {
@@ -162,6 +177,9 @@
 
             applyPhysics() {
                 const player = this.player;
+                console.log("Player position:", player.x, player.y, player.width, player.height);
+
+
                 player.dy += this.GRAVITY;
                 player.x += player.dx;
                 player.y += player.dy;
@@ -184,10 +202,6 @@
                         player.y = platform.y - player.height;
                     }
                 });
-            }
-
-            checkCollisions() {
-                const player = this.player;
 
                 this.enemies.forEach((enemy) => {
                     if (
@@ -211,7 +225,21 @@
                     }
                 });
 
+                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+            }
+
+            takeDamage() {
+                this.health--;
+                if (this.health <= 0) {
+                    alert('Game Over!');
+                    window.location.reload();
+                }
+            }
+
+            checkGoalCollision() {
+                const player = this.player;
                 const goal = this.goal;
+
                 if (
                     player.x < goal.x + goal.width &&
                     player.x + player.width > goal.x &&
@@ -228,72 +256,38 @@
                 }
             }
 
-            takeDamage() {
-                this.health--;
-                if (this.health <= 0) {
-                    alert('Game Over!');
-                    window.location.reload();
-                }
-                this.updateUI();
+            loadLevel(level) {
+                const newLevel = this.levels[level - 1];
+                this.platforms = newLevel.platforms;
+                this.goal = newLevel.goal;
+                this.enemies = newLevel.enemies;
+                this.spikes = newLevel.spikes;
+
+                this.player.x = 100;
+                this.player.y = 500;
+                this.health = 3;
             }
 
-            draw() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-                this.ctx.fillStyle = 'gray';
-                this.platforms.forEach((platform) => {
-                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-                });
-
-                this.ctx.fillStyle = 'gold';
-                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
-
-                this.ctx.fillStyle = 'red';
-                this.spikes.forEach((spike) => {
-                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
-                });
-
-                this.drawPlayer();
-            }
-
-            drawPlayer() {
+            updatePlayerAnimation() {
                 const player = this.player;
+                player.tickCount++;
 
-                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-                    const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
-                    const spriteHeight = player.sprite.naturalHeight;
+                if (player.tickCount > player.animationSpeed) {
+                    player.tickCount = 0;
+                    const totalFrames = player.framesPerState[player.currentState];
+                    player.frameIndex = 0; // Set to 0 for a single frame
 
-                    this.ctx.drawImage(
-                        player.sprite,
-                        player.frameIndex * spriteWidth, 0,  // Source X, Y
-                        spriteWidth, spriteHeight,          // Source Width, Height
-                        player.x, player.y,                 // Destination X, Y
-                        player.width, player.height         // Destination Width, Height
-                    );
-                } else {
-                    this.ctx.fillStyle = 'blue';
-                    this.ctx.fillRect(player.x, player.y, player.width, player.height);
                 }
             }
 
-            drawEnemies() {
-                this.enemies.forEach((enemy) => {
-                    if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
-                        const spriteWidth = enemy.sprite.naturalWidth / enemy.framesPerState[enemy.currentState];
-                        const spriteHeight = enemy.sprite.naturalHeight;
+            updateEnemyAnimation(enemy) {
+                enemy.tickCount++;
 
-                        this.ctx.drawImage(
-                            enemy.sprite,
-                            enemy.frameIndex * spriteWidth, 0,  // Source X, Y
-                            spriteWidth, spriteHeight,          // Source Width, Height
-                            enemy.x, enemy.y,                   // Destination X, Y
-                            enemy.width, enemy.height           // Destination Width, Height
-                        );
-                    } else {
-                        this.ctx.fillStyle = 'red';
-                        this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-                    }
-                });
+                if (enemy.tickCount > enemy.animationSpeed) {
+                    enemy.tickCount = 0;
+                    const totalFrames = enemy.framesPerState[enemy.currentState];
+                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
+                }
             }
 
             draw() {
@@ -315,16 +309,63 @@
                     this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
                 });
 
-                // Draw player and enemies
                 this.drawPlayer();
-                this.drawEnemies();
+                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
                 // Update UI
                 this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+
             }
 
-            gameLoop() {
+            drawPlayer() {
+    const player = this.player;
+
+    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+        const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
+        const spriteHeight = player.sprite.naturalHeight;
+
+        this.ctx.drawImage(
+            player.sprite,
+            player.frameIndex * spriteWidth, 0,  // Source X, Y
+            spriteWidth, spriteHeight,          // Source Width, Height
+            player.x, player.y,                 // Destination X, Y
+            player.width, player.height         // Destination Width, Height
+        );
+    } else {
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+}
+
+
+
+       
+
+
+
+drawPlayer() {
+    const player = this.player;
+
+    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+        const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
+        const spriteHeight = player.sprite.naturalHeight;
+
+        this.ctx.drawImage(
+            player.sprite,
+            player.frameIndex * spriteWidth, 0,  // Source X, Y
+            spriteWidth, spriteHeight,          // Source Width, Height
+            player.x, player.y,                 // Destination X, Y
+            player.width, player.height         // Destination Width, Height
+        );
+    } else {
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+}
+
+
+            gameLoop(){
                 if (!this.levelCompleted) {
                     this.handleInput();
                     this.applyPhysics();
@@ -337,10 +378,13 @@
 
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
+                this.ctx.fillStyle = 'red';
+this.ctx.fillRect(10, 10, 50, 50);
+
             }
         }
 
         new Game('gameCanvas');
     </script>
 </body>
-</html>
+</html> 

@@ -32,7 +32,6 @@
 
         canvas {
             display: block;
-          
         }
     </style>
 </head>
@@ -68,58 +67,45 @@
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
                 this.goal = this.levels[this.currentLevel - 1].goal;
-                this.enemies = [this.createEnemy()]; // Add more enemies as needed
-
+                this.enemies = this.createEnemies(this.levels[this.currentLevel - 1].enemies);
                 this.spikes = this.levels[this.currentLevel - 1].spikes;
+
                 this.setupInputHandlers();
                 this.gameLoop();
             }
 
             createPlayer() {
-    const playerSprite = new Image();
-    playerSprite.src = 'file:///C:/Users/1146614/Downloads/knight%20image%20for%20gamedev.png';
-
-
-    playerSprite.onload = () => {
-        console.log("Player sprite loaded successfully!");
-    };
-
-    playerSprite.onerror = () => {
-        console.error("Failed to load player sprite.");
-    };
-
-    return {
-        x: 100,
-        y: 100,
-        width: 50,
-        height: 50,
-        dx: 0,
-        dy: 0,
-        isJumping: false,
-        isOnGround: false,
-        sprite: playerSprite,
-        frameIndex: 0,
-        tickCount: 0,
-        animationSpeed: 5,
-        framesPerState: {
-            idle: 4,
-            running: 6,
-            jumping: 2,
-        },
-        currentState: 'idle',
-    };
-}
-
-
-            createEnemy() {
-                const enemySprite = new Image();
-                enemySprite.src = 'path/to/enemy-sprite-sheet.png'; // Replace with your Piskel sprite sheet
+                const playerSprite = new Image();
+                playerSprite.src = 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/67ac9192-773b-4a2c-86a5-22816e03bb10/d7ksrh7-f08c7afb-42f2-4e34-be06-824b49996a6b.png/v1/fill/w_1024,h_1304,q_80,strp/16x16_knight_sprite_by_obinsun_d7ksrh7-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTMwNCIsInBhdGgiOiJcL2ZcLzY3YWM5MTkyLTc3M2ItNGEyYy04NmE1LTIyODE2ZTAzYmIxMFwvZDdrc3JoNy1mMDhjN2FmYi00MmYyLTRlMzQtYmUwNi04MjRiNDk5OTZhNmIucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.cAjej9HBzexg2K4dkenXDxW4v3Kpau8gJ6jRPgEqN00'; // Replace with a valid sprite path
 
                 return {
-                    x: 400,
-                    y: 400,
+                    x: 100,
+                    y: 500,
                     width: 50,
                     height: 50,
+                    dx: 0,
+                    dy: 0,
+                    isJumping: false,
+                    isOnGround: false,
+                    sprite: playerSprite,
+                    frameIndex: 0,
+                    tickCount: 0,
+                    animationSpeed: 5,
+                    framesPerState: {
+                        idle: 4,
+                        running: 6,
+                        jumping: 2,
+                    },
+                    currentState: 'idle',
+                };
+            }
+
+            createEnemies(enemies) {
+                const enemySprite = new Image();
+                enemySprite.src = 'path/to/enemy_sprite.png'; // Replace with a valid sprite path
+
+                return enemies.map(enemy => ({
+                    ...enemy,
                     sprite: enemySprite,
                     frameIndex: 0,
                     tickCount: 0,
@@ -129,7 +115,7 @@
                         attacking: 4,
                     },
                     currentState: 'idle',
-                };
+                }));
             }
 
             createLevels() {
@@ -180,8 +166,6 @@
 
             applyPhysics() {
                 const player = this.player;
-                console.log("Player position:", player.x, player.y, player.width, player.height);
-
 
                 player.dy += this.GRAVITY;
                 player.x += player.dx;
@@ -206,29 +190,17 @@
                     }
                 });
 
-                this.enemies.forEach((enemy) => {
-                    if (
-                        player.x < enemy.x + enemy.width &&
-                        player.x + player.width > enemy.x &&
-                        player.y < enemy.y + enemy.height &&
-                        player.y + player.height > enemy.y
-                    ) {
-                        this.takeDamage();
-                    }
-                });
-
-                this.spikes.forEach((spike) => {
-                    if (
-                        player.x < spike.x + spike.width &&
-                        player.x + player.width > spike.x &&
-                        player.y < spike.y + spike.height &&
-                        player.y + player.height > spike.y
-                    ) {
-                        this.takeDamage();
-                    }
-                });
-
                 player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+            }
+
+            updateEnemies() {
+                this.enemies.forEach((enemy) => {
+                    enemy.x += enemy.dx;
+
+                    if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
+                        enemy.dx *= -1;
+                    }
+                });
             }
 
             takeDamage() {
@@ -261,9 +233,10 @@
 
             loadLevel(level) {
                 const newLevel = this.levels[level - 1];
+                this.levelCompleted = false;
                 this.platforms = newLevel.platforms;
                 this.goal = newLevel.goal;
-                this.enemies = newLevel.enemies;
+                this.enemies = this.createEnemies(newLevel.enemies);
                 this.spikes = newLevel.spikes;
 
                 this.player.x = 100;
@@ -271,42 +244,17 @@
                 this.health = 3;
             }
 
-            updatePlayerAnimation() {
-                const player = this.player;
-                player.tickCount++;
-
-                if (player.tickCount > player.animationSpeed) {
-                    player.tickCount = 0;
-                    const totalFrames = player.framesPerState[player.currentState];
-                    player.frameIndex = 0; // Set to 0 for a single frame
-
-                }
-            }
-
-            updateEnemyAnimation(enemy) {
-                enemy.tickCount++;
-
-                if (enemy.tickCount > enemy.animationSpeed) {
-                    enemy.tickCount = 0;
-                    const totalFrames = enemy.framesPerState[enemy.currentState];
-                    enemy.frameIndex = (enemy.frameIndex + 1) % totalFrames;
-                }
-            }
-
             draw() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Draw platforms
                 this.ctx.fillStyle = 'gray';
                 this.platforms.forEach((platform) => {
                     this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 });
 
-                // Draw goal
                 this.ctx.fillStyle = 'gold';
                 this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-                // Draw spikes
                 this.ctx.fillStyle = 'darkred';
                 this.spikes.forEach((spike) => {
                     this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
@@ -315,56 +263,56 @@
                 this.drawPlayer();
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                // Update UI
                 this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ♥`.repeat(this.health);
+                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
             }
 
             drawPlayer() {
-    const player = this.player;
+                const player = this.player;
 
-    // Draw a simple rectangle for testing
-    this.ctx.fillStyle = 'blue';
-    this.ctx.fillRect(player.x, player.y, player.width, player.height);
-}
+                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+                    const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
+                    const spriteHeight = player.sprite.naturalHeight;
 
-       
-
-
-
-            drawEnemy(enemy) {
-                const spriteWidth = enemy.sprite.width / enemy.framesPerState[enemy.currentState];
-                const spriteHeight = enemy.sprite.height;
-
-                this.ctx.drawImage(
-                    enemy.sprite,
-                    enemy.frameIndex * spriteWidth,
-                    0,
-                    spriteWidth,
-                    spriteHeight,
-                    enemy.x,
-                    enemy.y,
-                    enemy.width,
-                    enemy.height
-                );
+                    this.ctx.drawImage(
+                        player.sprite,
+                        player.frameIndex * spriteWidth, 0,
+                        spriteWidth, spriteHeight,
+                        player.x, player.y,
+                        player.width, player.height
+                    );
+                } else {
+                    this.ctx.fillStyle = 'blue';
+                    this.ctx.fillRect(player.x, player.y, player.width, player.height);
+                }
             }
 
-            gameLoop(){
-                if (!this.levelCompleted) {
-                    this.handleInput();
-                    this.applyPhysics();
-                    this.checkGoalCollision();
-                    this.updatePlayerAnimation();
-                    this.enemies.forEach((enemy) => this.updateEnemyAnimation(enemy));
+            drawEnemy(enemy) {
+                if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
+                    const spriteWidth = enemy.sprite.naturalWidth / enemy.framesPerState[enemy.currentState];
+                    const spriteHeight = enemy.sprite.naturalHeight;
+
+                    this.ctx.drawImage(
+                        enemy.sprite,
+                        enemy.frameIndex * spriteWidth, 0,
+                        spriteWidth, spriteHeight,
+                        enemy.x, enemy.y,
+                        enemy.width, enemy.height
+                    );
                 } else {
-                    this.loadLevel(this.currentLevel + 1);
+                    this.ctx.fillStyle = 'red';
+                    this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
                 }
+            }
+
+            gameLoop() {
+                this.handleInput();
+                this.applyPhysics();
+                this.updateEnemies();
+                this.checkGoalCollision();
 
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
-                this.ctx.fillStyle = 'red';
-this.ctx.fillRect(10, 10, 50, 50);
-
             }
         }
 

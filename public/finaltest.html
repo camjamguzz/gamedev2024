@@ -80,13 +80,9 @@
     playerSprite.src = 'file:///C:/Users/1146614/Downloads/knight%20image%20for%20gamedev.png';
 
 
-    playerSprite.onload = () => {
-        console.log("Player sprite loaded successfully!");
-    };
+    playerSprite.onload = () => console.log("Player sprite loaded successfully!");
+playerSprite.onerror = () => console.error("Failed to load player sprite.");
 
-    playerSprite.onerror = () => {
-        console.error("Failed to load player sprite.");
-    };
 
     return {
         x: 100,

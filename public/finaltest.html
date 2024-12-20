@@ -163,14 +163,10 @@ canvas {
 
     if (this.keys.has('ArrowLeft') || this.keys.has('ArrowRight')) {
         player.dx = this.keys.has('ArrowLeft') ? -this.PLAYER_SPEED : this.PLAYER_SPEED;
-        if (player.isOnGround) {
-            player.currentState = 'running';
-        }
+        player.currentState = player.isOnGround ? 'running' : 'jumping';
     } else {
         player.dx = 0;
-        if (player.isOnGround) {
-            player.currentState = 'idle';
-        }
+        player.currentState = player.isOnGround ? 'idle' : 'jumping';
     }
 
     if (this.keys.has('ArrowUp') && player.isOnGround) {
@@ -180,7 +176,6 @@ canvas {
     }
 }
 
-
 applyPhysics() {
     const player = this.player;
 
@@ -188,20 +183,15 @@ applyPhysics() {
     player.x += player.dx;
     player.y += player.dy;
 
-    // Collision with ground
+    // Check ground collision
     if (player.y > this.canvas.height - player.height) {
         player.y = this.canvas.height - player.height;
         player.dy = 0;
         player.isOnGround = true;
-
-        if (player.dx === 0) {
-            player.currentState = 'idle';
-        } else {
-            player.currentState = 'running';
-        }
+        player.currentState = player.dx === 0 ? 'idle' : 'running';
     }
 
-    // Collision with platforms
+    // Check platform collision
     this.platforms.forEach((platform) => {
         if (
             player.x < platform.x + platform.width &&
@@ -212,17 +202,13 @@ applyPhysics() {
             player.dy = 0;
             player.isOnGround = true;
             player.y = platform.y - player.height;
-
-            if (player.dx === 0) {
-                player.currentState = 'idle';
-            } else {
-                player.currentState = 'running';
-            }
+            player.currentState = player.dx === 0 ? 'idle' : 'running';
         }
     });
 
     player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
 }
+
 
 
             updateEnemies() {

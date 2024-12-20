@@ -159,54 +159,71 @@ canvas {
             }
 
             handleInput() {
-                const player = this.player;
+    const player = this.player;
 
-                if (this.keys.has('ArrowLeft')) {
-                    player.dx = -this.PLAYER_SPEED;
-                    player.currentState = 'running';
-                } else if (this.keys.has('ArrowRight')) {
-                    player.dx = this.PLAYER_SPEED;
-                    player.currentState = 'running';
-                } else {
-                    player.dx = 0;
-                    player.currentState = 'idle';
-                }
+    if (this.keys.has('ArrowLeft') || this.keys.has('ArrowRight')) {
+        player.dx = this.keys.has('ArrowLeft') ? -this.PLAYER_SPEED : this.PLAYER_SPEED;
+        if (player.isOnGround) {
+            player.currentState = 'running';
+        }
+    } else {
+        player.dx = 0;
+        if (player.isOnGround) {
+            player.currentState = 'idle';
+        }
+    }
 
-                if (this.keys.has('ArrowUp') && player.isOnGround) {
-                    player.dy = this.JUMP_FORCE;
-                    player.isOnGround = false;
-                    player.currentState = 'jumping';
-                }
+    if (this.keys.has('ArrowUp') && player.isOnGround) {
+        player.dy = this.JUMP_FORCE;
+        player.isOnGround = false;
+        player.currentState = 'jumping';
+    }
+}
+
+
+applyPhysics() {
+    const player = this.player;
+
+    player.dy += this.GRAVITY;
+    player.x += player.dx;
+    player.y += player.dy;
+
+    // Collision with ground
+    if (player.y > this.canvas.height - player.height) {
+        player.y = this.canvas.height - player.height;
+        player.dy = 0;
+        player.isOnGround = true;
+
+        if (player.dx === 0) {
+            player.currentState = 'idle';
+        } else {
+            player.currentState = 'running';
+        }
+    }
+
+    // Collision with platforms
+    this.platforms.forEach((platform) => {
+        if (
+            player.x < platform.x + platform.width &&
+            player.x + player.width > platform.x &&
+            player.y + player.height <= platform.y &&
+            player.y + player.height + player.dy >= platform.y
+        ) {
+            player.dy = 0;
+            player.isOnGround = true;
+            player.y = platform.y - player.height;
+
+            if (player.dx === 0) {
+                player.currentState = 'idle';
+            } else {
+                player.currentState = 'running';
             }
+        }
+    });
 
-            applyPhysics() {
-                const player = this.player;
+    player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+}
 
-                player.dy += this.GRAVITY;
-                player.x += player.dx;
-                player.y += player.dy;
-
-                if (player.y > this.canvas.height - player.height) {
-                    player.y = this.canvas.height - player.height;
-                    player.dy = 0;
-                    player.isOnGround = true;
-                }
-
-                this.platforms.forEach((platform) => {
-                    if (
-                        player.x < platform.x + platform.width &&
-                        player.x + player.width > platform.x &&
-                        player.y + player.height <= platform.y &&
-                        player.y + player.height + player.dy >= platform.y
-                    ) {
-                        player.dy = 0;
-                        player.isOnGround = true;
-                        player.y = platform.y - player.height;
-                    }
-                });
-
-                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
-            }
 
             updateEnemies() {
                 this.enemies.forEach((enemy) => {

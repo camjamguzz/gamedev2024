@@ -78,6 +78,11 @@
     const playerSprite = new Image();
     playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Static sprite
 
+    // Make sure to return a promise to handle the image load
+    playerSprite.onload = () => {
+        console.log('Player image loaded');
+    };
+
     return {
         x: 100,
         y: 500,
@@ -90,6 +95,7 @@
         sprite: playerSprite,
     };
 }
+
 
 
 

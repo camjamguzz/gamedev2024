@@ -190,19 +190,17 @@
                     }
                 });
 
-                // Check for spike collisions
-                this.spikes.forEach((spike) => {
-                    if (
-                        player.x < spike.x + spike.width &&
-                        player.x + player.width > spike.x &&
-                        player.y < spike.y + spike.height &&
-                        player.y + player.height > spike.y
-                    ) {
-                        this.takeDamage(); // Damage player if collision occurs with spike
+                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+            }
+
+            updateEnemies() {
+                this.enemies.forEach((enemy) => {
+                    enemy.x += enemy.dx;
+
+                    if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
+                        enemy.dx *= -1;
                     }
                 });
-
-                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
             }
 
             takeDamage() {

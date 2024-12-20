@@ -302,29 +302,32 @@ applyPhysics() {
             drawPlayer() {
     const player = this.player;
 
+    // Ensure the sprite is loaded and ready
     if (player.sprite.complete && player.sprite.naturalWidth > 0) {
         const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
         const spriteHeight = player.sprite.naturalHeight;
 
-        const scaledSpriteWidth = player.width;  // Scale sprite to match player width
-        const scaledSpriteHeight = player.height;  // Scale sprite to match player height
-
-        const offsetX = (player.width - scaledSpriteWidth) / 2; // Center horizontally
-        const offsetY = (player.height - scaledSpriteHeight) / 2; // Center vertically
-
         this.ctx.drawImage(
             player.sprite,
-            player.frameIndex * spriteWidth, 0, // Source x, y
-            spriteWidth, spriteHeight,          // Source width, height
-            player.x + offsetX, player.y + offsetY, // Destination x, y (adjusted for centering)
-            scaledSpriteWidth, scaledSpriteHeight // Destination width, height
+            player.frameIndex * spriteWidth, 0,  // Frame position in sprite sheet
+            spriteWidth, spriteHeight,          // Dimensions of the frame
+            player.x, player.y,                 // Position on canvas
+            player.width, player.height         // Scaled dimensions on canvas
         );
+
+        // Update animation frame
+        player.tickCount++;
+        if (player.tickCount > player.animationSpeed) {
+            player.tickCount = 0;
+            player.frameIndex = (player.frameIndex + 1) % player.framesPerState[player.currentState];
+        }
     } else {
-        // Fallback if sprite is not loaded
+        // Fallback: Draw a rectangle as a placeholder
         this.ctx.fillStyle = 'blue';
         this.ctx.fillRect(player.x, player.y, player.width, player.height);
     }
 }
+
 
 
             drawEnemy(enemy) {

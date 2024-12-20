@@ -76,30 +76,24 @@
 
             createPlayer() {
                 const playerSprite = new Image();
-                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png';
+                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Static sprite
 
+                // Make sure to return a promise to handle the image load
+                playerSprite.onload = () => {
+                    console.log('Player image loaded');
+                };
 
                 return {
-    x: 100,
-    y: 500,
-    width: 50, // Match this with sprite's intended width
-    height: 50, // Match this with sprite's intended height
-    dx: 0,
-    dy: 0,
-    isJumping: false,
-    isOnGround: false,
-    sprite: playerSprite,
-    frameIndex: 0,
-    tickCount: 0,
-    animationSpeed: 5,
-    framesPerState: {
-        idle: 4,
-        running: 6,
-        jumping: 2,
-    },
-    currentState: 'idle',
-};
-
+                    x: 100,
+                    y: 500,
+                    width: 50,  // Fixed width of 50
+                    height: 50, // Fixed height of 50
+                    dx: 0,
+                    dy: 0,
+                    isJumping: false,
+                    isOnGround: false,
+                    sprite: playerSprite,
+                };
             }
 
             createEnemies(enemies) {
@@ -270,36 +264,25 @@
             }
 
             drawPlayer() {
-    const player = this.player;
+                const player = this.player;
 
-    // Check if the sprite is loaded before drawing
-    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-        const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
-        const spriteHeight = player.sprite.naturalHeight;
+                // Log to check image and player position
+                console.log(player.sprite.complete, player.sprite.naturalWidth);
 
-        // Center the sprite inside the player's rectangle
-        const offsetX = (player.width - spriteWidth) / 2;
-        const offsetY = (player.height - spriteHeight) / 2;
-
-        this.ctx.drawImage(
-            player.sprite,
-            player.frameIndex * spriteWidth, // Start of the current frame in the sprite sheet
-            0, // Vertical offset in the sprite sheet
-            spriteWidth, spriteHeight, // Size of the frame in the sprite sheet
-            player.x + offsetX, player.y + offsetY, // Render position on canvas
-            spriteWidth, spriteHeight // Size on the canvas
-        );
-    } else {
-        // Fallback: Render a rectangle if the sprite is not loaded
-        this.ctx.fillStyle = 'blue';
-        this.ctx.fillRect(player.x, player.y, player.width, player.height);
-    }
-
-    // Update animation frame
-    this.updateAnimationFrame(player);
-}
-
-
+                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+                    // Draw the player image as 50x50 pixels
+                    this.ctx.drawImage(
+                        player.sprite,
+                        player.x, player.y, // Position on canvas
+                        50, 50 // Fixed size of 50x50
+                    );
+                } else {
+                    console.log('Player image not loaded or invalid');
+                    // Fallback to drawing a rectangle if the image is not loaded
+                    this.ctx.fillStyle = 'blue';
+                    this.ctx.fillRect(player.x, player.y, 50, 50); // Fallback size 50x50
+                }
+            }
 
             drawEnemy(enemy) {
                 if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {

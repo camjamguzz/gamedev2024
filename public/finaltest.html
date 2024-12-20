@@ -160,12 +160,15 @@ canvas {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
             }
-
+            
             handleInput() {
     const player = this.player;
 
-    if (this.keys.has('ArrowLeft') || this.keys.has('ArrowRight')) {
-        player.dx = this.keys.has('ArrowLeft') ? -this.PLAYER_SPEED : this.PLAYER_SPEED;
+    if (this.keys.has('ArrowLeft')) {
+        player.dx = -this.PLAYER_SPEED;
+        player.currentState = player.isOnGround ? 'running' : 'jumping';
+    } else if (this.keys.has('ArrowRight')) {
+        player.dx = this.PLAYER_SPEED;
         player.currentState = player.isOnGround ? 'running' : 'jumping';
     } else {
         player.dx = 0;
@@ -178,6 +181,7 @@ canvas {
         player.currentState = 'jumping';
     }
 }
+
 
 applyPhysics() {
     const player = this.player;

@@ -75,30 +75,32 @@
             }
 
             createPlayer() {
-                const playerSprite = new Image();
-                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Replace with a valid sprite path
+    const playerSprite = new Image();
+    playerSprite.src = 'https://example.com/path-to-sprite.png'; // Replace with a valid sprite URL
+    playerSprite.onload = () => console.log('Player sprite loaded.');
 
-                return {
-                    x: 100,
-                    y: 500,
-                    width: 70,
-                    height: 50,
-                    dx: 0,
-                    dy: 0,
-                    isJumping: false,
-                    isOnGround: false,
-                    sprite: playerSprite,
-                    frameIndex: 0,
-                    tickCount: 0,
-                    animationSpeed: 5,
-                    framesPerState: {
-                        idle: 4,
-                        running: 6,
-                        jumping: 2,
-                    },
-                    currentState: 'idle',
-                };
-            }
+    return {
+        x: 100,
+        y: 500,
+        width: 70,
+        height: 50,
+        dx: 0,
+        dy: 0,
+        isJumping: false,
+        isOnGround: false,
+        sprite: playerSprite,
+        frameIndex: 0,
+        tickCount: 0,
+        animationSpeed: 5,
+        framesPerState: {
+            idle: 4,
+            running: 6,
+            jumping: 2,
+        },
+        currentState: 'idle',
+    };
+}
+
 
             createEnemies(enemies) {
                 const enemySprite = new Image();

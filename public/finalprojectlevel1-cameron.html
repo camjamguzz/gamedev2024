@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>parkour knight</title>
+    <title>Parkour Knight</title>
     <style>
         body {
             margin: 0;
@@ -33,6 +33,34 @@
         canvas {
             display: block;
         }
+
+        /* Game Over Screen Styles */
+        #gameOverScreen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding-top: 200px;
+            font-size: 24px;
+        }
+
+        #gameOverScreen button {
+            background-color: #ff6347;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #gameOverScreen button:hover {
+            background-color: #ff4500;
+        }
     </style>
 </head>
 <body>
@@ -41,6 +69,12 @@
         <div id="healthDisplay">Health: ♥♥♥</div>
     </div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen">
+        <p>You Lost! Game Over</p>
+        <button id="respawnButton">Respawn</button>
+    </div>
+
     <script>
         class Game {
             constructor(canvasId) {
@@ -62,6 +96,11 @@
                 // Damage cooldown in milliseconds
                 this.damageCooldown = 1000;
                 this.lastDamageTime = 0;
+
+                this.gameOverScreen = document.getElementById('gameOverScreen');
+                this.respawnButton = document.getElementById('respawnButton');
+
+                this.respawnButton.addEventListener('click', () => this.respawn());
 
                 this.init(this.currentLevel);
             }
@@ -209,10 +248,20 @@
                     this.health--;
                     this.lastDamageTime = currentTime;
                     if (this.health <= 0) {
-                        alert('Game Over!');
-                        window.location.reload();
+                        this.showGameOver();
                     }
                 }
+            }
+
+            showGameOver() {
+                this.gameOverScreen.style.display = 'flex';
+            }
+
+            respawn() {
+                this.gameOverScreen.style.display = 'none';  // Hide the game over screen
+                this.health = 3;  // Reset health
+                this.currentLevel = 1;  // Go back to first level
+                this.init(this.currentLevel);  // Restart the game
             }
 
             checkGoalCollision() {
@@ -302,19 +351,13 @@
             drawPlayer() {
                 const player = this.player;
 
-                // Log to check image and player position
-                console.log(player.sprite.complete, player.sprite.naturalWidth);
-
                 if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-                    // Draw the player image as 50x50 pixels
                     this.ctx.drawImage(
                         player.sprite,
                         player.x, player.y, // Position on canvas
                         50, 50 // Fixed size of 50x50
                     );
                 } else {
-                    console.log('Player image not loaded or invalid');
-                    // Fallback to drawing a rectangle if the image is not loaded
                     this.ctx.fillStyle = 'blue';
                     this.ctx.fillRect(player.x, player.y, 50, 50); // Fallback size 50x50
                 }
@@ -343,8 +386,8 @@
                 this.applyPhysics();
                 this.updateEnemies();
                 this.checkGoalCollision();
-                this.checkSpikesCollision();  // Check for spike collision
-                this.checkEnemyCollision();  // Check for enemy collision
+                this.checkSpikesCollision();
+                this.checkEnemyCollision();
 
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());

@@ -294,11 +294,8 @@ applyPhysics() {
 }
 
 
-            drawPlayer() {
+drawPlayer() {
     const player = this.player;
-
-    const fixedX = 100; // Fixed X position where the player image will always appear
-    const fixedY = this.canvas.height - player.height - 50; // Fixed Y position (adjust as needed)
 
     if (player.sprite.complete && player.sprite.naturalWidth > 0) {
         const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
@@ -306,16 +303,21 @@ applyPhysics() {
 
         this.ctx.drawImage(
             player.sprite,
-            player.frameIndex * spriteWidth, 0,
+            player.frameIndex * spriteWidth, 0, // Select the current animation frame
             spriteWidth, spriteHeight,
-            fixedX, fixedY,
+            player.x, player.y, // Render at player's position
             player.width, player.height
         );
     } else {
+        // Fallback in case the sprite doesn't load
         this.ctx.fillStyle = 'blue';
-        this.ctx.fillRect(fixedX, fixedY, player.width, player.height);
+        this.ctx.fillRect(player.x, player.y, player.width, player.height);
     }
+
+    // Update animation frame
+    this.updateAnimationFrame(player);
 }
+
 
 
 

@@ -160,7 +160,7 @@ canvas {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
             }
-            
+
             handleInput() {
     const player = this.player;
 
@@ -186,11 +186,11 @@ canvas {
 applyPhysics() {
     const player = this.player;
 
-    player.dy += this.GRAVITY;
+    player.dy += this.GRAVITY; // Apply gravity
     player.x += player.dx;
     player.y += player.dy;
 
-    // Check ground collision
+    // Check for ground collision
     if (player.y > this.canvas.height - player.height) {
         player.y = this.canvas.height - player.height;
         player.dy = 0;
@@ -198,7 +198,7 @@ applyPhysics() {
         player.currentState = player.dx === 0 ? 'idle' : 'running';
     }
 
-    // Check platform collision
+    // Check for platform collision
     this.platforms.forEach((platform) => {
         if (
             player.x < platform.x + platform.width &&
@@ -209,12 +209,13 @@ applyPhysics() {
             player.dy = 0;
             player.isOnGround = true;
             player.y = platform.y - player.height;
-            player.currentState = player.dx === 0 ? 'idle' : 'running';
         }
     });
 
+    // Prevent the player from going off-screen
     player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
 }
+
 
 
 

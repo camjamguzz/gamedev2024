@@ -266,27 +266,33 @@ applyPhysics() {
             }
 
             draw() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                this.ctx.fillStyle = 'gray';
-                this.platforms.forEach((platform) => {
-                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-                });
+    // Determine camera offset based on player position
+    const cameraOffsetX = this.player.x - 100; // Keep player near the center
 
-                this.ctx.fillStyle = 'gold';
-                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+    this.ctx.fillStyle = 'gray';
+    this.platforms.forEach((platform) => {
+        this.ctx.fillRect(platform.x - cameraOffsetX, platform.y, platform.width, platform.height);
+    });
 
-                this.ctx.fillStyle = 'darkred';
-                this.spikes.forEach((spike) => {
-                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
-                });
+    this.ctx.fillStyle = 'gold';
+    this.ctx.fillRect(this.goal.x - cameraOffsetX, this.goal.y, this.goal.width, this.goal.height);
 
-                this.drawPlayer();
-                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
+    this.ctx.fillStyle = 'darkred';
+    this.spikes.forEach((spike) => {
+        this.ctx.fillRect(spike.x - cameraOffsetX, spike.y, spike.width, spike.height);
+    });
 
-                this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
-            }
+    this.drawPlayer(); // Player always rendered at fixed position
+    this.enemies.forEach((enemy) => {
+        this.drawEnemy({ ...enemy, x: enemy.x - cameraOffsetX });
+    });
+
+    this.ui.level.textContent = `Level: ${this.currentLevel}`;
+    this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+}
+
 
             drawPlayer() {
     const player = this.player;

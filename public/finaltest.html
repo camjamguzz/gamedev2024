@@ -30,22 +30,9 @@
             font-size: 14px;
         }
 
-        body {
-    margin: 0;
-    display: grid;
-    place-items: center;
-    height: 100vh;
-    background-color: black;
-    overflow: hidden;
-}
-
-canvas {
-    background: black;
-    border: 2px solid white;
-    display: block;
-}
-
-
+        canvas {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -88,35 +75,30 @@ canvas {
             }
 
             createPlayer() {
-    const playerSprite = new Image();
-    playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Replace with a valid sprite path
+                const playerSprite = new Image();
+                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Replace with a valid sprite path
 
-    playerSprite.onload = () => console.log('Player sprite loaded successfully');
-    playerSprite.onerror = () => console.error('Error loading player sprite');
-
-    return {
-        x: 100,
-        y: 500,
-        width: 70,
-        height: 50,
-        dx: 0,
-        dy: 0,
-        isJumping: false,
-        isOnGround: false,
-        sprite: playerSprite,
-        frameIndex: 0,
-        tickCount: 0,
-        animationSpeed: 5,
-        framesPerState: {
-            idle: 4,
-            running: 6,
-            jumping: 2,
-        },
-        currentState: 'idle',
-    };
-}
-
-
+                return {
+                    x: 100,
+                    y: 500,
+                    width: 70,
+                    height: 50,
+                    dx: 0,
+                    dy: 0,
+                    isJumping: false,
+                    isOnGround: false,
+                    sprite: playerSprite,
+                    frameIndex: 0,
+                    tickCount: 0,
+                    animationSpeed: 5,
+                    framesPerState: {
+                        idle: 4,
+                        running: 6,
+                        jumping: 2,
+                    },
+                    currentState: 'idle',
+                };
+            }
 
             createEnemies(enemies) {
                 const enemySprite = new Image();
@@ -162,62 +144,54 @@ canvas {
             }
 
             handleInput() {
-    const player = this.player;
+                const player = this.player;
 
-    if (this.keys.has('ArrowLeft')) {
-        player.dx = -this.PLAYER_SPEED;
-        player.currentState = player.isOnGround ? 'running' : 'jumping';
-    } else if (this.keys.has('ArrowRight')) {
-        player.dx = this.PLAYER_SPEED;
-        player.currentState = player.isOnGround ? 'running' : 'jumping';
-    } else {
-        player.dx = 0;
-        player.currentState = player.isOnGround ? 'idle' : 'jumping';
-    }
+                if (this.keys.has('ArrowLeft')) {
+                    player.dx = -this.PLAYER_SPEED;
+                    player.currentState = 'running';
+                } else if (this.keys.has('ArrowRight')) {
+                    player.dx = this.PLAYER_SPEED;
+                    player.currentState = 'running';
+                } else {
+                    player.dx = 0;
+                    player.currentState = 'idle';
+                }
 
-    if (this.keys.has('ArrowUp') && player.isOnGround) {
-        player.dy = this.JUMP_FORCE;
-        player.isOnGround = false;
-        player.currentState = 'jumping';
-    }
-}
+                if (this.keys.has('ArrowUp') && player.isOnGround) {
+                    player.dy = this.JUMP_FORCE;
+                    player.isOnGround = false;
+                    player.currentState = 'jumping';
+                }
+            }
 
+            applyPhysics() {
+                const player = this.player;
 
-applyPhysics() {
-    const player = this.player;
+                player.dy += this.GRAVITY;
+                player.x += player.dx;
+                player.y += player.dy;
 
-    player.dy += this.GRAVITY; // Apply gravity
-    player.x += player.dx;
-    player.y += player.dy;
+                if (player.y > this.canvas.height - player.height) {
+                    player.y = this.canvas.height - player.height;
+                    player.dy = 0;
+                    player.isOnGround = true;
+                }
 
-    // Check for ground collision
-    if (player.y > this.canvas.height - player.height) {
-        player.y = this.canvas.height - player.height;
-        player.dy = 0;
-        player.isOnGround = true;
-        player.currentState = player.dx === 0 ? 'idle' : 'running';
-    }
+                this.platforms.forEach((platform) => {
+                    if (
+                        player.x < platform.x + platform.width &&
+                        player.x + player.width > platform.x &&
+                        player.y + player.height <= platform.y &&
+                        player.y + player.height + player.dy >= platform.y
+                    ) {
+                        player.dy = 0;
+                        player.isOnGround = true;
+                        player.y = platform.y - player.height;
+                    }
+                });
 
-    // Check for platform collision
-    this.platforms.forEach((platform) => {
-        if (
-            player.x < platform.x + platform.width &&
-            player.x + player.width > platform.x &&
-            player.y + player.height <= platform.y &&
-            player.y + player.height + player.dy >= platform.y
-        ) {
-            player.dy = 0;
-            player.isOnGround = true;
-            player.y = platform.y - player.height;
-        }
-    });
-
-    // Prevent the player from going off-screen
-    player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
-}
-
-
-
+                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+            }
 
             updateEnemies() {
                 this.enemies.forEach((enemy) => {
@@ -271,61 +245,47 @@ applyPhysics() {
             }
 
             draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Determine camera offset based on player position
-    const cameraOffsetX = this.player.x - 100; // Keep player near the center
+                this.ctx.fillStyle = 'gray';
+                this.platforms.forEach((platform) => {
+                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                });
 
-    this.ctx.fillStyle = 'gray';
-    this.platforms.forEach((platform) => {
-        this.ctx.fillRect(platform.x - cameraOffsetX, platform.y, platform.width, platform.height);
-    });
+                this.ctx.fillStyle = 'gold';
+                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-    this.ctx.fillStyle = 'gold';
-    this.ctx.fillRect(this.goal.x - cameraOffsetX, this.goal.y, this.goal.width, this.goal.height);
+                this.ctx.fillStyle = 'darkred';
+                this.spikes.forEach((spike) => {
+                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
+                });
 
-    this.ctx.fillStyle = 'darkred';
-    this.spikes.forEach((spike) => {
-        this.ctx.fillRect(spike.x - cameraOffsetX, spike.y, spike.width, spike.height);
-    });
+                this.drawPlayer();
+                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-    this.drawPlayer(); // Player always rendered at fixed position
-    this.enemies.forEach((enemy) => {
-        this.drawEnemy({ ...enemy, x: enemy.x - cameraOffsetX });
-    });
+                this.ui.level.textContent = Level: ${this.currentLevel};
+                this.ui.health.textContent = Health: ${'♥'.repeat(this.health)};
+            }
 
-    this.ui.level.textContent = `Level: ${this.currentLevel}`;
-    this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
-}
+            drawPlayer() {
+                const player = this.player;
 
+                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+                    const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
+                    const spriteHeight = player.sprite.naturalHeight;
 
-drawPlayer() {
-    const player = this.player;
-
-    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-        const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
-        const spriteHeight = player.sprite.naturalHeight;
-
-        this.ctx.drawImage(
-            player.sprite,
-            player.frameIndex * spriteWidth, 0, // Select the current animation frame
-            spriteWidth, spriteHeight,
-            player.x, player.y, // Render at player's position
-            player.width, player.height
-        );
-    } else {
-        // Fallback in case the sprite doesn't load
-        this.ctx.fillStyle = 'blue';
-        this.ctx.fillRect(player.x, player.y, player.width, player.height);
-    }
-
-    // Update animation frame
-    this.updateAnimationFrame(player);
-}
-
-
-
-
+                    this.ctx.drawImage(
+                        player.sprite,
+                        player.frameIndex * spriteWidth, 0,
+                        spriteWidth, spriteHeight,
+                        player.x, player.y,
+                        player.width, player.height
+                    );
+                } else {
+                    this.ctx.fillStyle = 'blue';
+                    this.ctx.fillRect(player.x, player.y, player.width, player.height);
+                }
+            }
 
             drawEnemy(enemy) {
                 if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
@@ -359,4 +319,4 @@ drawPlayer() {
         new Game('gameCanvas');
     </script>
 </body>
-</html>
+</html> 

@@ -45,19 +45,19 @@
             background-color: rgba(0, 0, 0, 0.8);
             color: white;
             text-align: center;
-            padding-top: 150px;  /* Adjusted for better centering */
+            padding-top: 150px;
         }
 
         #gameOverScreen p {
-            font-size: 32px;  /* Increase font size for the text */
+            font-size: 32px;
             margin-bottom: 20px;
         }
 
         #gameOverScreen button {
             background-color: #ff6347;
             border: none;
-            padding: 6px 12px;  /* Smaller padding for the button */
-            font-size: 14px;    /* Smaller font size for the button */
+            padding: 6px 12px;
+            font-size: 14px;
             color: white;
             cursor: pointer;
             border-radius: 5px;
@@ -105,7 +105,6 @@
             position: absolute;
             width: 10px;
             height: 10px;
-            background-color: #ff6347;
             animation: confetti-fall 3s ease-in-out infinite;
         }
 
@@ -346,11 +345,24 @@
             }
 
             triggerConfetti() {
+                const colors = ['#ff6347', '#32CD32', '#FFD700', '#1E90FF', '#FF69B4', '#8A2BE2'];
+                
                 for (let i = 0; i < 100; i++) {
                     const confetti = document.createElement('div');
                     confetti.classList.add('confetti');
-                    confetti.style.left = `${Math.random() * 100}%`;
+                    
+                    // Randomize confetti color
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    // Randomize confetti position from sides
+                    const side = Math.random() > 0.5 ? 0 : this.canvas.width;
+                    confetti.style.left = `${side}px`;
+                    confetti.style.top = `${Math.random() * 100}px`; // Start from top
+
+                    // Animation duration and other randomization
                     confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                    confetti.style.animationTimingFunction = 'ease-in-out';
+
                     document.body.appendChild(confetti);
 
                     setTimeout(() => {
@@ -449,29 +461,18 @@
                     this.ctx.drawImage(
                         player.sprite,
                         player.x, player.y, // Position on canvas
-                        50, 50 // Fixed size of 50x50
+                        50, 50 // Fixed size for player sprite
                     );
-                } else {
-                    this.ctx.fillStyle = 'blue';
-                    this.ctx.fillRect(player.x, player.y, 50, 50); // Fallback size 50x50
                 }
             }
 
             drawEnemy(enemy) {
                 if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
-                    const spriteWidth = enemy.sprite.naturalWidth / enemy.framesPerState[enemy.currentState];
-                    const spriteHeight = enemy.sprite.naturalHeight;
-
                     this.ctx.drawImage(
                         enemy.sprite,
-                        enemy.frameIndex * spriteWidth, 0,
-                        spriteWidth, spriteHeight,
-                        enemy.x, enemy.y,
-                        enemy.width, enemy.height
+                        enemy.x, enemy.y, // Position on canvas
+                        enemy.width, enemy.height // Size
                     );
-                } else {
-                    this.ctx.fillStyle = 'red';
-                    this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
                 }
             }
 
@@ -484,11 +485,16 @@
                 this.checkEnemyCollision();
 
                 this.draw();
-                requestAnimationFrame(() => this.gameLoop());
+
+                if (this.health <= 0) {
+                    this.showGameOver();
+                } else {
+                    requestAnimationFrame(() => this.gameLoop());
+                }
             }
         }
 
-        new Game('gameCanvas');
+        const game = new Game('gameCanvas');
     </script>
 </body>
 </html>

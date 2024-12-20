@@ -124,7 +124,7 @@
                         ],
                         goal: { x: 750, y: 300, width: 50, height: 50 },
                         enemies: [
-                            { x: 400, y: 320, width: 50, height: 20, dx: 2 },
+                            { x: 400, y: 320, width: 50, height: 50, dx: 2 },
                         ],
                         spikes: [
                             { x: 250, y: 570, width: 50, height: 10 },
@@ -240,6 +240,34 @@
                 this.health = 3;
             }
 
+            checkSpikesCollision() {
+                const player = this.player;
+                this.spikes.forEach((spike) => {
+                    if (
+                        player.x < spike.x + spike.width &&
+                        player.x + player.width > spike.x &&
+                        player.y < spike.y + spike.height &&
+                        player.y + player.height > spike.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+            }
+
+            checkEnemyCollision() {
+                const player = this.player;
+                this.enemies.forEach((enemy) => {
+                    if (
+                        player.x < enemy.x + enemy.width &&
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &&
+                        player.y + player.height > enemy.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+            }
+
             draw() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -307,6 +335,8 @@
                 this.applyPhysics();
                 this.updateEnemies();
                 this.checkGoalCollision();
+                this.checkSpikesCollision();  // Check for spike collision
+                this.checkEnemyCollision();  // Check for enemy collision
 
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());

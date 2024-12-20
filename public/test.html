@@ -59,6 +59,10 @@
                 this.levelCompleted = false;
                 this.currentLevel = 1;
 
+                // Damage cooldown in milliseconds
+                this.damageCooldown = 1000;
+                this.lastDamageTime = 0;
+
                 this.init(this.currentLevel);
             }
 
@@ -200,10 +204,14 @@
             }
 
             takeDamage() {
-                this.health--;
-                if (this.health <= 0) {
-                    alert('Game Over!');
-                    window.location.reload();
+                const currentTime = Date.now();
+                if (currentTime - this.lastDamageTime >= this.damageCooldown) {
+                    this.health--;
+                    this.lastDamageTime = currentTime;
+                    if (this.health <= 0) {
+                        alert('Game Over!');
+                        window.location.reload();
+                    }
                 }
             }
 

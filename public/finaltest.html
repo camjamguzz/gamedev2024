@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hollow Knight-Inspired Game</title>
+    <title>parkour knight</title>
     <style>
         body {
             margin: 0;
@@ -75,30 +75,22 @@
             }
 
             createPlayer() {
-                const playerSprite = new Image();
-                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Replace with a valid sprite path
+    const playerSprite = new Image();
+    playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Static sprite
 
-                return {
-                    x: 100,
-                    y: 500,
-                    width: 70,
-                    height: 50,
-                    dx: 0,
-                    dy: 0,
-                    isJumping: false,
-                    isOnGround: false,
-                    sprite: playerSprite,
-                    frameIndex: 0,
-                    tickCount: 0,
-                    animationSpeed: 5,
-                    framesPerState: {
-                        idle: 4,
-                        running: 6,
-                        jumping: 2,
-                    },
-                    currentState: 'idle',
-                };
-            }
+    return {
+        x: 100,
+        y: 500,
+        width: 50,  // Adjust width to fit the sprite's natural width
+        height: 50, // Adjust height to fit the sprite's natural height
+        dx: 0,
+        dy: 0,
+        isJumping: false,
+        isOnGround: false,
+        sprite: playerSprite,
+    };
+}
+
 
             createEnemies(enemies) {
                 const enemySprite = new Image();
@@ -263,29 +255,37 @@
                 this.drawPlayer();
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                this.ui.level.textContent = Level: ${this.currentLevel};
-                this.ui.health.textContent = Health: ${'♥'.repeat(this.health)};
+                this.ui.level.textContent = `Level: ${this.currentLevel}`;
+                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
             }
 
             drawPlayer() {
-                const player = this.player;
+    const player = this.player;
 
-                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-                    const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
-                    const spriteHeight = player.sprite.naturalHeight;
+    // Check if the sprite is loaded before drawing
+    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+        const spriteWidth = player.sprite.naturalWidth;
+        const spriteHeight = player.sprite.naturalHeight;
 
-                    this.ctx.drawImage(
-                        player.sprite,
-                        player.frameIndex * spriteWidth, 0,
-                        spriteWidth, spriteHeight,
-                        player.x, player.y,
-                        player.width, player.height
-                    );
-                } else {
-                    this.ctx.fillStyle = 'blue';
-                    this.ctx.fillRect(player.x, player.y, player.width, player.height);
-                }
-            }
+        // Center the sprite inside the player's rectangle
+        const offsetX = (player.width - spriteWidth) / 2;
+        const offsetY = (player.height - spriteHeight) / 2;
+
+        // Draw the player image (without animation)
+        this.ctx.drawImage(
+            player.sprite,
+            player.x + offsetX, player.y + offsetY, // Position on canvas
+            spriteWidth, spriteHeight // Size of the image on the canvas
+        );
+    } else {
+        // Fallback: Render a rectangle if the sprite is not loaded
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+}
+
+
+
 
             drawEnemy(enemy) {
                 if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
@@ -319,4 +319,4 @@
         new Game('gameCanvas');
     </script>
 </body>
-</html> 
+</html>

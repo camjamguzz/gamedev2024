@@ -269,21 +269,22 @@
             drawPlayer() {
     const player = this.player;
 
-    // Check if the sprite is loaded before drawing
+    // Ensure the image is loaded and has valid dimensions
     if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+        // Use the player's width and height directly for drawing
         const spriteWidth = player.sprite.naturalWidth;
         const spriteHeight = player.sprite.naturalHeight;
 
-        // Center the sprite inside the player's rectangle (adjusting for new size)
+        // Center the sprite inside the player's rectangle
         const offsetX = (player.width - spriteWidth) / 2;
         const offsetY = (player.height - spriteHeight) / 2;
 
-        // Draw the player image (now smaller)
+        // Draw the player image (don't scale too much, just fit it in)
         this.ctx.drawImage(
             player.sprite,
             player.x + offsetX, player.y + offsetY, // Position on canvas
-            spriteWidth * (player.width / spriteWidth), // Scale down the image width
-            spriteHeight * (player.height / spriteHeight) // Scale down the image height
+            spriteWidth * (player.width / spriteWidth), // Scale width
+            spriteHeight * (player.height / spriteHeight) // Scale height
         );
     } else {
         // Fallback: Render a rectangle if the sprite is not loaded
@@ -291,6 +292,7 @@
         this.ctx.fillRect(player.x, player.y, player.width, player.height);
     }
 }
+
 
 
 

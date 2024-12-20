@@ -291,31 +291,26 @@ applyPhysics() {
             drawPlayer() {
     const player = this.player;
 
-    // Ensure the sprite is loaded and ready
+    const fixedX = 100; // Fixed X position where the player image will always appear
+    const fixedY = this.canvas.height - player.height - 50; // Fixed Y position (adjust as needed)
+
     if (player.sprite.complete && player.sprite.naturalWidth > 0) {
         const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
         const spriteHeight = player.sprite.naturalHeight;
 
         this.ctx.drawImage(
             player.sprite,
-            player.frameIndex * spriteWidth, 0,  // Frame position in sprite sheet
-            spriteWidth, spriteHeight,          // Dimensions of the frame
-            player.x, player.y,                 // Position on canvas
-            player.width, player.height         // Scaled dimensions on canvas
+            player.frameIndex * spriteWidth, 0,
+            spriteWidth, spriteHeight,
+            fixedX, fixedY,
+            player.width, player.height
         );
-
-        // Update animation frame
-        player.tickCount++;
-        if (player.tickCount > player.animationSpeed) {
-            player.tickCount = 0;
-            player.frameIndex = (player.frameIndex + 1) % player.framesPerState[player.currentState];
-        }
     } else {
-        // Fallback: Draw a rectangle as a placeholder
         this.ctx.fillStyle = 'blue';
-        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+        this.ctx.fillRect(fixedX, fixedY, player.width, player.height);
     }
 }
+
 
 
 

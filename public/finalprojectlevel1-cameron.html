@@ -268,24 +268,29 @@
             }
 
             drawPlayer() {
-                const player = this.player;
+    const player = this.player;
 
-                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-                    const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
-                    const spriteHeight = player.sprite.naturalHeight;
+    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+        const spriteWidth = player.sprite.naturalWidth / player.framesPerState[player.currentState];
+        const spriteHeight = player.sprite.naturalHeight;
 
-                    this.ctx.drawImage(
-                        player.sprite,
-                        player.frameIndex * spriteWidth, 0,
-                        spriteWidth, spriteHeight,
-                        player.x, player.y,
-                        player.width, player.height
-                    );
-                } else {
-                    this.ctx.fillStyle = 'blue';
-                    this.ctx.fillRect(player.x, player.y, player.width, player.height);
-                }
-            }
+        // Calculate offsets to center the sprite within the player's rectangle
+        const offsetX = (player.width - spriteWidth) / 2;
+        const offsetY = (player.height - spriteHeight) / 2;
+
+        this.ctx.drawImage(
+            player.sprite,
+            player.frameIndex * spriteWidth, 0,
+            spriteWidth, spriteHeight,
+            player.x + offsetX, player.y + offsetY,
+            spriteWidth, spriteHeight
+        );
+    } else {
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+}
+
 
             drawEnemy(enemy) {
                 if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {

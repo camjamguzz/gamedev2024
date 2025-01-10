@@ -383,21 +383,15 @@
             }
 
             takeDamage() {
-    const currentTime = Date.now();
-    if (currentTime - this.lastDamageTime >= this.damageCooldown) {
-        this.health--;
-        this.lastDamageTime = currentTime;
-
-        // Activate the flash effect
-        this.damageFlash.active = true;
-        this.damageFlash.opacity = 1;
-
-        if (this.health <= 0) {
-            this.showGameOver();
-        }
-    }
-}
-
+                const currentTime = Date.now();
+                if (currentTime - this.lastDamageTime >= this.damageCooldown) {
+                    this.health--;
+                    this.lastDamageTime = currentTime;
+                    if (this.health <= 0) {
+                        this.showGameOver();
+                    }
+                }
+            }
 
             showGameOver() {
                 this.gameOverScreen.style.display = 'flex';
@@ -426,8 +420,8 @@
                 for (let i = 0; i < 100; i++) {
                     const confetti = document.createElement('div');
                     confetti.classList.add('confetti');
-                    confetti.style.left = `${Math.random() * 100}%`;
-                    confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                    confetti.style.left = ${Math.random() * 100}%;
+                    confetti.style.animationDuration = ${Math.random() * 2 + 3}s;
                     document.body.appendChild(confetti);
 
                     setTimeout(() => {
@@ -497,35 +491,27 @@
             }
 
             draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Draw platforms, goal, spikes, player, and enemies...
-    this.ctx.fillStyle = 'gray';
-    this.platforms.forEach((platform) => {
-        this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-    });
+                this.ctx.fillStyle = 'gray';
+                this.platforms.forEach((platform) => {
+                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                });
 
-    this.ctx.fillStyle = 'gold';
-    this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+                this.ctx.fillStyle = 'gold';
+                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-    this.ctx.fillStyle = 'darkred';
-    this.spikes.forEach((spike) => {
-        this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
-    });
+                this.ctx.fillStyle = 'darkred';
+                this.spikes.forEach((spike) => {
+                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
+                });
 
-    this.drawPlayer();
-    this.enemies.forEach((enemy) => this.drawEnemy(enemy));
+                this.drawPlayer();
+                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-    this.ui.level.textContent = `Level: ${this.currentLevel}`;
-    this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
-
-    // Draw the flash effect
-    if (this.damageFlash.active) {
-        this.ctx.fillStyle = `rgba(255, 0, 0, ${this.damageFlash.opacity})`;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-}
-
+                this.ui.level.textContent = Level: ${this.currentLevel};
+                this.ui.health.textContent = Health: ${'♥'.repeat(this.health)};
+            }
 
             drawPlayer() {
                 const player = this.player;
@@ -561,28 +547,19 @@
             }
 
             gameLoop() {
-    this.handleInput();
-    this.applyPhysics();
-    this.updateEnemies();
-    this.checkGoalCollision();
-    this.checkSpikesCollision();
-    this.checkEnemyCollision();
+                this.handleInput();
+                this.applyPhysics();
+                this.updateEnemies();
+                this.checkGoalCollision();
+                this.checkSpikesCollision();
+                this.checkEnemyCollision();
 
-    // Fade the flash effect if active
-    if (this.damageFlash.active) {
-        this.damageFlash.opacity -= 0.05;
-        if (this.damageFlash.opacity <= 0) {
-            this.damageFlash.active = false;
-        }
-    }
-
-    this.draw();
-    requestAnimationFrame(() => this.gameLoop());
-}
-
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
         }
 
         new Game('gameCanvas');
     </script>
 </body>
-</html>
+</html> 

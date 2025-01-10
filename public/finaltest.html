@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>parkour knight</title>
+    <title>Parkour Knight</title>
     <style>
         body {
             margin: 0;
@@ -33,6 +33,93 @@
         canvas {
             display: block;
         }
+
+        /* Game Over Screen Styles */
+        #gameOverScreen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding-top: 150px;  /* Adjusted for better centering */
+        }
+
+        #gameOverScreen p {
+            font-size: 32px;  /* Increase font size for the text */
+            margin-bottom: 20px;
+        }
+
+        #gameOverScreen button {
+            background-color: #ff6347;
+            border: none;
+            padding: 6px 12px;  /* Smaller padding for the button */
+            font-size: 14px;    /* Smaller font size for the button */
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #gameOverScreen button:hover {
+            background-color: #ff4500;
+        }
+
+        /* Win Screen Styles */
+        #winScreen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding-top: 150px;
+        }
+
+        #winScreen p {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        #winScreen button {
+            background-color: #32CD32;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #winScreen button:hover {
+            background-color: #228B22;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6347;
+            animation: confetti-fall 3s ease-in-out infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(200px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -41,6 +128,19 @@
         <div id="healthDisplay">Health: ♥♥♥</div>
     </div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen">
+        <p>You Lost! Game Over</p>
+        <button id="respawnButton">Respawn</button>
+    </div>
+
+    <!-- Win Screen -->
+    <div id="winScreen">
+        <p>You Win! Congratulations!</p>
+        <button id="restartButton">Restart Game</button>
+    </div>
+
     <script>
         class Game {
             constructor(canvasId) {
@@ -59,6 +159,18 @@
                 this.levelCompleted = false;
                 this.currentLevel = 1;
 
+                // Damage cooldown in milliseconds
+                this.damageCooldown = 1000;
+                this.lastDamageTime = 0;
+
+                this.gameOverScreen = document.getElementById('gameOverScreen');
+                this.winScreen = document.getElementById('winScreen');
+                this.respawnButton = document.getElementById('respawnButton');
+                this.restartButton = document.getElementById('restartButton');
+
+                this.respawnButton.addEventListener('click', () => this.respawn());
+                this.restartButton.addEventListener('click', () => this.restart());
+
                 this.init(this.currentLevel);
             }
 
@@ -75,29 +187,26 @@
             }
 
             createPlayer() {
-    const playerSprite = new Image();
-    playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Static sprite
+                const playerSprite = new Image();
+                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Static sprite
 
-    // Make sure to return a promise to handle the image load
-    playerSprite.onload = () => {
-        console.log('Player image loaded');
-    };
+                // Make sure to return a promise to handle the image load
+                playerSprite.onload = () => {
+                    console.log('Player image loaded');
+                };
 
-    return {
-        x: 100,
-        y: 500,
-        width: 30,  // Smaller width
-        height: 30, // Smaller height
-        dx: 0,
-        dy: 0,
-        isJumping: false,
-        isOnGround: false,
-        sprite: playerSprite,
-    };
-}
-
-
-
+                return {
+                    x: 100,
+                    y: 500,
+                    width: 50,  // Fixed width of 50
+                    height: 50, // Fixed height of 50
+                    dx: 0,
+                    dy: 0,
+                    isJumping: false,
+                    isOnGround: false,
+                    sprite: playerSprite,
+                };
+            }
 
             createEnemies(enemies) {
                 const enemySprite = new Image();
@@ -127,15 +236,86 @@
                         ],
                         goal: { x: 750, y: 300, width: 50, height: 50 },
                         enemies: [
-                            { x: 400, y: 320, width: 50, height: 20, dx: 2 },
+                            { x: 400, y: 400, width: 50, height: 50, dx: 2 },
                         ],
                         spikes: [
                             { x: 250, y: 570, width: 50, height: 10 },
                         ],
                     },
-                    // Add more levels here
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 200, height: 20 },
+                            { x: 300, y: 450, width: 150, height: 20 },
+                            { x: 50, y: 350, width: 200, height: 20 },
+                            { x: 300, y: 250, width: 1000, height: 20 },
+                        ],
+                        goal: { x: 700, y: 50, width: 50, height: 50 },
+                        enemies: [
+                            { x: 400, y: 320, width: 50, height: 50, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 10 },
+                            { x: 300, y: 250, width: 50, height: 10 },
+                        ],
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 30, height: 20 },
+                            { x: 50, y: 450, width: 30, height: 20 },
+                            { x: 50, y: 350, width: 30, height: 20 },
+                            { x: 50, y: 250, width: 30, height: 20 },
+                            { x: 220, y: 500, width: 30, height: 20 },
+                            { x: 220, y: 400, width: 30, height: 20 },
+                            { x: 220, y: 300, width: 30, height: 20 },
+                            { x: 220, y: 200, width: 30, height: 20 },
+                            { x: 500, y: 200, width: 30, height: 20 },
+                            { x: 550, y: 300, width: 30, height: 20 },
+                            { x: 600, y: 400, width: 30, height: 20 },
+                            { x: 550, y: 500, width: 30, height: 20 },
+                            { x: 500, y: 600, width: 30, height: 20 },
+                           
+                        ],
+                        goal: { x: 700, y: 50, width: 50, height: 50 },
+                        enemies: [
+                        { x: 100, y: 350, width: 50, height: 50, dx: 2 },
+                           
+                        { x: 100, y: 160, width: 50, height: 50, dx: 2 },
+                            
+                            { x: 400, y: 500, width: 50, height: 50, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 60000 },
+                            { x: 250, y: 540, width: 50, height: 600 },
+                            { x: 250, y: 510, width: 50, height: 600 },
+                            { x: 250, y: 480, width: 50, height: 600 },
+                            { x: 250, y: 450, width: 50, height: 600 },
+                            { x: 250, y: 420, width: 50, height: 600 },
+                            { x: 250, y: 390, width: 50, height: 600 },
+                            { x: 250, y: 360, width: 50, height: 600 },
+                            { x: 250, y: 330, width: 50, height: 600 },
+                            { x: 250, y: 300, width: 50, height: 600 },
+                            { x: 250, y: 270, width: 50, height: 600 },
+                            { x: 250, y: 240, width: 50, height: 600 },
+                            { x: 0, y: 570, width: 50, height: 60000 },
+                            { x: 0, y: 540, width: 50, height: 600 },
+                            { x: 0, y: 510, width: 50, height: 600 },
+                            { x: 0, y: 480, width: 50, height: 600 },
+                            { x: 0, y: 450, width: 50, height: 600 },
+                            { x: 0, y: 420, width: 50, height: 600 },
+                            { x: 0, y: 390, width: 50, height: 600 },
+                            { x: 0, y: 360, width: 50, height: 600 },
+                            { x: 0, y: 330, width: 50, height: 600 },
+                            { x: 0, y: 300, width: 50, height: 600 },
+                            { x: 0, y: 270, width: 50, height: 600 },
+                            { x: 0, y: 240, width: 50, height: 600 },
+                           
+                            { x: 500, y: 570, width: 50, height: 60000 },
+                           
+                        ],
+                    },
                 ];
             }
+             
 
             setupInputHandlers() {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
@@ -203,13 +383,40 @@
             }
 
             takeDamage() {
-                this.health--;
-                if (this.health <= 0) {
-                    alert('Game Over!');
-                    window.location.reload();
+                const currentTime = Date.now();
+                if (currentTime - this.lastDamageTime >= this.damageCooldown) {
+                    this.health--;
+                    this.lastDamageTime = currentTime;
+                    if (this.health <= 0) {
+                        this.showGameOver();
+                    }
                 }
             }
 
+            showGameOver() {
+                this.gameOverScreen.style.display = 'flex';
+            }
+
+            showWinScreen() {
+                this.winScreen.style.display = 'flex';
+                this.triggerConfetti();
+            }
+
+            respawn() {
+                this.gameOverScreen.style.display = 'none';  // Hide the game over screen
+                this.health = 3;  // Reset health
+                this.currentLevel = 1;  // Go back to first level
+                this.init(this.currentLevel);  // Restart the game
+            }
+
+            restart() {
+                this.winScreen.style.display = 'none';  // Hide the win screen
+                this.currentLevel = 1;
+                this.health = 3;
+                this.init(this.currentLevel);
+            }
+
+            
             checkGoalCollision() {
                 const player = this.player;
                 const goal = this.goal;
@@ -222,8 +429,7 @@
                 ) {
                     this.currentLevel++;
                     if (this.currentLevel > this.levels.length) {
-                        alert('Congratulations! You completed all levels!');
-                        window.location.reload();
+                        this.showWinScreen();
                     } else {
                         this.loadLevel(this.currentLevel);
                     }
@@ -241,6 +447,34 @@
                 this.player.x = 100;
                 this.player.y = 500;
                 this.health = 3;
+            }
+
+            checkSpikesCollision() {
+                const player = this.player;
+                this.spikes.forEach((spike) => {
+                    if (
+                        player.x < spike.x + spike.width &&
+                        player.x + player.width > spike.x &&
+                        player.y < spike.y + spike.height &&
+                        player.y + player.height > spike.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+            }
+
+            checkEnemyCollision() {
+                const player = this.player;
+                this.enemies.forEach((enemy) => {
+                    if (
+                        player.x < enemy.x + enemy.width &&
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &&
+                        player.y + player.height > enemy.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
             }
 
             draw() {
@@ -262,43 +496,24 @@
                 this.drawPlayer();
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+                this.ui.level.textContent = Level; {this.currentLevel};
+                this.ui.health.textContent = Health; {'♥'.repeat(this.health)};
             }
 
             drawPlayer() {
-    const player = this.player;
+                const player = this.player;
 
-    // Log to check image and player position
-    console.log(player.sprite.complete, player.sprite.naturalWidth);
-
-    if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-        const spriteWidth = player.sprite.naturalWidth;
-        const spriteHeight = player.sprite.naturalHeight;
-
-        // Center the sprite inside the player's rectangle
-        const offsetX = (player.width - spriteWidth) / 2;
-        const offsetY = (player.height - spriteHeight) / 2;
-
-        this.ctx.drawImage(
-            player.sprite,
-            player.x + offsetX, player.y + offsetY, // Position on canvas
-            spriteWidth * (player.width / spriteWidth), // Scale width
-            spriteHeight * (player.height / spriteHeight) // Scale height
-        );
-    } else {
-        console.log('Player image not loaded or invalid');
-        // Fallback to drawing a rectangle if the image is not loaded
-        this.ctx.fillStyle = 'blue';
-        this.ctx.fillRect(player.x, player.y, player.width, player.height);
-    }
-}
-
-
-
-
-
-
+                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+                    this.ctx.drawImage(
+                        player.sprite,
+                        player.x, player.y, // Position on canvas
+                        50, 50 // Fixed size of 50x50
+                    );
+                } else {
+                    this.ctx.fillStyle = 'blue';
+                    this.ctx.fillRect(player.x, player.y, 50, 50); // Fallback size 50x50
+                }
+            }
 
             drawEnemy(enemy) {
                 if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
@@ -323,6 +538,8 @@
                 this.applyPhysics();
                 this.updateEnemies();
                 this.checkGoalCollision();
+                this.checkSpikesCollision();
+                this.checkEnemyCollision();
 
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());

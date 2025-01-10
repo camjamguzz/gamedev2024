@@ -45,19 +45,19 @@
             background-color: rgba(0, 0, 0, 0.8);
             color: white;
             text-align: center;
-            padding-top: 150px;
+            padding-top: 150px;  /* Adjusted for better centering */
         }
 
         #gameOverScreen p {
-            font-size: 32px;
+            font-size: 32px;  /* Increase font size for the text */
             margin-bottom: 20px;
         }
 
         #gameOverScreen button {
             background-color: #ff6347;
             border: none;
-            padding: 6px 12px;
-            font-size: 14px;
+            padding: 6px 12px;  /* Smaller padding for the button */
+            font-size: 14px;    /* Smaller font size for the button */
             color: white;
             cursor: pointer;
             border-radius: 5px;
@@ -105,6 +105,7 @@
             position: absolute;
             width: 10px;
             height: 10px;
+            background-color: #ff6347;
             animation: confetti-fall 3s ease-in-out infinite;
         }
 
@@ -235,15 +236,86 @@
                         ],
                         goal: { x: 750, y: 300, width: 50, height: 50 },
                         enemies: [
-                            { x: 400, y: 320, width: 50, height: 50, dx: 2 },
+                            { x: 400, y: 400, width: 50, height: 50, dx: 2 },
                         ],
                         spikes: [
                             { x: 250, y: 570, width: 50, height: 10 },
                         ],
                     },
-                    // Add more levels here
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 200, height: 20 },
+                            { x: 300, y: 450, width: 150, height: 20 },
+                            { x: 50, y: 350, width: 200, height: 20 },
+                            { x: 300, y: 250, width: 1000, height: 20 },
+                        ],
+                        goal: { x: 700, y: 50, width: 50, height: 50 },
+                        enemies: [
+                            { x: 400, y: 320, width: 50, height: 50, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 10 },
+                            { x: 300, y: 250, width: 50, height: 10 },
+                        ],
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 30, height: 20 },
+                            { x: 50, y: 450, width: 30, height: 20 },
+                            { x: 50, y: 350, width: 30, height: 20 },
+                            { x: 50, y: 250, width: 30, height: 20 },
+                            { x: 220, y: 500, width: 30, height: 20 },
+                            { x: 220, y: 400, width: 30, height: 20 },
+                            { x: 220, y: 300, width: 30, height: 20 },
+                            { x: 220, y: 200, width: 30, height: 20 },
+                            { x: 500, y: 200, width: 30, height: 20 },
+                            { x: 550, y: 300, width: 30, height: 20 },
+                            { x: 600, y: 400, width: 30, height: 20 },
+                            { x: 550, y: 500, width: 30, height: 20 },
+                            { x: 500, y: 600, width: 30, height: 20 },
+                           
+                        ],
+                        goal: { x: 700, y: 50, width: 50, height: 50 },
+                        enemies: [
+                        { x: 100, y: 350, width: 50, height: 50, dx: 2 },
+                           
+                        { x: 100, y: 160, width: 50, height: 50, dx: 2 },
+                            
+                            { x: 400, y: 500, width: 50, height: 50, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 60000 },
+                            { x: 250, y: 540, width: 50, height: 600 },
+                            { x: 250, y: 510, width: 50, height: 600 },
+                            { x: 250, y: 480, width: 50, height: 600 },
+                            { x: 250, y: 450, width: 50, height: 600 },
+                            { x: 250, y: 420, width: 50, height: 600 },
+                            { x: 250, y: 390, width: 50, height: 600 },
+                            { x: 250, y: 360, width: 50, height: 600 },
+                            { x: 250, y: 330, width: 50, height: 600 },
+                            { x: 250, y: 300, width: 50, height: 600 },
+                            { x: 250, y: 270, width: 50, height: 600 },
+                            { x: 250, y: 240, width: 50, height: 600 },
+                            { x: 0, y: 570, width: 50, height: 60000 },
+                            { x: 0, y: 540, width: 50, height: 600 },
+                            { x: 0, y: 510, width: 50, height: 600 },
+                            { x: 0, y: 480, width: 50, height: 600 },
+                            { x: 0, y: 450, width: 50, height: 600 },
+                            { x: 0, y: 420, width: 50, height: 600 },
+                            { x: 0, y: 390, width: 50, height: 600 },
+                            { x: 0, y: 360, width: 50, height: 600 },
+                            { x: 0, y: 330, width: 50, height: 600 },
+                            { x: 0, y: 300, width: 50, height: 600 },
+                            { x: 0, y: 270, width: 50, height: 600 },
+                            { x: 0, y: 240, width: 50, height: 600 },
+                           
+                            { x: 500, y: 570, width: 50, height: 60000 },
+                           
+                        ],
+                    },
                 ];
             }
+             
 
             setupInputHandlers() {
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
@@ -345,24 +417,11 @@
             }
 
             triggerConfetti() {
-                const colors = ['#ff6347', '#32CD32', '#FFD700', '#1E90FF', '#FF69B4', '#8A2BE2'];
-                
                 for (let i = 0; i < 100; i++) {
                     const confetti = document.createElement('div');
                     confetti.classList.add('confetti');
-                    
-                    // Randomize confetti color
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    
-                    // Randomize confetti position from sides
-                    const side = Math.random() > 0.5 ? 0 : this.canvas.width;
-                    confetti.style.left = `${side}px`;
-                    confetti.style.top = `${Math.random() * 100}px`; // Start from top
-
-                    // Animation duration and other randomization
-                    confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
-                    confetti.style.animationTimingFunction = 'ease-in-out';
-
+                    confetti.style.left = ${Math.random() * 100}%;
+                    confetti.style.animationDuration = ${Math.random() * 2 + 3}s;
                     document.body.appendChild(confetti);
 
                     setTimeout(() => {
@@ -450,8 +509,8 @@
                 this.drawPlayer();
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+                this.ui.level.textContent = Level: ${this.currentLevel};
+                this.ui.health.textContent = Health: ${'♥'.repeat(this.health)};
             }
 
             drawPlayer() {
@@ -461,18 +520,29 @@
                     this.ctx.drawImage(
                         player.sprite,
                         player.x, player.y, // Position on canvas
-                        50, 50 // Fixed size for player sprite
+                        50, 50 // Fixed size of 50x50
                     );
+                } else {
+                    this.ctx.fillStyle = 'blue';
+                    this.ctx.fillRect(player.x, player.y, 50, 50); // Fallback size 50x50
                 }
             }
 
             drawEnemy(enemy) {
                 if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
+                    const spriteWidth = enemy.sprite.naturalWidth / enemy.framesPerState[enemy.currentState];
+                    const spriteHeight = enemy.sprite.naturalHeight;
+
                     this.ctx.drawImage(
                         enemy.sprite,
-                        enemy.x, enemy.y, // Position on canvas
-                        enemy.width, enemy.height // Size
+                        enemy.frameIndex * spriteWidth, 0,
+                        spriteWidth, spriteHeight,
+                        enemy.x, enemy.y,
+                        enemy.width, enemy.height
                     );
+                } else {
+                    this.ctx.fillStyle = 'red';
+                    this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
                 }
             }
 
@@ -485,16 +555,11 @@
                 this.checkEnemyCollision();
 
                 this.draw();
-
-                if (this.health <= 0) {
-                    this.showGameOver();
-                } else {
-                    requestAnimationFrame(() => this.gameLoop());
-                }
+                requestAnimationFrame(() => this.gameLoop());
             }
         }
 
-        const game = new Game('gameCanvas');
+        new Game('gameCanvas');
     </script>
 </body>
-</html>
+</html> 

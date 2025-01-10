@@ -553,16 +553,25 @@
             }
 
             gameLoop() {
-                this.handleInput();
-                this.applyPhysics();
-                this.updateEnemies();
-                this.checkGoalCollision();
-                this.checkSpikesCollision();
-                this.checkEnemyCollision();
+    this.handleInput();
+    this.applyPhysics();
+    this.updateEnemies();
+    this.checkGoalCollision();
+    this.checkSpikesCollision();
+    this.checkEnemyCollision();
 
-                this.draw();
-                requestAnimationFrame(() => this.gameLoop());
-            }
+    // Fade the flash effect if active
+    if (this.damageFlash.active) {
+        this.damageFlash.opacity -= 0.05;
+        if (this.damageFlash.opacity <= 0) {
+            this.damageFlash.active = false;
+        }
+    }
+
+    this.draw();
+    requestAnimationFrame(() => this.gameLoop());
+}
+
         }
 
         new Game('gameCanvas');

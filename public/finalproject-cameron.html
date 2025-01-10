@@ -497,27 +497,35 @@
             }
 
             draw() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                this.ctx.fillStyle = 'gray';
-                this.platforms.forEach((platform) => {
-                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-                });
+    // Draw platforms, goal, spikes, player, and enemies...
+    this.ctx.fillStyle = 'gray';
+    this.platforms.forEach((platform) => {
+        this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+    });
 
-                this.ctx.fillStyle = 'gold';
-                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+    this.ctx.fillStyle = 'gold';
+    this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
 
-                this.ctx.fillStyle = 'darkred';
-                this.spikes.forEach((spike) => {
-                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
-                });
+    this.ctx.fillStyle = 'darkred';
+    this.spikes.forEach((spike) => {
+        this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
+    });
 
-                this.drawPlayer();
-                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
+    this.drawPlayer();
+    this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                this.ui.level.textContent = `Level: ${this.currentLevel}`;
-                this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
-            }
+    this.ui.level.textContent = `Level: ${this.currentLevel}`;
+    this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+
+    // Draw the flash effect
+    if (this.damageFlash.active) {
+        this.ctx.fillStyle = `rgba(255, 0, 0, ${this.damageFlash.opacity})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
 
             drawPlayer() {
                 const player = this.player;

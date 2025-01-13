@@ -152,9 +152,11 @@
                 };
 
                 this.keys = new Set();
-                this.health = 3;
-                this.GRAVITY = 0.5;
-                this.JUMP_FORCE = -12;
+                this.health = Math.max(0, this.health);
+
+                this.GRAVITY = 0.4;
+this.JUMP_FORCE = -10;
+
                 this.PLAYER_SPEED = 5;
                 this.levelCompleted = false;
                 this.currentLevel = 1;
@@ -193,7 +195,10 @@
                 // Make sure to return a promise to handle the image load
                 playerSprite.onload = () => {
                     console.log('Player image loaded');
-                };
+                    playerSprite.onerror = () => {
+    console.warn('Player sprite failed to load, using fallback.');
+};
+
 
                 return {
                     x: 100,
@@ -208,7 +213,7 @@
                 };
             }
 
-            createEnemies(enemies) {
+            createEnemies(enemies) ;
                 const enemySprite = new Image();
                 enemySprite.src = 'path/to/enemy_sprite.png'; // Replace with a valid sprite path
 
@@ -284,7 +289,7 @@
                             { x: 400, y: 500, width: 50, height: 50, dx: 2 },
                         ],
                         spikes: [
-                            { x: 250, y: 570, width: 50, height: 60000 },
+                            { x: 250, y: 570, width: 50, height: 600 },
                             { x: 250, y: 540, width: 50, height: 600 },
                             { x: 250, y: 510, width: 50, height: 600 },
                             { x: 250, y: 480, width: 50, height: 600 },
@@ -296,7 +301,7 @@
                             { x: 250, y: 300, width: 50, height: 600 },
                             { x: 250, y: 270, width: 50, height: 600 },
                             { x: 250, y: 240, width: 50, height: 600 },
-                            { x: 0, y: 570, width: 50, height: 60000 },
+                            { x: 0, y: 570, width: 50, height: 600 },
                             { x: 0, y: 540, width: 50, height: 600 },
                             { x: 0, y: 510, width: 50, height: 600 },
                             { x: 0, y: 480, width: 50, height: 600 },
@@ -309,7 +314,7 @@
                             { x: 0, y: 270, width: 50, height: 600 },
                             { x: 0, y: 240, width: 50, height: 600 },
                            
-                            { x: 500, y: 570, width: 50, height: 60000 },
+                            { x: 500, y: 570, width: 50, height: 600 },
                            
                         ],
                     },
@@ -376,9 +381,10 @@
                 this.enemies.forEach((enemy) => {
                     enemy.x += enemy.dx;
 
-                    if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
-                        enemy.dx *= -1;
-                    }
+                    if (enemy.x <= enemy.minX || enemy.x + enemy.width >= enemy.maxX) {
+    enemy.dx *= -1;
+}
+
                 });
             }
 
@@ -420,8 +426,9 @@
                 for (let i = 0; i < 100; i++) {
                     const confetti = document.createElement('div');
                     confetti.classList.add('confetti');
-                    confetti.style.left = ${Math.random() * 100}%;
-                    confetti.style.animationDuration = ${Math.random() * 2 + 3}s;
+                    confetti.style.left = `${Math.random() * 100}%`;
+confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
+
                     document.body.appendChild(confetti);
 
                     setTimeout(() => {

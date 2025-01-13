@@ -516,8 +516,8 @@ confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
                 this.drawPlayer();
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                this.ui.level.textContent = Level: ${this.currentLevel};
-                this.ui.health.textContent = Health: ${'♥'.repeat(this.health)};
+                this.ui.level.textContent = Level; $:{this.currentLevel};
+                this.ui.health.textContent = Health; $:{'♥'.repeat(this.health)};
             }
 
             drawPlayer() {

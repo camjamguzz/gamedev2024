@@ -31,8 +31,10 @@
         }
 
         canvas {
-            display: block;
-        }
+    display: block;
+    margin: auto;
+    border: 1px solid black;
+}
 
         /* Game Over Screen Styles */
         #gameOverScreen {
@@ -190,7 +192,8 @@ this.JUMP_FORCE = -10;
 
             createPlayer() {
                 const playerSprite = new Image();
-                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Static sprite
+                playerSprite.src = './assets/player.png';
+enemySprite.src = './assets/enemy.png';
 
                 // Make sure to return a promise to handle the image load
                 playerSprite.onload = () => {
@@ -198,6 +201,7 @@ this.JUMP_FORCE = -10;
                     playerSprite.onerror = () => {
     console.warn('Player sprite failed to load, using fallback.');
 };
+
 
 
                 return {
@@ -214,22 +218,18 @@ this.JUMP_FORCE = -10;
             }
 
             createEnemies(enemies) ;
-                const enemySprite = new Image();
-                enemySprite.src = 'path/to/enemy_sprite.png'; // Replace with a valid sprite path
+    const enemySprite = new Image();
+    enemySprite.src = './assets/enemy.png'; // Update the sprite path
 
-                return enemies.map(enemy => ({
-                    ...enemy,
-                    sprite: enemySprite,
-                    frameIndex: 0,
-                    tickCount: 0,
-                    animationSpeed: 10,
-                    framesPerState: {
-                        idle: 3,
-                        attacking: 4,
-                    },
-                    currentState: 'idle',
-                }));
-            }
+    return enemies.map(enemy => ({
+        ...enemy,
+        sprite: enemySprite,
+        dx: enemy.dx || 0,
+        minX: enemy.minX || enemy.x,
+        maxX: enemy.maxX || enemy.x + 100, // Example patrol range
+    }));
+}
+
 
             createLevels() {
                 return [
@@ -516,11 +516,11 @@ confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
                 this.drawPlayer();
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                this.ui.level.textContent = Level; $:{this.currentLevel};
-                this.ui.health.textContent = Health; $:{'♥'.repeat(this.health)};
-            }
+                this.ui.level.textContent = `Level: ${this.currentLevel}`;
+this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
 
-            drawPlayer() {
+
+            drawPlayer() ;
                 const player = this.player;
 
                 if (player.sprite.complete && player.sprite.naturalWidth > 0) {

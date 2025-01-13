@@ -31,8 +31,10 @@
         }
 
         canvas {
-            display: block;
-        }
+    display: block;
+    margin: auto;
+    border: 1px solid black;
+}
 
         /* Game Over Screen Styles */
         #gameOverScreen {
@@ -152,9 +154,11 @@
                 };
 
                 this.keys = new Set();
-                this.health = 3;
-                this.GRAVITY = 0.5;
-                this.JUMP_FORCE = -12;
+                this.health = Math.max(0, this.health);
+
+                this.GRAVITY = 0.4;
+this.JUMP_FORCE = -10;
+
                 this.PLAYER_SPEED = 5;
                 this.levelCompleted = false;
                 this.currentLevel = 1;
@@ -188,12 +192,17 @@
 
             createPlayer() {
                 const playerSprite = new Image();
-                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Static sprite
+                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png';
+enemySprite.src = './assets/enemy.png';
 
                 // Make sure to return a promise to handle the image load
                 playerSprite.onload = () => {
                     console.log('Player image loaded');
-                };
+                    playerSprite.onerror = () => {
+    console.warn('Player sprite failed to load, using fallback.');
+};
+
+
 
                 return {
                     x: 100,
@@ -208,23 +217,19 @@
                 };
             }
 
-            createEnemies(enemies) {
-                const enemySprite = new Image();
-                enemySprite.src = 'path/to/enemy_sprite.png'; // Replace with a valid sprite path
+            createEnemies(enemies) ;
+    const enemySprite = new Image();
+    enemySprite.src = './assets/enemy.png'; // Update the sprite path
 
-                return enemies.map(enemy => ({
-                    ...enemy,
-                    sprite: enemySprite,
-                    frameIndex: 0,
-                    tickCount: 0,
-                    animationSpeed: 10,
-                    framesPerState: {
-                        idle: 3,
-                        attacking: 4,
-                    },
-                    currentState: 'idle',
-                }));
-            }
+    return enemies.map(enemy => ({
+        ...enemy,
+        sprite: enemySprite,
+        dx: enemy.dx || 0,
+        minX: enemy.minX || enemy.x,
+        maxX: enemy.maxX || enemy.x + 100, // Example patrol range
+    }));
+}
+
 
             createLevels() {
                 return [
@@ -284,7 +289,7 @@
                             { x: 400, y: 500, width: 50, height: 50, dx: 2 },
                         ],
                         spikes: [
-                            { x: 250, y: 570, width: 50, height: 60000 },
+                            { x: 250, y: 570, width: 50, height: 600 },
                             { x: 250, y: 540, width: 50, height: 600 },
                             { x: 250, y: 510, width: 50, height: 600 },
                             { x: 250, y: 480, width: 50, height: 600 },
@@ -296,7 +301,7 @@
                             { x: 250, y: 300, width: 50, height: 600 },
                             { x: 250, y: 270, width: 50, height: 600 },
                             { x: 250, y: 240, width: 50, height: 600 },
-                            { x: 0, y: 570, width: 50, height: 60000 },
+                            { x: 0, y: 570, width: 50, height: 600 },
                             { x: 0, y: 540, width: 50, height: 600 },
                             { x: 0, y: 510, width: 50, height: 600 },
                             { x: 0, y: 480, width: 50, height: 600 },
@@ -309,7 +314,7 @@
                             { x: 0, y: 270, width: 50, height: 600 },
                             { x: 0, y: 240, width: 50, height: 600 },
                            
-                            { x: 500, y: 570, width: 50, height: 60000 },
+                            { x: 500, y: 570, width: 50, height: 600 },
                            
                         ],
                     },
@@ -376,9 +381,10 @@
                 this.enemies.forEach((enemy) => {
                     enemy.x += enemy.dx;
 
-                    if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
-                        enemy.dx *= -1;
-                    }
+                    if (enemy.x <= enemy.minX || enemy.x + enemy.width >= enemy.maxX) {
+    enemy.dx *= -1;
+}
+
                 });
             }
 
@@ -416,7 +422,21 @@
                 this.init(this.currentLevel);
             }
 
-            
+            triggerConfetti() {
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = `${Math.random() * 100}%`;
+confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
+
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);  // Remove confetti after animation
+                }
+            }
+
             checkGoalCollision() {
                 const player = this.player;
                 const goal = this.goal;
@@ -496,11 +516,11 @@
                 this.drawPlayer();
                 this.enemies.forEach((enemy) => this.drawEnemy(enemy));
 
-                this.ui.level.textContent = Level; {this.currentLevel};
-                this.ui.health.textContent = Health; {'♥'.repeat(this.health)};
-            }
+                this.ui.level.textContent = `Level: ${this.currentLevel}`;
+this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
 
-            drawPlayer() {
+
+            drawPlayer() ;
                 const player = this.player;
 
                 if (player.sprite.complete && player.sprite.naturalWidth > 0) {
@@ -549,4 +569,4 @@
         new Game('gameCanvas');
     </script>
 </body>
-</html>
+</html> 

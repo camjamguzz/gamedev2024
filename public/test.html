@@ -15,7 +15,7 @@
         canvas {
             display: block;
             margin: auto;
-            background: #222;
+            background: linear-gradient(to bottom, #444, #222);
             border: 2px solid #fff;
         }
         #gameOverScreen, #winScreen {
@@ -29,6 +29,7 @@
             color: white;
             text-align: center;
             padding-top: 150px;
+            z-index: 10;
         }
         #gameOverScreen button, #winScreen button {
             background-color: #32CD32;
@@ -72,10 +73,13 @@
                 this.gameOverScreen = document.getElementById('gameOverScreen');
                 this.winScreen = document.getElementById('winScreen');
 
+                this.running = true;
+
                 this.init();
             }
 
             init() {
+                this.running = true;
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
                 this.gameLoop();
@@ -97,12 +101,17 @@
                 this.player.x += this.player.dx;
                 this.player.y += this.player.dy;
 
+                // Prevent player from moving off the screen horizontally
+                this.player.x = Math.max(0, Math.min(this.canvas.width - this.player.width, this.player.x));
+
+                // Handle ground collision
                 if (this.player.y + this.player.height > this.canvas.height) {
                     this.player.y = this.canvas.height - this.player.height;
                     this.player.dy = 0;
                     this.player.isOnGround = true;
                 }
 
+                // Handle platform collision
                 this.platforms.forEach((platform) => {
                     if (
                         this.player.x < platform.x + platform.width &&
@@ -125,6 +134,7 @@
                     this.player.y < y + height &&
                     this.player.y + this.player.height > y
                 ) {
+                    this.running = false;
                     this.winScreen.style.display = 'flex';
                 }
             }
@@ -133,21 +143,22 @@
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
                 // Draw platforms
-                this.ctx.fillStyle = 'gray';
+                this.ctx.fillStyle = '#888';
                 this.platforms.forEach(({ x, y, width, height }) =>
                     this.ctx.fillRect(x, y, width, height)
                 );
 
                 // Draw player
-                this.ctx.fillStyle = 'blue';
+                this.ctx.fillStyle = '#00f';
                 this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
 
                 // Draw goal
-                this.ctx.fillStyle = 'gold';
+                this.ctx.fillStyle = '#FFD700';
                 this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
             }
 
             gameLoop() {
+                if (!this.running) return;
                 this.handleInput();
                 this.applyPhysics();
                 this.checkGoalCollision();
@@ -157,15 +168,15 @@
             }
         }
 
-        const game = new Game();
+        let game;
 
         function restartGame() {
-            game.winScreen.style.display = 'none';
-            game.gameOverScreen.style.display = 'none';
-            game.player.x = 50;
-            game.player.y = 500;
-            game.init();
+            document.getElementById('winScreen').style.display = 'none';
+            document.getElementById('gameOverScreen').style.display = 'none';
+            game = new Game();
         }
+
+        restartGame();
     </script>
 </body>
 </html>

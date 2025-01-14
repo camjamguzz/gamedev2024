@@ -65,6 +65,14 @@
                     { x: 400, y: 400, width: 200, height: 20 },
                 ];
                 this.goal = { x: 750, y: 300, width: 50, height: 50 };
+                this.spikes = [
+                    { x: 150, y: 530, width: 30, height: 20 },
+                    { x: 450, y: 380, width: 30, height: 20 },
+                ];
+                this.enemies = [
+                    { x: 100, y: 530, width: 40, height: 20, dx: 2 },
+                    { x: 300, y: 460, width: 40, height: 20, dx: 2 },
+                ];
                 this.keys = new Set();
                 this.gravity = 0.5;
                 this.jumpForce = -10;
@@ -126,17 +134,57 @@
                 });
             }
 
-            checkGoalCollision() {
-                const { x, y, width, height } = this.goal;
+            checkCollisions() {
+                // Check goal collision
                 if (
-                    this.player.x < x + width &&
-                    this.player.x + this.player.width > x &&
-                    this.player.y < y + height &&
-                    this.player.y + this.player.height > y
+                    this.player.x < this.goal.x + this.goal.width &&
+                    this.player.x + this.player.width > this.goal.x &&
+                    this.player.y < this.goal.y + this.goal.height &&
+                    this.player.y + this.player.height > this.goal.y
                 ) {
                     this.running = false;
                     this.winScreen.style.display = 'flex';
                 }
+
+                // Check spike collisions
+                this.spikes.forEach((spike) => {
+                    if (
+                        this.player.x < spike.x + spike.width &&
+                        this.player.x + this.player.width > spike.x &&
+                        this.player.y < spike.y + spike.height &&
+                        this.player.y + this.player.height > spike.y
+                    ) {
+                        this.gameOver();
+                    }
+                });
+
+                // Check enemy collisions
+                this.enemies.forEach((enemy) => {
+                    if (
+                        this.player.x < enemy.x + enemy.width &&
+                        this.player.x + this.player.width > enemy.x &&
+                        this.player.y < enemy.y + enemy.height &&
+                        this.player.y + this.player.height > enemy.y
+                    ) {
+                        this.gameOver();
+                    }
+                });
+            }
+
+            moveEnemies() {
+                this.enemies.forEach((enemy) => {
+                    enemy.x += enemy.dx;
+
+                    // Reverse direction if enemy hits a boundary
+                    if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
+                        enemy.dx *= -1;
+                    }
+                });
+            }
+
+            gameOver() {
+                this.running = false;
+                this.gameOverScreen.style.display = 'flex';
             }
 
             draw() {
@@ -155,13 +203,27 @@
                 // Draw goal
                 this.ctx.fillStyle = '#FFD700';
                 this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+
+                // Draw spikes
+                this.ctx.fillStyle = 'red';
+                this.spikes.forEach(({ x, y, width, height }) =>
+                    this.ctx.fillRect(x, y, width, height)
+                );
+
+                // Draw enemies
+                this.ctx.fillStyle = 'purple';
+                this.enemies.forEach(({ x, y, width, height }) =>
+                    this.ctx.fillRect(x, y, width, height)
+                );
             }
 
             gameLoop() {
                 if (!this.running) return;
+
                 this.handleInput();
                 this.applyPhysics();
-                this.checkGoalCollision();
+                this.checkCollisions();
+                this.moveEnemies();
                 this.draw();
 
                 requestAnimationFrame(() => this.gameLoop());

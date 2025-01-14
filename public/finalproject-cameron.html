@@ -144,52 +144,41 @@
     </div>
 
     <script>
-       class Game {
-    constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
-        this.ui = {
-            level: document.getElementById('levelDisplay'),
-            health: document.getElementById('healthDisplay'),
-        };
+        class Game {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.ui = {
+                    level: document.getElementById('levelDisplay'),
+                    health: document.getElementById('healthDisplay'),
+                };
 
-        this.keys = new Set();
-        this.health = Math.max(0, this.health);
+                this.keys = new Set();
+                this.health = Math.max(0, this.health);
 
-        this.GRAVITY = 0.4;
-        this.JUMP_FORCE = -10;
-        this.PLAYER_SPEED = 5;
-        this.levelCompleted = false;
-        this.currentLevel = 1;
+                this.GRAVITY = 0.4;
+this.JUMP_FORCE = -10;
 
-        // Damage cooldown in milliseconds
-        this.damageCooldown = 1000;
-        this.lastDamageTime = 0;
+                this.PLAYER_SPEED = 5;
+                this.levelCompleted = false;
+                this.currentLevel = 1;
 
-        this.gameOverScreen = document.getElementById('gameOverScreen');
-        this.winScreen = document.getElementById('winScreen');
-        this.respawnButton = document.getElementById('respawnButton');
-        this.restartButton = document.getElementById('restartButton');
+                // Damage cooldown in milliseconds
+                this.damageCooldown = 1000;
+                this.lastDamageTime = 0;
 
-        this.respawnButton.addEventListener('click', () => this.respawn());
-        this.restartButton.addEventListener('click', () => this.restart());
+                this.gameOverScreen = document.getElementById('gameOverScreen');
+                this.winScreen = document.getElementById('winScreen');
+                this.respawnButton = document.getElementById('respawnButton');
+                this.restartButton = document.getElementById('restartButton');
 
-        this.init(this.currentLevel);
-    }
+                this.respawnButton.addEventListener('click', () => this.respawn());
+                this.restartButton.addEventListener('click', () => this.restart());
 
-    init(level) {
-        // Make sure images are fully loaded before proceeding
-        this.playerSprite = new Image();
-        this.playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png';
-        
-        // Set up an event listener to start the game once images are loaded
-        this.playerSprite.onload = () => {
-            console.log('Player image loaded');
-            this.enemySprite = new Image();
-            this.enemySprite.src = './assets/enemy.png'; // Ensure the enemy image is loaded
+                this.init(this.currentLevel);
+            }
 
-            // Make sure the enemy sprite is ready before initializing the level
-            this.enemySprite.onload = () => {
+            init(level) {
                 this.player = this.createPlayer();
                 this.levels = this.createLevels();
                 this.platforms = this.levels[this.currentLevel - 1].platforms;
@@ -199,200 +188,388 @@
 
                 this.setupInputHandlers();
                 this.gameLoop();
-            };
-        };
-    }
-
-    createPlayer() {
-        return {
-            x: 100,
-            y: 500,
-            width: 50,  // Fixed width of 50
-            height: 50, // Fixed height of 50
-            dx: 0,
-            dy: 0,
-            isJumping: false,
-            isOnGround: false,
-            sprite: this.playerSprite,
-        };
-    }
-
-    createEnemies(enemies) {
-        return enemies.map(enemy => ({
-            ...enemy,
-            sprite: this.enemySprite,
-            dx: enemy.dx || 0,
-            minX: enemy.minX || enemy.x,
-            maxX: enemy.maxX || enemy.x + 100, // Example patrol range
-        }));
-    }
-
-    createLevels() {
-        return [
-            {
-                platforms: [
-                    { x: 50, y: 550, width: 200, height: 20 },
-                    { x: 300, y: 450, width: 150, height: 20 },
-                    { x: 500, y: 350, width: 200, height: 20 },
-                ],
-                goal: { x: 750, y: 300, width: 50, height: 50 },
-                enemies: [
-                    { x: 400, y: 400, width: 50, height: 50, dx: 2 },
-                ],
-                spikes: [
-                    { x: 250, y: 570, width: 50, height: 10 },
-                ],
-            },
-            {
-                platforms: [
-                    { x: 50, y: 550, width: 200, height: 20 },
-                    { x: 300, y: 450, width: 150, height: 20 },
-                    { x: 50, y: 350, width: 200, height: 20 },
-                    { x: 300, y: 250, width: 1000, height: 20 },
-                ],
-                goal: { x: 700, y: 50, width: 50, height: 50 },
-                enemies: [
-                    { x: 400, y: 320, width: 50, height: 50, dx: 2 },
-                ],
-                spikes: [
-                    { x: 250, y: 570, width: 50, height: 10 },
-                    { x: 300, y: 250, width: 50, height: 10 },
-                ],
-            },
-            // Add more levels if needed
-        ];
-    }
-
-    setupInputHandlers() {
-        window.addEventListener('keydown', (e) => this.keys.add(e.key));
-        window.addEventListener('keyup', (e) => this.keys.delete(e.key));
-    }
-
-    handleInput() {
-        const player = this.player;
-
-        if (this.keys.has('ArrowLeft')) {
-            player.dx = -this.PLAYER_SPEED;
-            player.currentState = 'running';
-        } else if (this.keys.has('ArrowRight')) {
-            player.dx = this.PLAYER_SPEED;
-            player.currentState = 'running';
-        } else {
-            player.dx = 0;
-            player.currentState = 'idle';
-        }
-
-        if (this.keys.has('ArrowUp') && player.isOnGround) {
-            player.dy = this.JUMP_FORCE;
-            player.isOnGround = false;
-            player.currentState = 'jumping';
-        }
-    }
-
-    applyPhysics() {
-        const player = this.player;
-
-        player.dy += this.GRAVITY;
-        player.x += player.dx;
-        player.y += player.dy;
-
-        if (player.y > this.canvas.height - player.height) {
-            player.y = this.canvas.height - player.height;
-            player.dy = 0;
-            player.isOnGround = true;
-        }
-
-        this.platforms.forEach((platform) => {
-            if (
-                player.x < platform.x + platform.width &&
-                player.x + player.width > platform.x &&
-                player.y + player.height <= platform.y &&
-                player.y + player.height + player.dy >= platform.y
-            ) {
-                player.dy = 0;
-                player.isOnGround = true;
-                player.y = platform.y - player.height;
             }
-        });
 
-        player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
-    }
+            createPlayer() {
+                const playerSprite = new Image();
+                playerSprite.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png';
+enemySprite.src = './assets/enemy.png';
 
-    updateEnemies() {
-        this.enemies.forEach((enemy) => {
-            enemy.x += enemy.dx;
+                // Make sure to return a promise to handle the image load
+                playerSprite.onload = () => {
+                    console.log('Player image loaded');
+                    playerSprite.onerror = () => {
+    console.warn('Player sprite failed to load, using fallback.');
+};
 
-            if (enemy.x <= enemy.minX || enemy.x + enemy.width >= enemy.maxX) {
-                enemy.dx *= -1;
+
+
+                return {
+                    x: 100,
+                    y: 500,
+                    width: 50,  // Fixed width of 50
+                    height: 50, // Fixed height of 50
+                    dx: 0,
+                    dy: 0,
+                    isJumping: false,
+                    isOnGround: false,
+                    sprite: playerSprite,
+                };
             }
-        });
-    }
 
-    draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            createEnemies(enemies) ;
+    const enemySprite = new Image();
+    enemySprite.src = './assets/enemy.png'; // Update the sprite path
 
-        // Draw platforms, goal, spikes, enemies, and player
-        this.ctx.fillStyle = 'gray';
-        this.platforms.forEach((platform) => {
-            this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-        });
-
-        this.ctx.fillStyle = 'gold';
-        this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
-
-        this.ctx.fillStyle = 'darkred';
-        this.spikes.forEach((spike) => {
-            this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
-        });
-
-        this.drawPlayer();
-        this.enemies.forEach((enemy) => this.drawEnemy(enemy));
-
-        this.ui.level.textContent = `Level: ${this.currentLevel}`;
-        this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
-    }
-
-    drawPlayer() {
-        const player = this.player;
-
-        if (player.sprite.complete && player.sprite.naturalWidth > 0) {
-            this.ctx.drawImage(
-                player.sprite,
-                player.x, player.y, // Position on canvas
-                50, 50 // Fixed size of 50x50
-            );
-        } else {
-            this.ctx.fillStyle = 'blue';
-            this.ctx.fillRect(player.x, player.y, 50, 50); // Fallback size 50x50
-        }
-    }
-
-    drawEnemy(enemy) {
-        if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
-            this.ctx.drawImage(
-                enemy.sprite,
-                enemy.x, enemy.y, 
-                50, 50  // Default enemy size of 50x50
-            );
-        } else {
-            this.ctx.fillStyle = 'red';
-            this.ctx.fillRect(enemy.x, enemy.y, 50, 50); // Default fallback enemy size
-        }
-    }
-
-    gameLoop() {
-        this.handleInput();
-        this.applyPhysics();
-        this.updateEnemies();
-        this.draw();
-
-        requestAnimationFrame(() => this.gameLoop());
-    }
+    return enemies.map(enemy => ({
+        ...enemy,
+        sprite: enemySprite,
+        dx: enemy.dx || 0,
+        minX: enemy.minX || enemy.x,
+        maxX: enemy.maxX || enemy.x + 100, // Example patrol range
+    }));
 }
 
-new Game('gameCanvas');
 
-        new Game('gameCanvas');
+            createLevels() {
+                return [
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 200, height: 20 },
+                            { x: 300, y: 450, width: 150, height: 20 },
+                            { x: 500, y: 350, width: 200, height: 20 },
+                        ],
+                        goal: { x: 750, y: 300, width: 50, height: 50 },
+                        enemies: [
+                            { x: 400, y: 400, width: 50, height: 50, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 10 },
+                        ],
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 200, height: 20 },
+                            { x: 300, y: 450, width: 150, height: 20 },
+                            { x: 50, y: 350, width: 200, height: 20 },
+                            { x: 300, y: 250, width: 1000, height: 20 },
+                        ],
+                        goal: { x: 700, y: 50, width: 50, height: 50 },
+                        enemies: [
+                            { x: 400, y: 320, width: 50, height: 50, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 10 },
+                            { x: 300, y: 250, width: 50, height: 10 },
+                        ],
+                    },
+                    {
+                        platforms: [
+                            { x: 50, y: 550, width: 30, height: 20 },
+                            { x: 50, y: 450, width: 30, height: 20 },
+                            { x: 50, y: 350, width: 30, height: 20 },
+                            { x: 50, y: 250, width: 30, height: 20 },
+                            { x: 220, y: 500, width: 30, height: 20 },
+                            { x: 220, y: 400, width: 30, height: 20 },
+                            { x: 220, y: 300, width: 30, height: 20 },
+                            { x: 220, y: 200, width: 30, height: 20 },
+                            { x: 500, y: 200, width: 30, height: 20 },
+                            { x: 550, y: 300, width: 30, height: 20 },
+                            { x: 600, y: 400, width: 30, height: 20 },
+                            { x: 550, y: 500, width: 30, height: 20 },
+                            { x: 500, y: 600, width: 30, height: 20 },
+                           
+                        ],
+                        goal: { x: 700, y: 50, width: 50, height: 50 },
+                        enemies: [
+                        { x: 100, y: 350, width: 50, height: 50, dx: 2 },
+                           
+                        { x: 100, y: 160, width: 50, height: 50, dx: 2 },
+                            
+                            { x: 400, y: 500, width: 50, height: 50, dx: 2 },
+                        ],
+                        spikes: [
+                            { x: 250, y: 570, width: 50, height: 600 },
+                            { x: 250, y: 540, width: 50, height: 600 },
+                            { x: 250, y: 510, width: 50, height: 600 },
+                            { x: 250, y: 480, width: 50, height: 600 },
+                            { x: 250, y: 450, width: 50, height: 600 },
+                            { x: 250, y: 420, width: 50, height: 600 },
+                            { x: 250, y: 390, width: 50, height: 600 },
+                            { x: 250, y: 360, width: 50, height: 600 },
+                            { x: 250, y: 330, width: 50, height: 600 },
+                            { x: 250, y: 300, width: 50, height: 600 },
+                            { x: 250, y: 270, width: 50, height: 600 },
+                            { x: 250, y: 240, width: 50, height: 600 },
+                            { x: 0, y: 570, width: 50, height: 600 },
+                            { x: 0, y: 540, width: 50, height: 600 },
+                            { x: 0, y: 510, width: 50, height: 600 },
+                            { x: 0, y: 480, width: 50, height: 600 },
+                            { x: 0, y: 450, width: 50, height: 600 },
+                            { x: 0, y: 420, width: 50, height: 600 },
+                            { x: 0, y: 390, width: 50, height: 600 },
+                            { x: 0, y: 360, width: 50, height: 600 },
+                            { x: 0, y: 330, width: 50, height: 600 },
+                            { x: 0, y: 300, width: 50, height: 600 },
+                            { x: 0, y: 270, width: 50, height: 600 },
+                            { x: 0, y: 240, width: 50, height: 600 },
+                           
+                            { x: 500, y: 570, width: 50, height: 600 },
+                           
+                        ],
+                    },
+                ];
+            }
+             
+
+            setupInputHandlers() {
+                window.addEventListener('keydown', (e) => this.keys.add(e.key));
+                window.addEventListener('keyup', (e) => this.keys.delete(e.key));
+            }
+
+            handleInput() {
+                const player = this.player;
+
+                if (this.keys.has('ArrowLeft')) {
+                    player.dx = -this.PLAYER_SPEED;
+                    player.currentState = 'running';
+                } else if (this.keys.has('ArrowRight')) {
+                    player.dx = this.PLAYER_SPEED;
+                    player.currentState = 'running';
+                } else {
+                    player.dx = 0;
+                    player.currentState = 'idle';
+                }
+
+                if (this.keys.has('ArrowUp') && player.isOnGround) {
+                    player.dy = this.JUMP_FORCE;
+                    player.isOnGround = false;
+                    player.currentState = 'jumping';
+                }
+            }
+
+            applyPhysics() {
+                const player = this.player;
+
+                player.dy += this.GRAVITY;
+                player.x += player.dx;
+                player.y += player.dy;
+
+                if (player.y > this.canvas.height - player.height) {
+                    player.y = this.canvas.height - player.height;
+                    player.dy = 0;
+                    player.isOnGround = true;
+                }
+
+                this.platforms.forEach((platform) => {
+                    if (
+                        player.x < platform.x + platform.width &&
+                        player.x + player.width > platform.x &&
+                        player.y + player.height <= platform.y &&
+                        player.y + player.height + player.dy >= platform.y
+                    ) {
+                        player.dy = 0;
+                        player.isOnGround = true;
+                        player.y = platform.y - player.height;
+                    }
+                });
+
+                player.x = Math.max(0, Math.min(player.x, this.canvas.width - player.width));
+            }
+
+            updateEnemies() {
+                this.enemies.forEach((enemy) => {
+                    enemy.x += enemy.dx;
+
+                    if (enemy.x <= enemy.minX || enemy.x + enemy.width >= enemy.maxX) {
+    enemy.dx *= -1;
+}
+
+                });
+            }
+
+            takeDamage() {
+                const currentTime = Date.now();
+                if (currentTime - this.lastDamageTime >= this.damageCooldown) {
+                    this.health--;
+                    this.lastDamageTime = currentTime;
+                    if (this.health <= 0) {
+                        this.showGameOver();
+                    }
+                }
+            }
+
+            showGameOver() {
+                this.gameOverScreen.style.display = 'flex';
+            }
+
+            showWinScreen() {
+                this.winScreen.style.display = 'flex';
+                this.triggerConfetti();
+            }
+
+            respawn() {
+                this.gameOverScreen.style.display = 'none';  // Hide the game over screen
+                this.health = 3;  // Reset health
+                this.currentLevel = 1;  // Go back to first level
+                this.init(this.currentLevel);  // Restart the game
+            }
+
+            restart() {
+                this.winScreen.style.display = 'none';  // Hide the win screen
+                this.currentLevel = 1;
+                this.health = 3;
+                this.init(this.currentLevel);
+            }
+
+            triggerConfetti() {
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = `${Math.random() * 100}%`;
+confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
+
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);  // Remove confetti after animation
+                }
+            }
+
+            checkGoalCollision() {
+                const player = this.player;
+                const goal = this.goal;
+
+                if (
+                    player.x < goal.x + goal.width &&
+                    player.x + player.width > goal.x &&
+                    player.y < goal.y + goal.height &&
+                    player.y + player.height > goal.y
+                ) {
+                    this.currentLevel++;
+                    if (this.currentLevel > this.levels.length) {
+                        this.showWinScreen();
+                    } else {
+                        this.loadLevel(this.currentLevel);
+                    }
+                }
+            }
+
+            loadLevel(level) {
+                const newLevel = this.levels[level - 1];
+                this.levelCompleted = false;
+                this.platforms = newLevel.platforms;
+                this.goal = newLevel.goal;
+                this.enemies = this.createEnemies(newLevel.enemies);
+                this.spikes = newLevel.spikes;
+
+                this.player.x = 100;
+                this.player.y = 500;
+                this.health = 3;
+            }
+
+            checkSpikesCollision() {
+                const player = this.player;
+                this.spikes.forEach((spike) => {
+                    if (
+                        player.x < spike.x + spike.width &&
+                        player.x + player.width > spike.x &&
+                        player.y < spike.y + spike.height &&
+                        player.y + player.height > spike.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+            }
+
+            checkEnemyCollision() {
+                const player = this.player;
+                this.enemies.forEach((enemy) => {
+                    if (
+                        player.x < enemy.x + enemy.width &&
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &&
+                        player.y + player.height > enemy.y
+                    ) {
+                        this.takeDamage();
+                    }
+                });
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.ctx.fillStyle = 'gray';
+                this.platforms.forEach((platform) => {
+                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                });
+
+                this.ctx.fillStyle = 'gold';
+                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+
+                this.ctx.fillStyle = 'darkred';
+                this.spikes.forEach((spike) => {
+                    this.ctx.fillRect(spike.x, spike.y, spike.width, spike.height);
+                });
+
+                this.drawPlayer();
+                this.enemies.forEach((enemy) => this.drawEnemy(enemy));
+
+                this.ui.level.textContent = `Level: ${this.currentLevel}`;
+this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
+
+
+            drawPlayer() ;
+                const player = this.player;
+
+                if (player.sprite.complete && player.sprite.naturalWidth > 0) {
+                    this.ctx.drawImage(
+                        player.sprite,
+                        player.x, player.y, // Position on canvas
+                        50, 50 // Fixed size of 50x50
+                    );
+                } else {
+                    this.ctx.fillStyle = 'blue';
+                    this.ctx.fillRect(player.x, player.y, 50, 50); // Fallback size 50x50
+                }
+            }
+
+            drawEnemy(enemy) {
+                if (enemy.sprite.complete && enemy.sprite.naturalWidth > 0) {
+                    const spriteWidth = enemy.sprite.naturalWidth / enemy.framesPerState[enemy.currentState];
+                    const spriteHeight = enemy.sprite.naturalHeight;
+
+                    this.ctx.drawImage(
+                        enemy.sprite,
+                        enemy.frameIndex * spriteWidth, 0,
+                        spriteWidth, spriteHeight,
+                        enemy.x, enemy.y,
+                        enemy.width, enemy.height
+                    );
+                } else {
+                    this.ctx.fillStyle = 'red';
+                    this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                }
+            }
+
+            gameLoop() {
+                this.handleInput();
+                this.applyPhysics();
+                this.updateEnemies();
+                this.checkGoalCollision();
+                this.checkSpikesCollision();
+                this.checkEnemyCollision();
+
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
+
+        // Initialize the game when the page loads
+        window.onload = () => {
+            const game = new Game('gameCanvas');
+        };
     </script>
 </body>
-</html> 
+</html>

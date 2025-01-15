@@ -566,7 +566,10 @@ this.ui.health.textContent = `Health: ${'♥'.repeat(this.health)}`;
             }
         }
 
-        new Game('gameCanvas');
+        // Initialize the game when the page loads
+        window.onload = () => {
+            const game = new Game('gameCanvas');
+        };
     </script>
 </body>
-</html> 
+</html>

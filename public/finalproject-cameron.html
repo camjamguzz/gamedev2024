@@ -68,7 +68,6 @@
                 this.canvas = document.getElementById('gameCanvas');
                 this.ctx = this.canvas.getContext('2d');
     
-                // Player attributes
                 this.player = {
                     x: 50,
                     y: 500,
@@ -79,7 +78,7 @@
                     isOnGround: false,
                     image: new Image()
                 };
-                this.player.image.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png'; // Replace 'player.png' with the actual path to your image.
+                this.player.image.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png';
     
                 this.platforms = [
                     { x: 50, y: 550, width: 200, height: 20 },
@@ -95,7 +94,7 @@
                     { x: 100, y: 530, width: 40, height: 20, dx: 2 },
                     { x: 400, y: 460, width: 40, height: 20, dx: 2 },
                 ];
-                
+    
                 this.keys = new Set();
                 this.gravity = 0.5;
                 this.jumpForce = -10;
@@ -105,6 +104,8 @@
                 this.winScreen = document.getElementById('winScreen');
     
                 this.running = true;
+                this.startTime = Date.now(); // Track the start time
+                this.elapsedTime = 0; // Track the elapsed time
     
                 this.init();
             }
@@ -132,17 +133,14 @@
                 this.player.x += this.player.dx;
                 this.player.y += this.player.dy;
     
-                // Prevent player from moving off the screen horizontally
                 this.player.x = Math.max(0, Math.min(this.canvas.width - this.player.width, this.player.x));
     
-                // Handle ground collision
                 if (this.player.y + this.player.height > this.canvas.height) {
                     this.player.y = this.canvas.height - this.player.height;
                     this.player.dy = 0;
                     this.player.isOnGround = true;
                 }
     
-                // Handle platform collision
                 this.platforms.forEach((platform) => {
                     if (
                         this.player.x < platform.x + platform.width &&
@@ -158,7 +156,6 @@
             }
     
             checkCollisions() {
-                // Check goal collision
                 if (
                     this.player.x < this.goal.x + this.goal.width &&
                     this.player.x + this.player.width > this.goal.x &&
@@ -169,7 +166,6 @@
                     this.winScreen.style.display = 'flex';
                 }
     
-                // Check spike collisions
                 this.spikes.forEach((spike) => {
                     if (
                         this.player.x < spike.x + spike.width &&
@@ -181,7 +177,6 @@
                     }
                 });
     
-                // Check enemy collisions
                 this.enemies.forEach((enemy) => {
                     if (
                         this.player.x < enemy.x + enemy.width &&
@@ -198,7 +193,6 @@
                 this.enemies.forEach((enemy) => {
                     enemy.x += enemy.dx;
     
-                    // Reverse direction if enemy hits a boundary
                     if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
                         enemy.dx *= -1;
                     }
@@ -213,34 +207,36 @@
             draw() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     
-                // Draw platforms
                 this.ctx.fillStyle = '#888';
                 this.platforms.forEach(({ x, y, width, height }) =>
                     this.ctx.fillRect(x, y, width, height)
                 );
     
-                // Draw player
                 this.ctx.drawImage(this.player.image, this.player.x, this.player.y, this.player.width, this.player.height);
     
-                // Draw goal
                 this.ctx.fillStyle = '#FFD700';
                 this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
     
-                // Draw spikes
                 this.ctx.fillStyle = 'red';
                 this.spikes.forEach(({ x, y, width, height }) =>
                     this.ctx.fillRect(x, y, width, height)
                 );
     
-                // Draw enemies
                 this.ctx.fillStyle = 'purple';
                 this.enemies.forEach(({ x, y, width, height }) =>
                     this.ctx.fillRect(x, y, width, height)
                 );
+    
+                // Draw timer
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '20px Arial';
+                this.ctx.fillText(`Time: ${Math.floor(this.elapsedTime / 1000)}s`, 10, 20);
             }
     
             gameLoop() {
                 if (!this.running) return;
+    
+                this.elapsedTime = Date.now() - this.startTime;
     
                 this.handleInput();
                 this.applyPhysics();
@@ -262,6 +258,7 @@
     
         restartGame();
     </script>
+    
     
 </body>
 </html>

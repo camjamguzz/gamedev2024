@@ -63,200 +63,206 @@
         <button onclick="restartGame()">Restart</button>
     </div>
     <script>
-        class Game {
-            constructor() {
-                this.canvas = document.getElementById('gameCanvas');
-                this.ctx = this.canvas.getContext('2d');
-    
-                this.player = {
-                    x: 50,
-                    y: 500,
-                    width: 50,
-                    height: 50,
-                    dx: 0,
-                    dy: 0,
-                    isOnGround: false,
-                    image: new Image()
-                };
-                this.player.image.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png';
-    
-                this.platforms = [
-                    { x: 50, y: 550, width: 200, height: 20 },
-                    { x: 300, y: 480, width: 150, height: 20 },
-                    { x: 400, y: 400, width: 200, height: 20 },
-                ];
-                this.goal = { x: 750, y: 300, width: 50, height: 50 };
-                this.spikes = [
-                    { x: 150, y: 530, width: 30, height: 20 },
-                    { x: 450, y: 380, width: 30, height: 20 },
-                ];
-                this.enemies = [
-                    { x: 100, y: 530, width: 40, height: 20, dx: 2 },
-                    { x: 400, y: 460, width: 40, height: 20, dx: 2 },
-                ];
-    
-                this.keys = new Set();
-                this.gravity = 0.5;
-                this.jumpForce = -10;
-                this.speed = 5;
-    
-                this.gameOverScreen = document.getElementById('gameOverScreen');
-                this.winScreen = document.getElementById('winScreen');
-    
-                this.running = true;
-                this.startTime = Date.now(); // Track the start time
-                this.elapsedTime = 0; // Track the elapsed time
-    
-                this.init();
-            }
-    
-            init() {
-                this.running = true;
-                window.addEventListener('keydown', (e) => this.keys.add(e.key));
-                window.addEventListener('keyup', (e) => this.keys.delete(e.key));
-                this.gameLoop();
-            }
-    
-            handleInput() {
-                if (this.keys.has('ArrowLeft')) this.player.dx = -this.speed;
-                else if (this.keys.has('ArrowRight')) this.player.dx = this.speed;
-                else this.player.dx = 0;
-    
-                if (this.keys.has('ArrowUp') && this.player.isOnGround) {
-                    this.player.dy = this.jumpForce;
-                    this.player.isOnGround = false;
-                }
-            }
-    
-            applyPhysics() {
-                this.player.dy += this.gravity;
-                this.player.x += this.player.dx;
-                this.player.y += this.player.dy;
-    
-                this.player.x = Math.max(0, Math.min(this.canvas.width - this.player.width, this.player.x));
-    
-                if (this.player.y + this.player.height > this.canvas.height) {
-                    this.player.y = this.canvas.height - this.player.height;
-                    this.player.dy = 0;
-                    this.player.isOnGround = true;
-                }
-    
-                this.platforms.forEach((platform) => {
-                    if (
-                        this.player.x < platform.x + platform.width &&
-                        this.player.x + this.player.width > platform.x &&
-                        this.player.y + this.player.height <= platform.y &&
-                        this.player.y + this.player.height + this.player.dy >= platform.y
-                    ) {
-                        this.player.y = platform.y - this.player.height;
-                        this.player.dy = 0;
-                        this.player.isOnGround = true;
-                    }
-                });
-            }
-    
-            checkCollisions() {
-                if (
-                    this.player.x < this.goal.x + this.goal.width &&
-                    this.player.x + this.player.width > this.goal.x &&
-                    this.player.y < this.goal.y + this.goal.height &&
-                    this.player.y + this.player.height > this.goal.y
-                ) {
-                    this.running = false;
-                    this.winScreen.style.display = 'flex';
-                }
-    
-                this.spikes.forEach((spike) => {
-                    if (
-                        this.player.x < spike.x + spike.width &&
-                        this.player.x + this.player.width > spike.x &&
-                        this.player.y < spike.y + spike.height &&
-                        this.player.y + this.player.height > spike.y
-                    ) {
-                        this.gameOver();
-                    }
-                });
-    
-                this.enemies.forEach((enemy) => {
-                    if (
-                        this.player.x < enemy.x + enemy.width &&
-                        this.player.x + this.player.width > enemy.x &&
-                        this.player.y < enemy.y + enemy.height &&
-                        this.player.y + this.player.height > enemy.y
-                    ) {
-                        this.gameOver();
-                    }
-                });
-            }
-    
-            moveEnemies() {
-                this.enemies.forEach((enemy) => {
-                    enemy.x += enemy.dx;
-    
-                    if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
-                        enemy.dx *= -1;
-                    }
-                });
-            }
-    
-            gameOver() {
-                this.running = false;
-                this.gameOverScreen.style.display = 'flex';
-            }
-    
-            draw() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
-                this.ctx.fillStyle = '#888';
-                this.platforms.forEach(({ x, y, width, height }) =>
-                    this.ctx.fillRect(x, y, width, height)
-                );
-    
-                this.ctx.drawImage(this.player.image, this.player.x, this.player.y, this.player.width, this.player.height);
-    
-                this.ctx.fillStyle = '#FFD700';
-                this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
-    
-                this.ctx.fillStyle = 'red';
-                this.spikes.forEach(({ x, y, width, height }) =>
-                    this.ctx.fillRect(x, y, width, height)
-                );
-    
-                this.ctx.fillStyle = 'purple';
-                this.enemies.forEach(({ x, y, width, height }) =>
-                    this.ctx.fillRect(x, y, width, height)
-                );
-    
-                // Draw timer
-                this.ctx.fillStyle = 'white';
-                this.ctx.font = '20px Arial';
-                this.ctx.fillText(`Time: ${Math.floor(this.elapsedTime / 1000)}s`, 10, 20);
-            }
-    
-            gameLoop() {
-                if (!this.running) return;
-    
-                this.elapsedTime = Date.now() - this.startTime;
-    
-                this.handleInput();
-                this.applyPhysics();
-                this.checkCollisions();
-                this.moveEnemies();
-                this.draw();
-    
-                requestAnimationFrame(() => this.gameLoop());
-            }
+       class Game {
+    constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+
+        // Load background image
+        this.backgroundImage = new Image();
+        this.backgroundImage.src = 'https://example.com/background.png'; // Replace with your background image URL
+
+        this.player = {
+            x: 50,
+            y: 500,
+            width: 50,
+            height: 50,
+            dx: 0,
+            dy: 0,
+            isOnGround: false,
+            image: new Image()
+        };
+        this.player.image.src = 'https://dinopixel.com/preload/0322/Mando-knight-lol.png';
+
+        this.platforms = [
+            { x: 50, y: 550, width: 200, height: 20 },
+            { x: 300, y: 480, width: 150, height: 20 },
+            { x: 400, y: 400, width: 200, height: 20 },
+        ];
+        this.goal = { x: 750, y: 300, width: 50, height: 50 };
+        this.spikes = [
+            { x: 150, y: 530, width: 30, height: 20 },
+            { x: 450, y: 380, width: 30, height: 20 },
+        ];
+        this.enemies = [
+            { x: 100, y: 530, width: 40, height: 20, dx: 2 },
+            { x: 400, y: 460, width: 40, height: 20, dx: 2 },
+        ];
+
+        this.keys = new Set();
+        this.gravity = 0.5;
+        this.jumpForce = -10;
+        this.speed = 5;
+
+        this.gameOverScreen = document.getElementById('gameOverScreen');
+        this.winScreen = document.getElementById('winScreen');
+
+        this.running = true;
+        this.startTime = Date.now();
+        this.elapsedTime = 0;
+
+        this.init();
+    }
+
+    init() {
+        this.running = true;
+        window.addEventListener('keydown', (e) => this.keys.add(e.key));
+        window.addEventListener('keyup', (e) => this.keys.delete(e.key));
+        this.gameLoop();
+    }
+
+    handleInput() {
+        if (this.keys.has('ArrowLeft')) this.player.dx = -this.speed;
+        else if (this.keys.has('ArrowRight')) this.player.dx = this.speed;
+        else this.player.dx = 0;
+
+        if (this.keys.has('ArrowUp') && this.player.isOnGround) {
+            this.player.dy = this.jumpForce;
+            this.player.isOnGround = false;
         }
-    
-        let game;
-    
-        function restartGame() {
-            document.getElementById('winScreen').style.display = 'none';
-            document.getElementById('gameOverScreen').style.display = 'none';
-            game = new Game();
+    }
+
+    applyPhysics() {
+        this.player.dy += this.gravity;
+        this.player.x += this.player.dx;
+        this.player.y += this.player.dy;
+
+        this.player.x = Math.max(0, Math.min(this.canvas.width - this.player.width, this.player.x));
+
+        if (this.player.y + this.player.height > this.canvas.height) {
+            this.player.y = this.canvas.height - this.player.height;
+            this.player.dy = 0;
+            this.player.isOnGround = true;
         }
-    
-        restartGame();
+
+        this.platforms.forEach((platform) => {
+            if (
+                this.player.x < platform.x + platform.width &&
+                this.player.x + this.player.width > platform.x &&
+                this.player.y + this.player.height <= platform.y &&
+                this.player.y + this.player.height + this.player.dy >= platform.y
+            ) {
+                this.player.y = platform.y - this.player.height;
+                this.player.dy = 0;
+                this.player.isOnGround = true;
+            }
+        });
+    }
+
+    checkCollisions() {
+        if (
+            this.player.x < this.goal.x + this.goal.width &&
+            this.player.x + this.player.width > this.goal.x &&
+            this.player.y < this.goal.y + this.goal.height &&
+            this.player.y + this.player.height > this.goal.y
+        ) {
+            this.running = false;
+            this.winScreen.style.display = 'flex';
+        }
+
+        this.spikes.forEach((spike) => {
+            if (
+                this.player.x < spike.x + spike.width &&
+                this.player.x + this.player.width > spike.x &&
+                this.player.y < spike.y + spike.height &&
+                this.player.y + this.player.height > spike.y
+            ) {
+                this.gameOver();
+            }
+        });
+
+        this.enemies.forEach((enemy) => {
+            if (
+                this.player.x < enemy.x + enemy.width &&
+                this.player.x + this.player.width > enemy.x &&
+                this.player.y < enemy.y + enemy.height &&
+                this.player.y + this.player.height > enemy.y
+            ) {
+                this.gameOver();
+            }
+        });
+    }
+
+    moveEnemies() {
+        this.enemies.forEach((enemy) => {
+            enemy.x += enemy.dx;
+
+            if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
+                enemy.dx *= -1;
+            }
+        });
+    }
+
+    gameOver() {
+        this.running = false;
+        this.gameOverScreen.style.display = 'flex';
+    }
+
+    draw() {
+        // Draw background
+        this.ctx.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.fillStyle = '#888';
+        this.platforms.forEach(({ x, y, width, height }) =>
+            this.ctx.fillRect(x, y, width, height)
+        );
+
+        this.ctx.drawImage(this.player.image, this.player.x, this.player.y, this.player.width, this.player.height);
+
+        this.ctx.fillStyle = '#FFD700';
+        this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
+
+        this.ctx.fillStyle = 'red';
+        this.spikes.forEach(({ x, y, width, height }) =>
+            this.ctx.fillRect(x, y, width, height)
+        );
+
+        this.ctx.fillStyle = 'purple';
+        this.enemies.forEach(({ x, y, width, height }) =>
+            this.ctx.fillRect(x, y, width, height)
+        );
+
+        // Draw timer
+        this.ctx.fillStyle = 'white';
+        this.ctx.font = '20px Arial';
+        this.ctx.fillText(`Time: ${Math.floor(this.elapsedTime / 1000)}s`, 10, 20);
+    }
+
+    gameLoop() {
+        if (!this.running) return;
+
+        this.elapsedTime = Date.now() - this.startTime;
+
+        this.handleInput();
+        this.applyPhysics();
+        this.checkCollisions();
+        this.moveEnemies();
+        this.draw();
+
+        requestAnimationFrame(() => this.gameLoop());
+    }
+}
+
+let game;
+
+function restartGame() {
+    document.getElementById('winScreen').style.display = 'none';
+    document.getElementById('gameOverScreen').style.display = 'none';
+    game = new Game();
+}
+
+restartGame();
+
     </script>
     
     

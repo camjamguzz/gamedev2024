@@ -67,8 +67,20 @@
             constructor() {
                 this.canvas = document.getElementById('gameCanvas');
                 this.ctx = this.canvas.getContext('2d');
-
-                this.player = { x: 50, y: 500, width: 50, height: 50, dx: 0, dy: 0, isOnGround: false };
+    
+                // Player attributes
+                this.player = {
+                    x: 50,
+                    y: 500,
+                    width: 50,
+                    height: 50,
+                    dx: 0,
+                    dy: 0,
+                    isOnGround: false,
+                    image: new Image()
+                };
+                this.player.image.src = 'player.png'; // Replace 'player.png' with the actual path to your image.
+    
                 this.platforms = [
                     { x: 50, y: 550, width: 200, height: 20 },
                     { x: 200, y: 480, width: 150, height: 20 },
@@ -83,67 +95,52 @@
                     { x: 100, y: 530, width: 40, height: 20, dx: 2 },
                     { x: 300, y: 460, width: 40, height: 20, dx: 2 },
                 ];
-                this.player = { x: 50, y: 500, width: 50, height: 50, dx: 0, dy: 0, isOnGround: false };
-                this.platforms = [
-                    { x: 50, y: 550, width: 20, height: 20 },
-                    { x: 200, y: 480, width: 20, height: 20 },
-                    { x: 350, y: 400, width: 20, height: 20 },
-                ];
-                this.goal = { x: 750, y: 300, width: 50, height: 50 };
-                this.spikes = [
-                    { x: 150, y: 530, width: 30, height: 20 },
-                    { x: 450, y: 380, width: 30, height: 20 },
-                ];
-                this.enemies = [
-                    { x: 100, y: 530, width: 40, height: 20, dx: 2 },
-                    { x: 300, y: 460, width: 40, height: 20, dx: 2 },
-                ];
                 this.keys = new Set();
                 this.gravity = 0.5;
                 this.jumpForce = -10;
                 this.speed = 5;
-
+    
                 this.gameOverScreen = document.getElementById('gameOverScreen');
                 this.winScreen = document.getElementById('winScreen');
-
+    
                 this.running = true;
-
+    
                 this.init();
             }
-
+    
             init() {
                 this.running = true;
                 window.addEventListener('keydown', (e) => this.keys.add(e.key));
                 window.addEventListener('keyup', (e) => this.keys.delete(e.key));
                 this.gameLoop();
             }
-
+    
             handleInput() {
                 if (this.keys.has('ArrowLeft')) this.player.dx = -this.speed;
                 else if (this.keys.has('ArrowRight')) this.player.dx = this.speed;
                 else this.player.dx = 0;
-
+    
                 if (this.keys.has('ArrowUp') && this.player.isOnGround) {
                     this.player.dy = this.jumpForce;
                     this.player.isOnGround = false;
                 }
             }
-
+    
             applyPhysics() {
                 this.player.dy += this.gravity;
                 this.player.x += this.player.dx;
                 this.player.y += this.player.dy;
-
+    
                 // Prevent player from moving off the screen horizontally
                 this.player.x = Math.max(0, Math.min(this.canvas.width - this.player.width, this.player.x));
-
+    
                 // Handle ground collision
                 if (this.player.y + this.player.height > this.canvas.height) {
                     this.player.y = this.canvas.height - this.player.height;
                     this.player.dy = 0;
                     this.player.isOnGround = true;
                 }
-
+    
                 // Handle platform collision
                 this.platforms.forEach((platform) => {
                     if (
@@ -158,7 +155,7 @@
                     }
                 });
             }
-
+    
             checkCollisions() {
                 // Check goal collision
                 if (
@@ -170,7 +167,7 @@
                     this.running = false;
                     this.winScreen.style.display = 'flex';
                 }
-
+    
                 // Check spike collisions
                 this.spikes.forEach((spike) => {
                     if (
@@ -182,7 +179,7 @@
                         this.gameOver();
                     }
                 });
-
+    
                 // Check enemy collisions
                 this.enemies.forEach((enemy) => {
                     if (
@@ -195,75 +192,75 @@
                     }
                 });
             }
-
+    
             moveEnemies() {
                 this.enemies.forEach((enemy) => {
                     enemy.x += enemy.dx;
-
+    
                     // Reverse direction if enemy hits a boundary
                     if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
                         enemy.dx *= -1;
                     }
                 });
             }
-
+    
             gameOver() {
                 this.running = false;
                 this.gameOverScreen.style.display = 'flex';
             }
-
+    
             draw() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+    
                 // Draw platforms
                 this.ctx.fillStyle = '#888';
                 this.platforms.forEach(({ x, y, width, height }) =>
                     this.ctx.fillRect(x, y, width, height)
                 );
-
+    
                 // Draw player
-                this.ctx.fillStyle = '#00f';
-                this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
-
+                this.ctx.drawImage(this.player.image, this.player.x, this.player.y, this.player.width, this.player.height);
+    
                 // Draw goal
                 this.ctx.fillStyle = '#FFD700';
                 this.ctx.fillRect(this.goal.x, this.goal.y, this.goal.width, this.goal.height);
-
+    
                 // Draw spikes
                 this.ctx.fillStyle = 'red';
                 this.spikes.forEach(({ x, y, width, height }) =>
                     this.ctx.fillRect(x, y, width, height)
                 );
-
+    
                 // Draw enemies
                 this.ctx.fillStyle = 'purple';
                 this.enemies.forEach(({ x, y, width, height }) =>
                     this.ctx.fillRect(x, y, width, height)
                 );
             }
-
+    
             gameLoop() {
                 if (!this.running) return;
-
+    
                 this.handleInput();
                 this.applyPhysics();
                 this.checkCollisions();
                 this.moveEnemies();
                 this.draw();
-
+    
                 requestAnimationFrame(() => this.gameLoop());
             }
         }
-
+    
         let game;
-
+    
         function restartGame() {
             document.getElementById('winScreen').style.display = 'none';
             document.getElementById('gameOverScreen').style.display = 'none';
             game = new Game();
         }
-
+    
         restartGame();
     </script>
+    
 </body>
 </html>

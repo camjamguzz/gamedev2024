@@ -20,15 +20,39 @@
         #defender {
             background: blue;
         }
-        #game-over {
-            position: absolute;
-            top: 40%;
+        #winner-popup {
+            position: fixed;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: black;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 30px;
             text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
             display: none;
+        }
+        #winner-popup h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+        #winner-popup p {
+            margin: 10px 0 20px;
+            font-size: 18px;
+        }
+        #winner-popup button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #winner-popup button:hover {
+            background: #0056b3;
         }
     </style>
 </head>
@@ -41,7 +65,11 @@
     <p>Player 1 Time: <span id="player1-time">0</span> seconds</p>
     <p>Player 2 Time: <span id="player2-time">0</span> seconds</p>
 </div>
-<div id="game-over"></div>
+<div id="winner-popup">
+    <h1 id="winner-text"></h1>
+    <p>Thank you for playing!</p>
+    <button onclick="location.reload()">Play Again</button>
+</div>
 
 <div id="attacker" class="player" style="top: 150px; left: 50px;"></div>
 <div id="defender" class="player" style="top: 150px; left: 300px;"></div>
@@ -94,7 +122,6 @@
 
     // End the round and switch roles
     function endRound() {
-        const gameOverMessage = document.getElementById("game-over");
         if (currentRound === 0) {
             player1Time = timeSurvived;
             document.getElementById("player1-time").innerText = player1Time;
@@ -103,18 +130,8 @@
         } else {
             player2Time = timeSurvived;
             document.getElementById("player2-time").innerText = player2Time;
-
-            // Determine the winner
-            const winner =
-                player1Time > player2Time
-                    ? "Player 1 wins!"
-                    : player1Time < player2Time
-                    ? "Player 2 wins!"
-                    : "It's a tie!";
-            gameOverMessage.innerHTML = `Game Over! ${winner}`;
-            gameOverMessage.style.display = "block";
+            displayWinner();
         }
-
         resetGame();
     }
 
@@ -135,6 +152,22 @@
         const defenderTemp = defender.style;
         attacker.style = defenderTemp;
         defender.style = attackerTemp;
+    }
+
+    // Display winner popup
+    function displayWinner() {
+        const popup = document.getElementById("winner-popup");
+        const winnerText = document.getElementById("winner-text");
+
+        if (player1Time > player2Time) {
+            winnerText.innerText = "Player 1 Wins!";
+        } else if (player1Time < player2Time) {
+            winnerText.innerText = "Player 2 Wins!";
+        } else {
+            winnerText.innerText = "It's a Tie!";
+        }
+
+        popup.style.display = "block";
     }
 
     // Keydown and Keyup events for movement

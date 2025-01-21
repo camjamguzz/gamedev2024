@@ -89,24 +89,36 @@
         const p2 = document.getElementById('myImg02');
 
         switch (e.key) {
-            case 'ArrowUp': // Player 1 jump
+            case 'ArrowUp': // Player 1 jump forward
                 p1.style.top = (parseInt(p1.style.top) - 50) + 'px';
+                p1.style.left = (parseInt(p1.style.left) + 20) + 'px';
                 setTimeout(() => {
                     p1.style.top = (parseInt(p1.style.top) + 50) + 'px';
                 }, 300);
-                break;
-            case 'ArrowRight': // Player 1 move right
-                p1.style.left = (parseInt(p1.style.left) + 10) + 'px';
                 myCheckHit(p1);
                 break;
-            case 'w': // Player 2 jump
+            case 'ArrowDown': // Player 1 jump backward
+                p1.style.top = (parseInt(p1.style.top) - 50) + 'px';
+                p1.style.left = (parseInt(p1.style.left) - 20) + 'px';
+                setTimeout(() => {
+                    p1.style.top = (parseInt(p1.style.top) + 50) + 'px';
+                }, 300);
+                myCheckHit(p1);
+                break;
+            case 'w': // Player 2 jump forward
                 p2.style.top = (parseInt(p2.style.top) - 50) + 'px';
+                p2.style.left = (parseInt(p2.style.left) + 20) + 'px';
                 setTimeout(() => {
                     p2.style.top = (parseInt(p2.style.top) + 50) + 'px';
                 }, 300);
+                myCheckHit(p2);
                 break;
-            case 'd': // Player 2 move right
-                p2.style.left = (parseInt(p2.style.left) + 10) + 'px';
+            case 's': // Player 2 jump backward
+                p2.style.top = (parseInt(p2.style.top) - 50) + 'px';
+                p2.style.left = (parseInt(p2.style.left) - 20) + 'px';
+                setTimeout(() => {
+                    p2.style.top = (parseInt(p2.style.top) + 50) + 'px';
+                }, 300);
                 myCheckHit(p2);
                 break;
         }

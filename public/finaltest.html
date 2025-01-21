@@ -11,8 +11,8 @@
         }
         .player {
             position: absolute;
-            width: 80px;
-            height: 80px;
+            width: 60px; /* Reduced size */
+            height: 60px; /* Reduced size */
         }
         #attacker {
             background: red;
@@ -190,13 +190,13 @@
         if (keysPressed["ArrowLeft"] && attackerLeft > 0) {
             attacker.style.left = attackerLeft - 5 + "px";
         }
-        if (keysPressed["ArrowRight"] && attackerLeft < window.innerWidth - 80) {
+        if (keysPressed["ArrowRight"] && attackerLeft < window.innerWidth - 60) {
             attacker.style.left = attackerLeft + 5 + "px";
         }
         if (keysPressed["ArrowUp"] && attackerTop > 0) {
             attacker.style.top = attackerTop - 5 + "px";
         }
-        if (keysPressed["ArrowDown"] && attackerTop < window.innerHeight - 80) {
+        if (keysPressed["ArrowDown"] && attackerTop < window.innerHeight - 60) {
             attacker.style.top = attackerTop + 5 + "px";
         }
 
@@ -204,13 +204,13 @@
         if (keysPressed["a"] && defenderLeft > 0) {
             defender.style.left = defenderLeft - 5 + "px";
         }
-        if (keysPressed["d"] && defenderLeft < window.innerWidth - 80) {
+        if (keysPressed["d"] && defenderLeft < window.innerWidth - 60) {
             defender.style.left = defenderLeft + 5 + "px";
         }
         if (keysPressed["w"] && defenderTop > 0) {
             defender.style.top = defenderTop - 5 + "px";
         }
-        if (keysPressed["s"] && defenderTop < window.innerHeight - 80) {
+        if (keysPressed["s"] && defenderTop < window.innerHeight - 60) {
             defender.style.top = defenderTop + 5 + "px";
         }
 

@@ -11,8 +11,8 @@
         }
         .player {
             position: absolute;
-            width: 60px; /* Reduced size */
-            height: 60px; /* Reduced size */
+            width: 60px;
+            height: 60px;
         }
         #attacker {
             background: red;
@@ -83,6 +83,7 @@
     let currentRound = 0; // Tracks which round it is
     let player1Time = 0;
     let player2Time = 0;
+    let isWASDAttacker = true; // Tracks if WASD player is the attacker
 
     // Movement flags for smooth movement
     let keysPressed = {};
@@ -126,6 +127,7 @@
             player1Time = timeSurvived;
             document.getElementById("player1-time").innerText = player1Time;
             currentRound++;
+            isWASDAttacker = false; // WASD becomes the defender
             switchRoles();
         } else {
             player2Time = timeSurvived;
@@ -186,32 +188,30 @@
         const defenderLeft = parseInt(defender.style.left || "300px");
         const defenderTop = parseInt(defender.style.top || "150px");
 
-        // Attacker movement (Arrow keys)
-        if (keysPressed["ArrowLeft"] && attackerLeft > 0) {
-            attacker.style.left = attackerLeft - 5 + "px";
-        }
-        if (keysPressed["ArrowRight"] && attackerLeft < window.innerWidth - 60) {
-            attacker.style.left = attackerLeft + 5 + "px";
-        }
-        if (keysPressed["ArrowUp"] && attackerTop > 0) {
-            attacker.style.top = attackerTop - 5 + "px";
-        }
-        if (keysPressed["ArrowDown"] && attackerTop < window.innerHeight - 60) {
-            attacker.style.top = attackerTop + 5 + "px";
+        // Attacker movement
+        if (isWASDAttacker) {
+            if (keysPressed["a"] && attackerLeft > 0) attacker.style.left = attackerLeft - 5 + "px";
+            if (keysPressed["d"] && attackerLeft < window.innerWidth - 60) attacker.style.left = attackerLeft + 5 + "px";
+            if (keysPressed["w"] && attackerTop > 0) attacker.style.top = attackerTop - 5 + "px";
+            if (keysPressed["s"] && attackerTop < window.innerHeight - 60) attacker.style.top = attackerTop + 5 + "px";
+        } else {
+            if (keysPressed["ArrowLeft"] && attackerLeft > 0) attacker.style.left = attackerLeft - 5 + "px";
+            if (keysPressed["ArrowRight"] && attackerLeft < window.innerWidth - 60) attacker.style.left = attackerLeft + 5 + "px";
+            if (keysPressed["ArrowUp"] && attackerTop > 0) attacker.style.top = attackerTop - 5 + "px";
+            if (keysPressed["ArrowDown"] && attackerTop < window.innerHeight - 60) attacker.style.top = attackerTop + 5 + "px";
         }
 
-        // Defender movement (WASD keys)
-        if (keysPressed["a"] && defenderLeft > 0) {
-            defender.style.left = defenderLeft - 5 + "px";
-        }
-        if (keysPressed["d"] && defenderLeft < window.innerWidth - 60) {
-            defender.style.left = defenderLeft + 5 + "px";
-        }
-        if (keysPressed["w"] && defenderTop > 0) {
-            defender.style.top = defenderTop - 5 + "px";
-        }
-        if (keysPressed["s"] && defenderTop < window.innerHeight - 60) {
-            defender.style.top = defenderTop + 5 + "px";
+        // Defender movement
+        if (isWASDAttacker) {
+            if (keysPressed["ArrowLeft"] && defenderLeft > 0) defender.style.left = defenderLeft - 5 + "px";
+            if (keysPressed["ArrowRight"] && defenderLeft < window.innerWidth - 60) defender.style.left = defenderLeft + 5 + "px";
+            if (keysPressed["ArrowUp"] && defenderTop > 0) defender.style.top = defenderTop - 5 + "px";
+            if (keysPressed["ArrowDown"] && defenderTop < window.innerHeight - 60) defender.style.top = defenderTop + 5 + "px";
+        } else {
+            if (keysPressed["a"] && defenderLeft > 0) defender.style.left = defenderLeft - 5 + "px";
+            if (keysPressed["d"] && defenderLeft < window.innerWidth - 60) defender.style.left = defenderLeft + 5 + "px";
+            if (keysPressed["w"] && defenderTop > 0) defender.style.top = defenderTop - 5 + "px";
+            if (keysPressed["s"] && defenderTop < window.innerHeight - 60) defender.style.top = defenderTop + 5 + "px";
         }
 
         myCheckHit();

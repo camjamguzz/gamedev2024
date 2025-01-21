@@ -3,59 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Survival Game</title>
+    <title>Survival Game</title>
+    <style>
+        body {
+            background-repeat: repeat;
+            background-size: 80%;
+        }
+        .player {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+        }
+        #attacker {
+            background: red;
+        }
+        #defender {
+            background: blue;
+        }
+        #game-over {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: black;
+            text-align: center;
+            display: none;
+        }
+    </style>
 </head>
-<body id="myBody" style="background-repeat:repeat; background-size: 80%" background="myBackground01.jpg">
+<body id="myBody" background="myBackground01.jpg">
 
-<h1 align=center>Survival Game</h1>
-<h3 align=center>Survive as long as you can!</h3>
+<h1 align="center">Survival Game</h1>
+<h3 align="center">Survive as long as you can!</h3>
 <div align="center">
     <p>Time Survived: <span id="timer">0</span> seconds</p>
+    <p>Player 1 Time: <span id="player1-time">0</span> seconds</p>
+    <p>Player 2 Time: <span id="player2-time">0</span> seconds</p>
 </div>
+<div id="game-over"></div>
+
+<div id="attacker" class="player" style="top: 150px; left: 50px;"></div>
+<div id="defender" class="player" style="top: 150px; left: 300px;"></div>
 
 <script>
     // Global variables
-    let myGlobalX = 0;
-    let myClock;
+    let attacker = document.getElementById("attacker");
+    let defender = document.getElementById("defender");
     let gameTimer;
     let timeSurvived = 0;
+    let currentRound = 0; // Tracks which round it is
+    let player1Time = 0;
+    let player2Time = 0;
 
-    // Initialize positions
-    let attacker = document.createElement("div");
-    let defender = document.createElement("div");
+    // Movement flags for smooth movement
+    let keysPressed = {};
 
-    document.body.appendChild(attacker);
-    document.body.appendChild(defender);
+    // Timer function
+    function startTimer() {
+        gameTimer = setInterval(() => {
+            timeSurvived++;
+            document.getElementById("timer").innerText = timeSurvived;
+        }, 1000);
+    }
 
-    // Styles for attacker and defender
-    attacker.style = "position: absolute; width: 80px; height: 80px; background: red; top: 150px; left: 50px;";
-    defender.style = "position: absolute; width: 80px; height: 80px; background: blue; top: 150px; left: 300px;";
-
-    // Movement function for the attacker
-    document.addEventListener("keydown", function(event) {
-        const attackerPosition = parseInt(attacker.style.left);
-        const defenderPosition = parseInt(defender.style.left);
-
-        if (event.key === "ArrowLeft" && attackerPosition > 0) {
-            attacker.style.left = attackerPosition - 10 + "px";
-        } else if (event.key === "ArrowRight" && attackerPosition < window.innerWidth - 80) {
-            attacker.style.left = attackerPosition + 10 + "px";
-        }
-
-        if (event.key === "a" && defenderPosition > 0) {
-            defender.style.left = defenderPosition - 10 + "px";
-        } else if (event.key === "d" && defenderPosition < window.innerWidth - 80) {
-            defender.style.left = defenderPosition + 10 + "px";
-        }
-
-        myCheckHit();
-    });
+    // Stop the timer
+    function stopTimer() {
+        clearInterval(gameTimer);
+    }
 
     // Collision detection
     function myHitOther(my1, my2) {
         const rect1 = my1.getBoundingClientRect();
         const rect2 = my2.getBoundingClientRect();
-
         return !(
             rect1.right < rect2.left ||
             rect1.left > rect2.right ||
@@ -67,22 +87,107 @@
     // Check for collisions
     function myCheckHit() {
         if (myHitOther(attacker, defender)) {
-            alert("Game Over! Defender survived for " + timeSurvived + " seconds.");
-            clearInterval(gameTimer);
-            location.reload(); // Restart the game
+            stopTimer();
+            endRound();
         }
     }
 
-    // Timer function
-    function startTimer() {
-        gameTimer = setInterval(() => {
-            timeSurvived++;
-            document.getElementById("timer").innerText = timeSurvived;
-        }, 1000);
+    // End the round and switch roles
+    function endRound() {
+        const gameOverMessage = document.getElementById("game-over");
+        if (currentRound === 0) {
+            player1Time = timeSurvived;
+            document.getElementById("player1-time").innerText = player1Time;
+            currentRound++;
+            switchRoles();
+        } else {
+            player2Time = timeSurvived;
+            document.getElementById("player2-time").innerText = player2Time;
+
+            // Determine the winner
+            const winner =
+                player1Time > player2Time
+                    ? "Player 1 wins!"
+                    : player1Time < player2Time
+                    ? "Player 2 wins!"
+                    : "It's a tie!";
+            gameOverMessage.innerHTML = `Game Over! ${winner}`;
+            gameOverMessage.style.display = "block";
+        }
+
+        resetGame();
     }
 
-    // Start the game timer
+    // Reset positions and timer
+    function resetGame() {
+        timeSurvived = 0;
+        document.getElementById("timer").innerText = timeSurvived;
+        attacker.style.left = "50px";
+        attacker.style.top = "150px";
+        defender.style.left = "300px";
+        defender.style.top = "150px";
+        if (currentRound === 1) startTimer();
+    }
+
+    // Switch roles
+    function switchRoles() {
+        const attackerTemp = attacker.style;
+        const defenderTemp = defender.style;
+        attacker.style = defenderTemp;
+        defender.style = attackerTemp;
+    }
+
+    // Keydown and Keyup events for movement
+    document.addEventListener("keydown", (event) => {
+        keysPressed[event.key] = true;
+    });
+
+    document.addEventListener("keyup", (event) => {
+        keysPressed[event.key] = false;
+    });
+
+    // Movement loop
+    function movementLoop() {
+        const attackerLeft = parseInt(attacker.style.left || "50px");
+        const attackerTop = parseInt(attacker.style.top || "150px");
+        const defenderLeft = parseInt(defender.style.left || "300px");
+        const defenderTop = parseInt(defender.style.top || "150px");
+
+        // Attacker movement (Arrow keys)
+        if (keysPressed["ArrowLeft"] && attackerLeft > 0) {
+            attacker.style.left = attackerLeft - 5 + "px";
+        }
+        if (keysPressed["ArrowRight"] && attackerLeft < window.innerWidth - 80) {
+            attacker.style.left = attackerLeft + 5 + "px";
+        }
+        if (keysPressed["ArrowUp"] && attackerTop > 0) {
+            attacker.style.top = attackerTop - 5 + "px";
+        }
+        if (keysPressed["ArrowDown"] && attackerTop < window.innerHeight - 80) {
+            attacker.style.top = attackerTop + 5 + "px";
+        }
+
+        // Defender movement (WASD keys)
+        if (keysPressed["a"] && defenderLeft > 0) {
+            defender.style.left = defenderLeft - 5 + "px";
+        }
+        if (keysPressed["d"] && defenderLeft < window.innerWidth - 80) {
+            defender.style.left = defenderLeft + 5 + "px";
+        }
+        if (keysPressed["w"] && defenderTop > 0) {
+            defender.style.top = defenderTop - 5 + "px";
+        }
+        if (keysPressed["s"] && defenderTop < window.innerHeight - 80) {
+            defender.style.top = defenderTop + 5 + "px";
+        }
+
+        myCheckHit();
+        requestAnimationFrame(movementLoop);
+    }
+
+    // Start the game
     startTimer();
+    movementLoop();
 </script>
 
 </body>
